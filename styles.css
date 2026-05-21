@@ -569,7 +569,19 @@ body {
 
 /* ── MINI PRODUCT CARDS ── */
 .mini-section { background: var(--color-surface); padding-bottom: 16px; }
-.mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
+/* Horizontal-scroll row of dish cards (1 row, swipe to see more) */
+.mini-grid {
+  display: flex; overflow-x: auto; scrollbar-width: none;
+  gap: 12px; padding: 2px 16px 6px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.mini-grid::-webkit-scrollbar { display: none; }
+.mini-grid > .mini-card {
+  flex: 0 0 auto;
+  width: 165px;
+  scroll-snap-align: start;
+}
 .mini-card {
   border-radius: var(--r-card); overflow: hidden;
   background: var(--color-surface);

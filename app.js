@@ -8,6 +8,7 @@
      • toast utility
      • PWA: service worker registration (with auto-update)
      • Notification API helpers (permission, sound, system push)
+     • Auto random notification 30s after launch (once per session)
    ────────────────────────────────────────────────────────────── */
 
 window.TG = (function() {
@@ -47,6 +48,30 @@ window.TG = (function() {
     system: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>',
     bonus:  '<svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5 5 1.5 7L12 18l-6.5 3.5L7 14.5 2 9.5l7-1z"/></svg>'
   };
+
+  // Pool used by the auto-fire scheduler
+  var AUTO_NOTIF_POOL = [
+    { type: 'promo',  title: 'Скидка 25% на плов',
+      preview: 'В Beshqozon Plov Markazi до конца дня скидка 25% на все плов-блюда.',
+      full: 'Только сегодня в ресторане Beshqozon Plov Markazi скидка 25% на:\n• Палов\n• Тошкент палов\n• Тухум барак\n\nПромокод применится автоматически.',
+      cta: 'Перейти к акции' },
+    { type: 'order',  title: 'Любимый ресторан рядом',
+      preview: 'Khan Atlas в 10 минутах от тебя — заказ доставят быстро.',
+      full: 'Заметили, что вы часто заказываете из Khan Atlas. Сейчас ресторан работает и сможет доставить за 10–15 минут.',
+      cta: 'Открыть ресторан' },
+    { type: 'bonus',  title: '+100 бонусов на счёт',
+      preview: 'Тебе начислены приветственные бонусы — потрать их в следующем заказе.',
+      full: 'Вам начислено 100 приветственных бонусов.\n\n1 балл = 1 сум при оплате следующего заказа. Бонусы действуют 30 дней.',
+      cta: 'Мои бонусы' },
+    { type: 'system', title: 'Новая категория «Стрит-фуд»',
+      preview: 'Добавили лагман-такси, бутерброды и шаурму. Загляни!',
+      full: 'Мы добавили новую категорию «Стрит-фуд»:\n• Лагман-такси\n• Хот-доги и бутерброды\n• Шаурма\n• Самса навынос\n\nЦены ниже обычных, доставка от 10 минут.',
+      cta: 'Смотреть категорию' },
+    { type: 'promo',  title: 'Бесплатная доставка с Togora+',
+      preview: 'Подключи подписку и получи бесплатную доставку на всё.',
+      full: 'Togora+ — это:\n• Бесплатная доставка на все заказы\n• +5% бонусов с каждого заказа\n• Ранний доступ к акциям\n\nПервый месяц — бесплатно.',
+      cta: 'Подключить Togora+' }
+  ];
 
   function loadNotifications() {
     try {
@@ -111,7 +136,7 @@ window.TG = (function() {
   function registerSW() {
     if (!('serviceWorker' in navigator)) return;
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js?v=2').then(function(reg) {
+      navigator.serviceWorker.register('./sw.js?v=6').then(function(reg) {
         if (reg.waiting) reg.waiting.postMessage({ type: 'skip-waiting' });
         reg.addEventListener('updatefound', function() {
           var nw = reg.installing;
@@ -125,7 +150,6 @@ window.TG = (function() {
       }).catch(function(err) {
         console.warn('[Togora] SW registration failed', err);
       });
-
       var reloaded = false;
       navigator.serviceWorker.addEventListener('controllerchange', function() {
         if (reloaded) return;
@@ -201,10 +225,53 @@ window.TG = (function() {
     } catch (e) { return Promise.resolve(false); }
   }
 
+  // ── Auto random notification — 30 s after launch, once per session ──
+  function scheduleRandomAutoNotif(delayMs) {
+    try {
+      if (sessionStorage.getItem('tg_auto_notif_fired') === '1') return;
+    } catch (e) {}
+    setTimeout(function() {
+      try { sessionStorage.setItem('tg_auto_notif_fired', '1'); } catch (e) {}
+      fireRandomAutoNotif();
+    }, delayMs);
+  }
+
+  function fireRandomAutoNotif() {
+    var notifs = loadNotifications();
+    var nextId = notifs.reduce(function(m, n) { return Math.max(m, n.id); }, 0) + 1;
+    var pick = AUTO_NOTIF_POOL[Math.floor(Math.random() * AUTO_NOTIF_POOL.length)];
+    var item = {
+      id: nextId, type: pick.type, title: pick.title,
+      preview: pick.preview, full: pick.full,
+      time: 'Только что', day: 'Сегодня', read: false, cta: pick.cta
+    };
+    notifs.unshift(item);
+    saveNotifications(notifs);
+    updateBellBadge();
+
+    // In-app sound (silent if no user gesture happened — by spec)
+    playNotifSound();
+
+    // System push — needs Notification permission already granted
+    sendSystemNotif({
+      title: item.title, body: item.preview,
+      tag: 'togora-auto-' + item.id,
+      url: './notifications.html', id: item.id
+    });
+
+    // Live-refresh notifications page if it's open in this tab
+    try {
+      window.dispatchEvent(new CustomEvent('tg:notifications-changed', { detail: { id: item.id } }));
+    } catch (e) {}
+
+    showToast('Новое уведомление: ' + item.title);
+  }
+
   function init() {
     setBottomNavActive();
     updateBellBadge();
     registerSW();
+    scheduleRandomAutoNotif(30000);
   }
 
   if (document.readyState === 'loading') {
@@ -224,8 +291,11 @@ window.TG = (function() {
     requestNotificationPermission: requestNotificationPermission,
     playNotifSound: playNotifSound,
     sendSystemNotif: sendSystemNotif,
+    scheduleRandomAutoNotif: scheduleRandomAutoNotif,
+    fireRandomAutoNotif: fireRandomAutoNotif,
     NICON: NICON,
-    DEFAULT_NOTIFICATIONS: DEFAULT_NOTIFICATIONS
+    DEFAULT_NOTIFICATIONS: DEFAULT_NOTIFICATIONS,
+    AUTO_NOTIF_POOL: AUTO_NOTIF_POOL
   };
 
 })();

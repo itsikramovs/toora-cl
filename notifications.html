@@ -343,6 +343,23 @@
     if (notifDetail.classList.contains('show')) closeDetail();
   });
 
+  // Re-render when the shared store is updated from another module
+  // (e.g. the auto-notification fired by app.js after 30s)
+  window.addEventListener('tg:notifications-changed', function() {
+    notifications = TG.loadNotifications();
+    updateCounts();
+    render();
+  });
+
+  // Also react to storage events from other tabs
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'tg_notifications_v1') {
+      notifications = TG.loadNotifications();
+      updateCounts();
+      render();
+    }
+  });
+
   updateCounts();
   render();
 

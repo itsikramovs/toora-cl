@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Корзина — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="page-header">
+  <a class="page-back" href="index.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Корзина</h1>
+  <button class="page-header-icon cart-header-clear" id="clearAllBtn" type="button" aria-label="Очистить корзину" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+  </button>
+</header>
+
+<!-- Vendor tabs row (shown only if cart has 2+ vendors) -->
+<div class="cart-vendor-tabs" id="vendorTabs" hidden></div>
+
+<main class="cart-page" id="cartRoot">
+  <!-- content rendered by JS -->
+</main>
+
+<!-- Floating checkout -->
+<div class="cart-checkout" id="cartCheckout" hidden>
+  <div class="cart-checkout-inner">
+    <button class="cart-checkout-btn" id="checkoutBtn" type="button">
+      <span class="ck-label">К оплате</span>
+      <span class="ck-total" id="ckTotal">0 сум</span>
+    </button>
+  </div>
+</div>
+
+<!-- Warning modal -->
+<div class="cart-modal-overlay" id="modalOverlay"></div>
+<div class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="cart-modal-icon" id="modalIcon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+  </div>
+  <h2 class="cart-modal-title" id="modalTitle">Заголовок</h2>
+  <p class="cart-modal-text" id="modalText">Текст</p>
+  <div class="cart-modal-actions">
+    <button class="cart-modal-btn primary" id="modalPrimary" type="button">OK</button>
+    <button class="cart-modal-btn ghost" id="modalGhost" type="button" hidden>Отмена</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none"><path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/></svg></div>
+    <span>Главная</span>
+  </a>
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/><rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+      <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/><rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+    </svg></div>
+    <span>Каталог</span>
+  </a>
+  <a class="nav-item" href="cart.html" data-page="cart.html" aria-current="page">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+      <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+    </svg></div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <circle class="ni" cx="13" cy="9" r="4.5"/>
+      <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+    </svg></div>
+    <span>Профиль</span>
+  </a>
+</nav>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FE5196"/><stop offset="100%" stop-color="#F77062"/></linearGradient></defs></svg>
+
+<div class="toast" id="cart-toast" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var escH = (window.TG && TG.escHTML) || function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  };
+  function fmtMoney(n){
+    n = Math.round(Number(n) || 0);
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+
+  var VENDORS = {
+    'salom-non':     { name: 'Salom Non',      minOrder: 25000, status: 'open' },
+    'besh-qozon':    { name: 'Besh Qozon',     minOrder: 40000, status: 'open' },
+    'shashlik-house':{ name: 'Shashlik House', minOrder: 30000, status: 'open' },
+    'samsa-fan':     { name: 'Samsa Fan',      minOrder: 20000, status: 'closed' },
+    'norin-mahalla': { name: 'Norin Mahalla',  minOrder: 35000, status: 'open' },
+    'sweet-tashkent':{ name: 'Sweet Tashkent', minOrder: 15000, status: 'open' }
+  };
+  function vendor(id){
+    return VENDORS[id] || { name: id, minOrder: 0, status: 'open' };
+  }
+
+  var KEY = 'tg-cart';
+  function loadCart(){
+    try {
+      var s = localStorage.getItem(KEY);
+      if (!s) return [];
+      var arr = JSON.parse(s);
+      return Array.isArray(arr) ? arr : [];
+    } catch(e){ return []; }
+  }
+  function saveCart(items){
+    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch(e){}
+    try { window.dispatchEvent(new CustomEvent('tg:cart-changed')); } catch(e){}
+  }
+
+  // Demo seeder via ?demo=
+  (function seedDemo(){
+    var p = new URLSearchParams(location.search);
+    var d = p.get('demo');
+    if (!d) return;
+    if (d === 'empty') { saveCart([]); }
+    else if (d === 'single') {
+      saveCart([
+        { id: 'lep1', name: 'Лепёшка обедненная (тандыр)', img: 'img/dish-06.jpg', price: 8000,  qty: 2, vendorId: 'salom-non' },
+        { id: 'lep2', name: 'Патыр с кунжутом',            img: 'img/ev-02.jpg',   price: 12000, qty: 1, vendorId: 'salom-non' },
+        { id: 'lep3', name: 'Гижда (домашняя)',            img: 'img/dish-07.jpg', price: 10000, qty: 1, vendorId: 'salom-non' }
+      ]);
+    } else if (d === 'multi') {
+      saveCart([
+        { id: 'plov1', name: 'Плов по-ташкентски',        img: 'img/dish-02.jpg', price: 38000, qty: 1, vendorId: 'besh-qozon' },
+        { id: 'shsh1', name: 'Шашлык из баранины (3 шт)', img: 'img/dish-04.jpg', price: 75000, qty: 1, vendorId: 'shashlik-house' },
+        { id: 'lep1',  name: 'Лепёшка обедненная (тандыр)',img:'img/dish-06.jpg', price: 8000,  qty: 2, vendorId: 'salom-non' }
+      ]);
+    } else if (d === 'minwarn') {
+      saveCart([
+        { id: 'sam1', name: 'Самса с мясом', img: 'img/dish-08.jpg', price: 9000, qty: 1, vendorId: 'salom-non' }
+      ]);
+    } else if (d === 'closed') {
+      saveCart([
+        { id: 'sam2', name: 'Самса с тыквой', img: 'img/dish-09.jpg', price: 11000, qty: 2, vendorId: 'samsa-fan' }
+      ]);
+    }
+    try { history.replaceState({}, '', location.pathname); } catch(e){}
+  })();
+
+  // ---- DOM refs ----
+  var $root      = document.getElementById('cartRoot');
+  var $clear     = document.getElementById('clearAllBtn');
+  var $checkout  = document.getElementById('cartCheckout');
+  var $ckTotal   = document.getElementById('ckTotal');
+  var $ckBtn     = document.getElementById('checkoutBtn');
+  var $navPill   = document.getElementById('navCartPill');
+  var $tabs      = document.getElementById('vendorTabs');
+  var $modalOv   = document.getElementById('modalOverlay');
+  var $modal     = document.getElementById('cartModal');
+  var $mTitle    = document.getElementById('modalTitle');
+  var $mText     = document.getElementById('modalText');
+  var $mPrimary  = document.getElementById('modalPrimary');
+  var $mGhost    = document.getElementById('modalGhost');
+  var $toast     = document.getElementById('cart-toast');
+
+  function toast(msg){
+    if (!$toast) return;
+    $toast.textContent = msg;
+    $toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ $toast.classList.remove('show'); }, 1800);
+  }
+
+  // ---- Modal ----
+  var modalState = null;
+  function showModal(opts){
+    modalState = opts || {};
+    $mTitle.textContent = opts.title || 'Внимание';
+    $mText.textContent  = opts.text  || '';
+    $mPrimary.textContent = opts.primaryLabel || 'OK';
+    if (opts.ghostLabel) {
+      $mGhost.textContent = opts.ghostLabel;
+      $mGhost.hidden = false;
+    } else {
+      $mGhost.hidden = true;
+    }
+    $modalOv.classList.add('open');
+    $modal.classList.add('open');
+  }
+  function hideModal(){
+    $modalOv.classList.remove('open');
+    $modal.classList.remove('open');
+    modalState = null;
+  }
+  $modalOv.addEventListener('click', hideModal);
+  $mGhost.addEventListener('click', function(){
+    if (modalState && typeof modalState.onGhost === 'function') modalState.onGhost();
+    hideModal();
+  });
+  $mPrimary.addEventListener('click', function(){
+    var s = modalState;
+    hideModal();
+    if (s && typeof s.onPrimary === 'function') s.onPrimary();
+  });
+
+  // ---- Group / compute ----
+  function groupByVendor(items){
+    var map = {};
+    var order = [];
+    items.forEach(function(it){
+      var v = it.vendorId || 'unknown';
+      if (!map[v]) { map[v] = []; order.push(v); }
+      map[v].push(it);
+    });
+    return { map: map, order: order };
+  }
+  function vendorSubtotal(list){
+    return list.reduce(function(s, i){ return s + (Number(i.price)||0) * (Number(i.qty)||0); }, 0);
+  }
+  function vendorBlocked(vId, list){
+    var v = vendor(vId);
+    if (v.status === 'closed') return 'closed';
+    if (vendorSubtotal(list) < v.minOrder) return 'min';
+    return null;
+  }
+
+  // ---- Active vendor (for multi-vendor tabs) ----
+  var ACTIVE_KEY = 'tg-cart-active-vendor';
+  function getActiveVendor(vendorIds){
+    var saved = null;
+    try { saved = localStorage.getItem(ACTIVE_KEY); } catch(e){}
+    if (saved && vendorIds.indexOf(saved) >= 0) return saved;
+    return vendorIds[0] || null;
+  }
+  function setActiveVendor(vId){
+    try { localStorage.setItem(ACTIVE_KEY, vId); } catch(e){}
+  }
+
+  // ---- Suggest data ----
+  var SUGGEST = [
+    { id: 's1', name: 'Лепёшка обедненная', img: './img/dish-06.jpg', price: 8000,  vendorId: 'salom-non' },
+    { id: 's2', name: 'Самса с мясом',      img: './img/dish-08.jpg', price: 12000, vendorId: 'salom-non' },
+    { id: 's3', name: 'Чак-чак',            img: './img/dish-15.jpg', price: 18000, vendorId: 'sweet-tashkent' },
+    { id: 's4', name: 'Coca-Cola 0.5л',     img: './img/dish-07.jpg', price: 12000, vendorId: 'besh-qozon' },
+    { id: 's5', name: 'Mayda norin',        img: './img/dish-12.jpg', price: 28000, vendorId: 'norin-mahalla' },
+    { id: 's6', name: 'Шашлык 1 шамп.',     img: './img/dish-04.jpg', price: 22000, vendorId: 'shashlik-house' }
+  ];
+  function renderSuggest(){
+    var html = ''
+      + '<section class="cart-suggest">'
+      +   '<div class="cart-suggest-title">Добавьте к заказу</div>'
+      +   '<div class="mini-grid-3col">';
+    SUGGEST.forEach(function(s){
+      html += ''
+        + '<div class="mini-card">'
+        +   '<div class="mini-img">'
+        +     '<img src="' + s.img + '" alt="">'
+        +     '<div class="mini-img-overlay"></div>'
+        +     '<button class="add-btn-float" type="button" data-suggest="' + escH(s.id) + '" aria-label="Добавить">'
+        +       '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+        +     '</button>'
+        +   '</div>'
+        +   '<div class="mini-body">'
+        +     '<div class="mini-price">' + fmtMoney(s.price) + '</div>'
+        +     '<div class="mini-name">' + escH(s.name) + '</div>'
+        +   '</div>'
+        + '</div>';
+    });
+    html += '</div></section>';
+    return html;
+  }
+  function findSuggest(id){
+    for (var i = 0; i < SUGGEST.length; i++) if (SUGGEST[i].id === id) return SUGGEST[i];
+    return null;
+  }
+  function addSuggestToCart(id){
+    var s = findSuggest(id);
+    if (!s) return;
+    var items = loadCart();
+    var existing = items.find(function(i){ return i.id === s.id && i.vendorId === s.vendorId; });
+    if (existing) {
+      existing.qty = (Number(existing.qty)||0) + 1;
+    } else {
+      items.push({ id: s.id, name: s.name, img: s.img, price: s.price, qty: 1, vendorId: s.vendorId });
+    }
+    saveCart(items);
+    toast(s.name + ' — добавлено');
+    render();
+  }
+
+  // ---- Render ----
+  function render(){
+    var items = loadCart();
+    var pillCount = items.reduce(function(s, i){ return s + (Number(i.qty)||0); }, 0);
+
+    if ($navPill) {
+      if (pillCount > 0) { $navPill.hidden = false; $navPill.textContent = pillCount; }
+      else { $navPill.hidden = true; }
+    }
+
+    if (!items.length){
+      $clear.hidden = true;
+      $checkout.hidden = true;
+      $tabs.hidden = true;
+      $root.innerHTML = ''
+        + '<section class="cart-empty">'
+        +   '<div class="cart-empty-icon">'
+        +     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+        +       '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>'
+        +       '<line x1="3" y1="6" x2="21" y2="6"/>'
+        +       '<path d="M16 10a4 4 0 01-8 0"/>'
+        +     '</svg>'
+        +   '</div>'
+        +   '<h2 class="cart-empty-title">Корзина пуста</h2>'
+        +   '<p class="cart-empty-text">Здесь появятся блюда, которые вы захотите заказать. Загляните в каталог — там много вкусного.</p>'
+        +   '<a class="cart-empty-btn" href="restaurants.html">Перейти к ресторанам</a>'
+        + '</section>'
+        + '<div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:0 16px 24px">'
+        +   '<a class="filter-action-btn" href="?demo=single">Демо: 1 ресторан</a>'
+        +   '<a class="filter-action-btn" href="?demo=multi">Демо: 2 ресторана</a>'
+        +   '<a class="filter-action-btn" href="?demo=minwarn">Демо: мин. заказ</a>'
+        +   '<a class="filter-action-btn" href="?demo=closed">Демо: закрыт</a>'
+        + '</div>';
+      return;
+    }
+
+    $clear.hidden = false;
+    $checkout.hidden = false;
+
+    var grouped = groupByVendor(items);
+    var vendorIds = grouped.order;
+    var groups = grouped.map;
+    var multi = vendorIds.length > 1;
+
+    if (multi) {
+      $tabs.hidden = false;
+      var active = getActiveVendor(vendorIds);
+      $tabs.innerHTML = vendorIds.map(function(vId){
+        var list = groups[vId];
+        var v = vendor(vId);
+        var sub = vendorSubtotal(list);
+        var cls = (vId === active) ? ' active' : '';
+        return '<button class="cart-vendor-tab' + cls + '" data-vid="' + escH(vId) + '" type="button">'
+          + '<div class="cvt-name">' + escH(v.name) + '</div>'
+          + '<div class="cvt-sub">' + fmtMoney(sub) + '</div>'
+          + '</button>';
+      }).join('');
+    } else {
+      $tabs.hidden = true;
+    }
+
+    var renderVendor = multi ? getActiveVendor(vendorIds) : vendorIds[0];
+    var list = groups[renderVendor];
+    var v = vendor(renderVendor);
+    var sub = vendorSubtotal(list);
+    var blocked = vendorBlocked(renderVendor, list);
+
+    var html = '<section class="cart-vendor" data-vendor="' + escH(renderVendor) + '">';
+    html += ''
+      + '<div class="cart-vendor-head">'
+      +   '<a class="cart-vendor-name" href="restaurant.html?name=' + encodeURIComponent(v.name) + '">' + escH(v.name) + '</a>'
+      + '</div>';
+    if (v.status === 'closed'){
+      html += '<div class="cart-vendor-closed">Ресторан сейчас закрыт. Заказ невозможно оформить.</div>';
+    }
+    list.forEach(function(it, idx){
+      var img = it.img ? "background-image: url('" + escH(it.img) + "');" : '';
+      html += ''
+        + '<div class="cart-item-row">'
+        +   '<div class="cart-item-track" data-vid="' + escH(renderVendor) + '" data-idx="' + idx + '">'
+        +     '<div class="cart-item">'
+        +       '<div class="cart-item-img" style="' + img + '"></div>'
+        +       '<div class="cart-item-body">'
+        +         '<h3 class="cart-item-name">' + escH(it.name) + '</h3>'
+        +         '<div class="cart-item-foot">'
+        +           '<div class="cart-item-price">' + fmtMoney((Number(it.price)||0) * (Number(it.qty)||0)) + '</div>'
+        +           '<div class="cart-item-stepper">'
+        +             '<button data-act="dec" aria-label="Меньше">−</button>'
+        +             '<span class="qty">' + (Number(it.qty)||0) + '</span>'
+        +             '<button data-act="inc" aria-label="Больше">+</button>'
+        +           '</div>'
+        +         '</div>'
+        +       '</div>'
+        +     '</div>'
+        +     '<button class="cart-item-delete" type="button" data-act="delete" aria-label="Удалить">'
+        +       '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+        +     '</button>'
+        +   '</div>'
+        + '</div>';
+    });
+    if (blocked === 'min'){
+      var need = v.minOrder - sub;
+      html += '<div class="cart-vendor-minwarn">Минимальный заказ для этого ресторана — <strong>' + fmtMoney(v.minOrder) + '</strong>. Добавьте ещё на ' + fmtMoney(need) + ', чтобы оформить.</div>';
+    }
+    html += '</section>';
+
+    html += renderSuggest();
+    $root.innerHTML = html;
+    $ckTotal.textContent = fmtMoney(sub);
+    $ckBtn.disabled = !!blocked;
+  }
+
+  // ---- Item actions ----
+  function changeQty(vId, idx, delta){
+    var items = loadCart();
+    var counter = -1;
+    for (var i = 0; i < items.length; i++){
+      if ((items[i].vendorId || 'unknown') === vId){
+        counter++;
+        if (counter === idx){
+          items[i].qty = (Number(items[i].qty)||0) + delta;
+          if (items[i].qty <= 0) items.splice(i, 1);
+          break;
+        }
+      }
+    }
+    saveCart(items);
+    render();
+  }
+  function removeCartItem(vId, idx) {
+    var items = loadCart();
+    var counter = -1;
+    for (var i = 0; i < items.length; i++) {
+      if ((items[i].vendorId || 'unknown') === vId) {
+        counter++;
+        if (counter === idx) {
+          items.splice(i, 1);
+          break;
+        }
+      }
+    }
+    saveCart(items);
+    render();
+    toast('Удалено из корзины');
+  }
+
+  // ---- Click delegation ----
+  $root.addEventListener('click', function(e){
+    var suggestBtn = e.target.closest('[data-suggest]');
+    if (suggestBtn) {
+      e.stopPropagation();
+      addSuggestToCart(suggestBtn.getAttribute('data-suggest'));
+      return;
+    }
+    var delBtn = e.target.closest('[data-act="delete"]');
+    if (delBtn) {
+      e.stopPropagation();
+      var track = delBtn.closest('.cart-item-track');
+      if (track) {
+        removeCartItem(track.getAttribute('data-vid'), parseInt(track.getAttribute('data-idx'), 10));
+      }
+      return;
+    }
+    var btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    var t = btn.closest('.cart-item-track');
+    if (!t) return;
+    var vId = t.getAttribute('data-vid');
+    var idx = parseInt(t.getAttribute('data-idx'), 10);
+    var act = btn.getAttribute('data-act');
+    changeQty(vId, idx, act === 'inc' ? 1 : -1);
+  });
+
+  // ---- iOS-style swipe-to-delete ----
+  var swipe = { row: null, startX: 0, startY: 0, dx: 0, axis: null };
+  function closeAllSwipes(except) {
+    document.querySelectorAll('.cart-item-track.open').forEach(function(el) {
+      if (el !== except) el.classList.remove('open');
+    });
+  }
+  function swipeBegin(item, x, y) {
+    swipe.row = item;
+    swipe.startX = x;
+    swipe.startY = y;
+    swipe.dx = 0;
+    swipe.axis = null;
+  }
+  function swipeUpdate(x, y) {
+    if (!swipe.row) return;
+    var dx = x - swipe.startX;
+    var dy = y - swipe.startY;
+    if (!swipe.axis) {
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+        swipe.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+    }
+    if (swipe.axis !== 'x') return;
+    var item = swipe.row;
+    var base = item.classList.contains('open') ? -72 : 0;
+    var pos = Math.min(0, Math.max(-72, base + dx));
+    item.classList.add('swiping');
+    item.style.transform = 'translateX(' + pos + 'px)';
+    swipe.dx = dx;
+  }
+  function swipeEnd() {
+    if (!swipe.row) return;
+    var item = swipe.row;
+    item.classList.remove('swiping');
+    item.style.transform = '';
+    if (swipe.axis === 'x') {
+      var wasOpen = item.classList.contains('open');
+      if (wasOpen) {
+        if (swipe.dx > 30) item.classList.remove('open');
+      } else {
+        if (swipe.dx < -30) {
+          closeAllSwipes(item);
+          item.classList.add('open');
+        }
+      }
+    }
+    swipe.row = null;
+    swipe.axis = null;
+  }
+
+  document.addEventListener('touchstart', function(e) {
+    var item = e.target.closest && e.target.closest('.cart-item-track');
+    if (!item) { closeAllSwipes(); return; }
+    if (e.target.closest('button')) return;
+    swipeBegin(item, e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e) {
+    if (!swipe.row) return;
+    swipeUpdate(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  document.addEventListener('touchend', swipeEnd);
+  document.addEventListener('touchcancel', swipeEnd);
+
+  document.addEventListener('mousedown', function(e) {
+    var item = e.target.closest && e.target.closest('.cart-item-track');
+    if (!item) { closeAllSwipes(); return; }
+    if (e.target.closest('button')) return;
+    swipeBegin(item, e.clientX, e.clientY);
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!swipe.row || !(e.buttons & 1)) return;
+    swipeUpdate(e.clientX, e.clientY);
+  });
+  document.addEventListener('mouseup', swipeEnd);
+
+  // ---- Tabs / Clear / Checkout ----
+  $tabs.addEventListener('click', function(e){
+    var tab = e.target.closest('.cart-vendor-tab');
+    if (!tab) return;
+    setActiveVendor(tab.getAttribute('data-vid'));
+    render();
+  });
+
+  $clear.addEventListener('click', function(){
+    showModal({
+      title: 'Очистить корзину?',
+      text:  'Все добавленные блюда будут удалены.',
+      primaryLabel: 'Очистить',
+      ghostLabel:   'Отмена',
+      onPrimary: function(){
+        saveCart([]);
+        render();
+        toast('Корзина очищена');
+      }
+    });
+  });
+
+  $ckBtn.addEventListener('click', function(){
+    var items = loadCart();
+    if (!items.length) return;
+    var grouped = groupByVendor(items);
+    var vendorIds = grouped.order;
+    var multi = vendorIds.length > 1;
+    var activeId = multi ? getActiveVendor(vendorIds) : vendorIds[0];
+    var list = grouped.map[activeId];
+    var v = vendor(activeId);
+    var b = vendorBlocked(activeId, list);
+    if (b === 'closed'){
+      showModal({
+        title: v.name + ' закрыт',
+        text:  'Этот ресторан сейчас не принимает заказы. Удалите его блюда или попробуйте позже.',
+        primaryLabel: 'Понятно'
+      });
+      return;
+    }
+    if (b === 'min'){
+      var sub = vendorSubtotal(list);
+      var need = v.minOrder - sub;
+      showModal({
+        title: 'Минимальный заказ',
+        text:  'Чтобы оформить заказ из «' + v.name + '», добавьте ещё на ' + fmtMoney(need) + '. Минимум — ' + fmtMoney(v.minOrder) + '.',
+        primaryLabel: 'Добавить блюда',
+        ghostLabel:   'Закрыть',
+        onPrimary: function(){ location.href = 'restaurant.html?name=' + encodeURIComponent(v.name); }
+      });
+      return;
+    }
+    showModal({
+      title: 'Заказ оформляется',
+      text:  'Страница оформления заказа пока в разработке. Вы будете перенаправлены на главную.',
+      primaryLabel: 'На главную',
+      onPrimary: function(){ location.href = 'index.html'; }
+    });
+  });
+
+  window.addEventListener('storage', function(e){ if (e.key === KEY) render(); });
+  window.addEventListener('tg:cart-changed', render);
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Мероприятие — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="product-page">
+
+  <!-- Hero photo with back + share buttons -->
+  <div class="product-hero rest-detail-hero" style="aspect-ratio:16/9">
+    <img id="eventImg" src="./img/ev-04.jpg" alt="">
+    <div class="product-hero-top">
+      <button class="ph-btn" id="ph-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ph-btn-group">
+        <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title + description card (overlaps hero) -->
+  <section class="product-block product-block-main">
+    <h1 class="rest-detail-name" id="eventTitle">Мероприятие</h1>
+    <div class="rest-detail-desc" id="eventDesc"></div>
+  </section>
+
+  <!-- Filter row (top half of merged card) -->
+  <div class="filter-actions" id="filterActions" style="top:0">
+    <button class="filter-action-btn" data-filter="sort" type="button">
+      <span class="fab-value" id="valSort">Сортировка</span>
+      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <button class="filter-action-btn" data-filter="filters" type="button">
+      <span class="fab-value" id="valFilters">Фильтры</span>
+      <span class="fab-dot" id="filterDot" hidden></span>
+      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
+
+  <!-- Content grid (bottom half of merged card via sibling-selector CSS) -->
+  <div class="list-page">
+    <section class="product-block" style="padding: 4px 0 16px;">
+      <div class="mini-grid-2col" id="dishGrid"></div>
+    </section>
+  </div>
+
+</div>
+
+<!-- Sort bottom-sheet -->
+<div class="filter-overlay" id="sortOverlay"></div>
+<aside class="filter-sheet" id="sortSheet" aria-modal="true">
+  <div class="filter-sheet-head">
+    <div class="filter-sheet-title">Сортировка</div>
+    <button class="filter-sheet-reset" id="sortReset" type="button">Сбросить</button>
+  </div>
+  <div class="filter-sheet-list" id="sortList"></div>
+  <button class="filter-sheet-apply" id="sortApply" type="button">Показать результаты</button>
+</aside>
+
+<!-- Combined Filters bottom-sheet (Price + Vendor) -->
+<div class="filter-overlay" id="filtersOverlay"></div>
+<aside class="filter-sheet filter-sheet--blocks" id="filtersSheet" aria-modal="true">
+  <div class="fbs-head">
+    <div class="filter-sheet-title">Фильтры</div>
+    <button class="fbs-close" id="fbsClose" type="button" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fbs-body" id="fbsBody">
+    <section class="fbs-block">
+      <div class="fbs-block-title">Цена</div>
+      <div class="fbs-pills" id="fbsPrice"></div>
+    </section>
+    <section class="fbs-block">
+      <div class="fbs-block-title">Ресторан</div>
+      <div class="fbs-pills" id="fbsVendor"></div>
+    </section>
+  </div>
+  <div class="fbs-foot">
+    <button class="fbs-btn fbs-btn-reset" id="fbsReset" type="button">Сбросить</button>
+    <button class="fbs-btn fbs-btn-apply" id="fbsApply" type="button">Применить</button>
+  </div>
+</aside>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none"><path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/></svg></div>
+    <span>Главная</span>
+  </a>
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/><rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+      <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/><rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+    </svg></div>
+    <span>Каталог</span>
+  </a>
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+      <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+    </svg></div>
+    <div class="cart-pill">3</div>
+    <span>Корзина</span>
+  </a>
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <circle class="ni" cx="13" cy="9" r="4.5"/>
+      <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+    </svg></div>
+    <span>Профиль</span>
+  </a>
+</nav>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FE5196"/><stop offset="100%" stop-color="#F77062"/></linearGradient></defs></svg>
+
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var EVENT_CATALOG = {
+    wedding: {
+      title: 'Свадьба',
+      img: './img/ev-04.jpg',
+      desc: 'Полноценные банкетные наборы — палов, шашлык, манты, лепёшки и сладости. Рассчитано на 20–50 гостей. Бесплатная доставка и сервировка.',
+      items: [
+        { name: 'Свадебный плов',      img: './img/dish-03.jpg', price: 380000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-сет 50 шамп.', img: './img/dish-04.jpg', price: 850000, vendor: 'Khan Atlas' },
+        { name: 'Манты на 30 персон',  img: './img/dish-09.jpg', price: 320000, vendor: 'Manti House' },
+        { name: 'Самса 50 шт',         img: './img/dish-08.jpg', price: 220000, vendor: 'Tandur Master' },
+        { name: 'Лепёшки 30 шт',       img: './img/ev-02.jpg',   price: 180000, vendor: 'Rayhon Milliy' },
+        { name: 'Десертный набор',     img: './img/dish-14.jpg', price: 250000, vendor: 'Sweet Lab' }
+      ]
+    },
+    beshik: {
+      title: 'Бешик туй',
+      img: './img/ev-05.jpg',
+      desc: 'Праздничный набор для торжества по случаю рождения малыша. Лёгкие угощения и сладости для гостей.',
+      items: [
+        { name: 'Палов на 10 персон', img: './img/dish-02.jpg', price: 180000, vendor: 'Beshqozon Plov' },
+        { name: 'Норин-семейный',     img: './img/dish-17.jpg', price: 65000,  vendor: 'Norin House' },
+        { name: 'Самса 20 шт',        img: './img/dish-08.jpg', price: 95000,  vendor: 'Tandur Master' },
+        { name: 'Чак-чак',            img: './img/dish-15.jpg', price: 18000,  vendor: 'Sweet Lab' },
+        { name: 'Сладкая патыр',      img: './img/dish-14.jpg', price: 22000,  vendor: 'Rayhon Milliy' }
+      ]
+    },
+    engagement: {
+      title: 'Помолвка',
+      img: './img/ev-04.jpg',
+      desc: 'Меню для торжественной встречи семей. Изысканные блюда — палов, шашлык, фруктовые десерты.',
+      items: [
+        { name: 'Свадебный плов',  img: './img/dish-03.jpg', price: 280000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-сет',      img: './img/dish-12.jpg', price: 75000,  vendor: 'Khan Atlas' },
+        { name: 'Десертный набор', img: './img/dish-14.jpg', price: 150000, vendor: 'Sweet Lab' }
+      ]
+    },
+    kuda: {
+      title: 'Куда чакирик',
+      img: './img/ev-01.jpg',
+      desc: 'Встреча родственников — классический набор: плов, лепёшки, шашлык, сладости.',
+      items: [
+        { name: 'Osh Palav',         img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык из ягнёнка', img: './img/dish-04.jpg', price: 42000, vendor: 'Khan Atlas' },
+        { name: "Qo'qon patir",      img: './img/ev-02.jpg',   price: 15000, vendor: 'Rayhon Milliy' },
+        { name: 'Самса с мясом',     img: './img/dish-08.jpg', price: 12000, vendor: 'Tandur Master' }
+      ]
+    },
+    kavurdak: {
+      title: 'Кавурдак',
+      img: './img/ev-02.jpg',
+      desc: 'Кавурдак — традиционное блюдо из казана: жареное мясо с овощами и специями. Готовится 4 часа на углях.',
+      items: [
+        { name: 'Кавурдак из ягнёнка',   img: './img/dish-04.jpg', price: 65000, vendor: 'Khan Atlas' },
+        { name: 'Кавурдак с картофелем', img: './img/dish-05.jpg', price: 55000, vendor: 'Osh Markazi' }
+      ]
+    },
+    navruz: {
+      title: 'Навруз',
+      img: './img/ev-03.jpg',
+      desc: 'Сезонное меню весеннего праздника — сумаляк, нишолда, проросшие зёрна, плов с сухофруктами.',
+      items: [
+        { name: 'Сладкий палов', img: './img/dish-11.jpg', price: 27000, vendor: 'Osh Markazi' },
+        { name: 'Чак-чак',       img: './img/dish-15.jpg', price: 18000, vendor: 'Sweet Lab' },
+        { name: 'Сладкая патыр', img: './img/dish-14.jpg', price: 22000, vendor: 'Sweet Lab' }
+      ]
+    },
+    iftar: {
+      title: 'Ифтар',
+      img: './img/ev-02.jpg',
+      desc: 'Готовые наборы для разговения в Рамадан. Доставка точно к закату. Финики, бульон, плов, сладости.',
+      items: [
+        { name: 'Osh Palav',  img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
+        { name: 'Mayda norin', img: './img/dish-12.jpg', price: 28000, vendor: 'Norin House' },
+        { name: 'Тандыр-нон', img: './img/dish-06.jpg', price: 12000, vendor: 'Tandur Master' }
+      ]
+    }
+  };
+
+  var params = new URLSearchParams(location.search);
+  var type = params.get('type') || 'wedding';
+  var ev = EVENT_CATALOG[type] || EVENT_CATALOG['wedding'];
+
+  document.title = ev.title + ' — Togora';
+  document.getElementById('eventImg').src = ev.img;
+  document.getElementById('eventTitle').textContent = ev.title;
+  document.getElementById('eventDesc').textContent = ev.desc;
+
+  // ---- Filter options ----
+  var SORT_OPTS = [
+    { id: 'default',    label: 'По умолчанию' },
+    { id: 'price-asc',  label: 'Сначала дешевле' },
+    { id: 'price-desc', label: 'Сначала дороже' },
+    { id: 'name-asc',   label: 'По названию А→Я' }
+  ];
+  var PRICE_OPTS = [
+    { id: 'all',     label: 'Все цены' },
+    { id: 'low',     label: 'До 30 000 сум', max: 30000 },
+    { id: 'mid',     label: '30 000 – 100 000 сум', min: 30000, max: 100000 },
+    { id: 'high',    label: '100 000 – 300 000 сум', min: 100000, max: 300000 },
+    { id: 'premium', label: 'Свыше 300 000 сум', min: 300000 }
+  ];
+  function vendorList() {
+    return Array.from(new Set(ev.items.map(function(i) { return i.vendor; }))).sort();
+  }
+
+  // ---- State (persisted per event type) ----
+  var STORAGE_KEY = 'tg-event-filters-' + type;
+  var state = { sort: 'default', price: 'all', vendor: 'all' };
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (saved && typeof saved === 'object') {
+      if (saved.sort)   state.sort   = saved.sort;
+      if (saved.price)  state.price  = saved.price;
+      if (saved.vendor) state.vendor = saved.vendor;
+    }
+  } catch (e) {}
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  // ---- DOM refs ----
+  var actions      = document.getElementById('filterActions');
+  var grid         = document.getElementById('dishGrid');
+  var valSort      = document.getElementById('valSort');
+  var valFilters   = document.getElementById('valFilters');
+  var filterDot    = document.getElementById('filterDot');
+
+  var sortOverlay  = document.getElementById('sortOverlay');
+  var sortSheet    = document.getElementById('sortSheet');
+  var sortList     = document.getElementById('sortList');
+  var sortApplyBtn = document.getElementById('sortApply');
+  var sortResetBtn = document.getElementById('sortReset');
+
+  var fOverlay = document.getElementById('filtersOverlay');
+  var fSheet   = document.getElementById('filtersSheet');
+  var fPrice   = document.getElementById('fbsPrice');
+  var fVendor  = document.getElementById('fbsVendor');
+  var fApply   = document.getElementById('fbsApply');
+  var fReset   = document.getElementById('fbsReset');
+  var fClose   = document.getElementById('fbsClose');
+
+  function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
+  function esc(s) { return (window.TG && TG.escHTML) ? TG.escHTML(s) : String(s||''); }
+  function escAttr(s) { return esc(s).replace(/"/g,'&quot;'); }
+
+  function applyFilters() {
+    var arr = ev.items.slice();
+    if (state.vendor !== 'all') arr = arr.filter(function(d) { return d.vendor === state.vendor; });
+    if (state.price !== 'all') {
+      var opt = PRICE_OPTS.find(function(o) { return o.id === state.price; });
+      if (opt) {
+        if (opt.min != null) arr = arr.filter(function(d) { return d.price >= opt.min; });
+        if (opt.max != null) arr = arr.filter(function(d) { return d.price <= opt.max; });
+      }
+    }
+    if (state.sort === 'price-asc')  arr.sort(function(a,b) { return a.price - b.price; });
+    if (state.sort === 'price-desc') arr.sort(function(a,b) { return b.price - a.price; });
+    if (state.sort === 'name-asc')   arr.sort(function(a,b) { return a.name.localeCompare(b.name, 'ru'); });
+    return arr;
+  }
+
+  function chipLabels() {
+    var s = SORT_OPTS.find(function(o){return o.id===state.sort;});
+    valSort.textContent = state.sort === 'default' ? 'Сортировка' : (s ? s.label : 'Сортировка');
+    actions.querySelector('[data-filter="sort"]').classList.toggle('active', state.sort !== 'default');
+    var count = (state.price !== 'all' ? 1 : 0) + (state.vendor !== 'all' ? 1 : 0);
+    var any = count > 0;
+    valFilters.textContent = any ? ('Фильтры · ' + count) : 'Фильтры';
+    filterDot.hidden = !any;
+    actions.querySelector('[data-filter="filters"]').classList.toggle('active', any);
+  }
+
+  function render() {
+    var list = applyFilters();
+    chipLabels();
+    if (!list.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--color-muted)">Под выбранные фильтры ничего не нашлось</div>';
+      return;
+    }
+    grid.innerHTML = list.map(function(d) {
+      return '<div class="mini-card" data-name="' + escAttr(d.name) +
+             '" data-img="' + escAttr(d.img) + '">' +
+        '<div class="mini-img">' +
+          '<img src="' + d.img + '" alt="">' +
+          '<div class="mini-img-overlay"></div>' +
+          '<button class="add-btn-float" type="button" data-name="' + escAttr(d.name) + '" aria-label="Добавить">' +
+            '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="mini-body">' +
+          '<div class="mini-price">' + fmt(d.price) + '</div>' +
+          '<div class="mini-name">' + esc(d.name) + '</div>' +
+          '<div class="mini-vendor">' + esc(d.vendor) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ==================== SORT sheet ====================
+  function openSort() {
+    sortList.innerHTML = SORT_OPTS.map(function(o) {
+      var sel = o.id === state.sort ? ' selected' : '';
+      return '<div class="filter-option' + sel + '" data-id="' + escAttr(o.id) + '">' +
+        '<div class="filter-option-label">' + esc(o.label) + '</div>' +
+        '<div class="filter-option-radio"></div>' +
+      '</div>';
+    }).join('');
+    sortOverlay.classList.add('show');
+    sortSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSort() {
+    sortOverlay.classList.remove('show');
+    sortSheet.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  sortList.addEventListener('click', function(e) {
+    var opt = e.target.closest('.filter-option');
+    if (!opt) return;
+    sortList.querySelectorAll('.filter-option').forEach(function(o) { o.classList.toggle('selected', o === opt); });
+  });
+  sortApplyBtn.addEventListener('click', function() {
+    var sel = sortList.querySelector('.filter-option.selected');
+    if (sel) state.sort = sel.dataset.id;
+    saveState();
+    closeSort();
+    render();
+  });
+  sortResetBtn.addEventListener('click', function() {
+    state.sort = 'default';
+    saveState();
+    closeSort();
+    render();
+  });
+  sortOverlay.addEventListener('click', closeSort);
+
+  // ==================== FILTERS sheet ====================
+  var tent = { price: 'all', vendor: 'all' };
+  function renderFiltersSheet() {
+    fPrice.innerHTML = PRICE_OPTS.map(function(o) {
+      var sel = o.id === tent.price ? ' selected' : '';
+      return '<button class="fbs-pill' + sel + '" type="button" data-price="' + escAttr(o.id) + '">' + esc(o.label) + '</button>';
+    }).join('');
+    var vendors = vendorList();
+    var html = '<button class="fbs-pill' + (tent.vendor === 'all' ? ' selected' : '') + '" type="button" data-vendor="all">Все рестораны</button>';
+    html += vendors.map(function(v) {
+      var sel = v === tent.vendor ? ' selected' : '';
+      return '<button class="fbs-pill' + sel + '" type="button" data-vendor="' + escAttr(v) + '">' + esc(v) + '</button>';
+    }).join('');
+    fVendor.innerHTML = html;
+  }
+  function openFilters() {
+    tent = { price: state.price, vendor: state.vendor };
+    renderFiltersSheet();
+    fOverlay.classList.add('show');
+    fSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFilters() {
+    fOverlay.classList.remove('show');
+    fSheet.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  fPrice.addEventListener('click', function(e) {
+    var pill = e.target.closest('.fbs-pill'); if (!pill) return;
+    tent.price = pill.dataset.price;
+    fPrice.querySelectorAll('.fbs-pill').forEach(function(p) { p.classList.toggle('selected', p === pill); });
+  });
+  fVendor.addEventListener('click', function(e) {
+    var pill = e.target.closest('.fbs-pill'); if (!pill) return;
+    tent.vendor = pill.dataset.vendor;
+    fVendor.querySelectorAll('.fbs-pill').forEach(function(p) { p.classList.toggle('selected', p === pill); });
+  });
+  fApply.addEventListener('click', function() {
+    state.price = tent.price; state.vendor = tent.vendor;
+    saveState(); closeFilters(); render();
+  });
+  fReset.addEventListener('click', function() {
+    tent = { price: 'all', vendor: 'all' };
+    renderFiltersSheet();
+  });
+  fClose.addEventListener('click', closeFilters);
+  fOverlay.addEventListener('click', closeFilters);
+
+  // ==================== Chip dispatcher ====================
+  actions.addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-action-btn'); if (!btn) return;
+    var kind = btn.dataset.filter;
+    if (kind === 'sort')    openSort();
+    if (kind === 'filters') openFilters();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (sortSheet.classList.contains('show')) closeSort();
+    if (fSheet.classList.contains('show')) closeFilters();
+  });
+
+  // ==================== Cart add / stepper ====================
+  var navCartPill = document.querySelector('nav .cart-pill');
+  function bumpPill(delta) {
+    if (!navCartPill) return;
+    var n = parseInt(navCartPill.textContent || '0', 10);
+    if (isNaN(n)) n = 0;
+    n = Math.max(0, n + delta);
+    navCartPill.textContent = String(n);
+    navCartPill.hidden = n === 0;
+  }
+  function showToast(name) {
+    if (window.TG && TG.showToast) { TG.showToast(name + ' — добавлено'); return; }
+    var t = document.getElementById('cart-toast');
+    if (!t) return;
+    var txt = t.querySelector('.toast-text');
+    if (txt) txt.textContent = name + ' — добавлено';
+    t.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  grid.addEventListener('click', function(e) {
+    var add = e.target.closest('.add-btn-float');
+    if (add) {
+      e.stopPropagation();
+      var name = add.dataset.name || 'Блюдо';
+      var stepper = document.createElement('div');
+      stepper.className = 'qty-stepper';
+      stepper.dataset.name = name;
+      stepper.innerHTML =
+        '<button class="qs-btn qs-minus" type="button" aria-label="Меньше">−</button>' +
+        '<span class="qs-count">1</span>' +
+        '<button class="qs-btn qs-plus" type="button" aria-label="Больше">+</button>';
+      add.replaceWith(stepper);
+      bumpPill(1);
+      showToast(name);
+      return;
+    }
+    var qsBtn = e.target.closest('.qs-btn');
+    if (qsBtn) {
+      e.stopPropagation();
+      var stepper2 = qsBtn.closest('.qty-stepper');
+      var countEl = stepper2.querySelector('.qs-count');
+      var n = parseInt(countEl.textContent, 10) || 0;
+      if (qsBtn.classList.contains('qs-plus'))  { n += 1; bumpPill(1); }
+      if (qsBtn.classList.contains('qs-minus')) {
+        n -= 1; bumpPill(-1);
+        if (n <= 0) {
+          var add2 = document.createElement('button');
+          add2.className = 'add-btn-float';
+          add2.type = 'button';
+          add2.dataset.name = stepper2.dataset.name;
+          add2.setAttribute('aria-label','Добавить');
+          add2.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+          stepper2.replaceWith(add2);
+          return;
+        }
+      }
+      countEl.textContent = String(n);
+      return;
+    }
+    var card = e.target.closest('.mini-card');
+    if (!card) return;
+    var qs = 'name=' + encodeURIComponent(card.dataset.name) + '&img=' + encodeURIComponent(card.dataset.img);
+    location.href = 'product.html?' + qs;
+  });
+
+  // Back + share
+  document.getElementById('ph-back').addEventListener('click', function() {
+    if (history.length > 1) history.back(); else location.href = 'events.html';
+  });
+  document.getElementById('ph-share').addEventListener('click', function() {
+    if (navigator.share) navigator.share({ title: ev.title, url: location.href }).catch(function() {});
+    else if (window.TG && TG.showToast) TG.showToast('Ссылка скопирована');
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

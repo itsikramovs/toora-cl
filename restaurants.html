@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Рестораны — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <a class="page-back" href="index.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Рестораны</h1>
+  <a class="page-header-icon" href="search.html" aria-label="Поиск">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </a>
+</header>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-chip active" data-cuisine="all">Все</button>
+  <button class="filter-chip" data-cuisine="Узбекская">Узбекская</button>
+  <button class="filter-chip" data-cuisine="Плов">Плов</button>
+  <button class="filter-chip" data-cuisine="Шашлык">Шашлык</button>
+  <button class="filter-chip" data-cuisine="Норин">Норин</button>
+  <button class="filter-chip" data-cuisine="Манты">Манты</button>
+  <button class="filter-chip" data-cuisine="Самса · Лепёшки">Самса · Лепёшки</button>
+  <button class="filter-chip" data-cuisine="Суши">Суши</button>
+  <button class="filter-chip" data-cuisine="Десерты">Десерты</button>
+</div>
+
+<div class="list-page">
+  <div class="rest-list" id="restList"></div>
+</div>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none"><path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/></svg></div>
+    <span>Главная</span>
+  </a>
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/><rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+      <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/><rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+    </svg></div>
+    <span>Каталог</span>
+  </a>
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+      <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+    </svg></div>
+    <div class="cart-pill">3</div>
+    <span>Корзина</span>
+  </a>
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <circle class="ni" cx="13" cy="9" r="4.5"/>
+      <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+    </svg></div>
+    <span>Профиль</span>
+  </a>
+</nav>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%"  stop-color="#FE5196"/><stop offset="100%" stop-color="#F77062"/></linearGradient></defs></svg>
+
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  var RESTAURANTS = [
+    { name: 'Rayhon Milliy',  img: './img/dish-04.jpg', rating: 4.8, eta: '20–30 мин', cuisine: 'Узбекская',       fee: 'Бесплатно', badge: '−15%' },
+    { name: 'Osh Markazi',    img: './img/dish-02.jpg', rating: 4.7, eta: '25–35 мин', cuisine: 'Плов',            fee: '5 000 сум' },
+    { name: 'Norin House',    img: './img/dish-13.jpg', rating: 4.6, eta: '15–25 мин', cuisine: 'Норин',           fee: 'Бесплатно' },
+    { name: 'Khan Atlas',     img: './img/dish-04.jpg', rating: 4.9, eta: '20–30 мин', cuisine: 'Шашлык',          fee: '7 000 сум', badge: 'Топ' },
+    { name: 'Tandur Master',  img: './img/dish-08.jpg', rating: 4.7, eta: '15–25 мин', cuisine: 'Самса · Лепёшки', fee: 'Бесплатно' },
+    { name: 'Beshqozon Plov', img: './img/dish-02.jpg', rating: 4.9, eta: '30–40 мин', cuisine: 'Плов',            fee: 'Бесплатно', badge: 'Новый' },
+    { name: 'Manti House',    img: './img/dish-07.jpg', rating: 4.8, eta: '15–25 мин', cuisine: 'Манты',           fee: '5 000 сум' },
+    { name: 'Sushi Toshkent', img: './img/dish-10.jpg', rating: 4.6, eta: '30–40 мин', cuisine: 'Суши',            fee: '10 000 сум' },
+    { name: 'Lepyoshka Master', img: './img/dish-16.jpg', rating: 4.7, eta: '10–20 мин', cuisine: 'Самса · Лепёшки', fee: 'Бесплатно' },
+    { name: 'Sweet Lab',      img: './img/dish-14.jpg', rating: 4.9, eta: '20–30 мин', cuisine: 'Десерты',         fee: '5 000 сум', badge: '−20%' }
+  ];
+
+  var STORAGE_FAV = 'tg_fav_rest';
+  function loadFav() { try { return JSON.parse(localStorage.getItem(STORAGE_FAV) || '[]'); } catch(e) { return []; } }
+  function saveFav(arr) { try { localStorage.setItem(STORAGE_FAV, JSON.stringify(arr)); } catch(e) {} }
+
+  var listEl = document.getElementById('restList');
+  var filterBar = document.getElementById('filterBar');
+  var currentCuisine = 'all';
+
+  function render() {
+    var fav = loadFav();
+    var filtered = currentCuisine === 'all'
+      ? RESTAURANTS
+      : RESTAURANTS.filter(function(r) { return r.cuisine === currentCuisine; });
+    if (!filtered.length) {
+      listEl.innerHTML = '<div style="padding:60px 20px;text-align:center;color:var(--color-muted)">Ничего не нашлось</div>';
+      return;
+    }
+    listEl.innerHTML = filtered.map(function(r) {
+      var isFav = fav.indexOf(r.name) >= 0;
+      var badge = r.badge ? '<div class="rest-list-badge">' + TG.escHTML(r.badge) + '</div>' : '';
+      return '<a class="rest-list-card" href="restaurant.html?name=' + encodeURIComponent(r.name) + '">' +
+        '<div class="rest-list-photo">' +
+          '<img src="' + r.img + '" alt="' + TG.escHTML(r.name) + '">' +
+          badge +
+          '<button class="rest-list-fav ' + (isFav ? 'active' : '') + '" data-name="' + TG.escHTML(r.name).replace(/"/g,'&quot;') + '" aria-label="Избранное">' +
+            '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="rest-list-body">' +
+          '<div class="rest-list-name">' + TG.escHTML(r.name) + '</div>' +
+          '<div class="rest-list-meta">' +
+            '<span class="rlm-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>' + r.rating + '</span>' +
+            '<span class="rlm-dot"></span>' +
+            '<span>' + r.eta + '</span>' +
+            '<span class="rlm-dot"></span>' +
+            '<span>Доставка: ' + r.fee + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('');
+  }
+  render();
+
+  filterBar.addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    currentCuisine = btn.dataset.cuisine;
+    filterBar.querySelectorAll('.filter-chip').forEach(function(c) {
+      c.classList.toggle('active', c === btn);
+    });
+    render();
+  });
+
+  listEl.addEventListener('click', function(e) {
+    var fav = e.target.closest('.rest-list-fav');
+    if (!fav) return;
+    e.preventDefault(); e.stopPropagation();
+    var arr = loadFav();
+    var n = fav.dataset.name;
+    var i = arr.indexOf(n);
+    if (i >= 0) arr.splice(i, 1); else arr.push(n);
+    saveFav(arr);
+    fav.classList.toggle('active');
+    TG.showToast(i >= 0 ? 'Убрано из избранного' : 'Добавлено в избранное');
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -3,45 +3,52 @@
    Shared across: index.html, notifications.html, cart.html, etc.
    ────────────────────────────────────────────────────────────── */
 
+/* ── YSText / YSCompressed — local files in ./fonts/
+   If you don't have the woff2 files yet, see ./fonts/README.md
+   The font stack falls back to Onest (Google Fonts, visually closest to YSText),
+   then system sans-serif, so the page is readable even without YSText. */
+
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap');
+
 @font-face {
   font-family: YSText;
   font-weight: 800;
   font-style: normal;
   font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
+  src: url('./fonts/YSText-Bold.woff2') format('woff2');
 }
 @font-face {
   font-family: YSText;
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
+  src: url('./fonts/YSText-Bold.woff2') format('woff2');
 }
 @font-face {
   font-family: YSText;
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Medium-7cc05513a9304e1b4be9.woff2") format("woff2");
+  src: url('./fonts/YSText-Medium.woff2') format('woff2');
 }
 @font-face {
   font-family: YSText;
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Regular-f689cf1dc4d29be27e17.woff2") format("woff2");
+  src: url('./fonts/YSText-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: YSCompressed;
   font-weight: 800;
   font-style: normal;
   font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSCompressed_Heavy-3e1dbef438e42c92bc38.woff2") format("woff2");
+  src: url('./fonts/YSCompressed-Heavy.woff2') format('woff2');
 }
 
 :root {
-  --font-main: 'YSText', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-compressed: 'YSCompressed', -apple-system, Arial Black, sans-serif;
+  --font-main: 'YSText', 'Onest', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-compressed: 'YSCompressed', 'Onest', -apple-system, Arial Black, sans-serif;
   --color-bg:       #F5F5F5;
   --color-surface:  #FFFFFF;
   --color-text:     #21201F;
@@ -422,14 +429,14 @@ body:has(.product-page) {
   background: var(--color-bg); color: var(--color-text); margin-top: 10px;
 }
 .search-bar {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
   background: var(--color-bg); border-radius: var(--r-btn);
   padding: 0 14px; height: 54px; cursor: text;
   text-decoration: none; color: inherit;
   -webkit-tap-highlight-color: transparent;
 }
-.search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-muted); stroke-width: 2; flex-shrink: 0; }
-.search-bar span { font-size: 15px; color: var(--color-muted); }
+.search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-text); stroke-width: 2; flex-shrink: 0; }
+.search-bar span { font-size: 15px; color: var(--color-text); font-weight: 500; text-align: center; }
 
 /* ── PROMO BANNERS ── */
 .promo-section { background: var(--color-surface); padding: 14px 0; }
@@ -500,16 +507,26 @@ body:has(.product-page) {
 
 
 /* ── CATEGORIES ── */
+/* Sizing rule: at viewport=390px and .cat-scroll padding 16px each side
+   (usable ≈358px), with width 60 + gap 6 → 5 cards fully fit
+   (5×60 + 4×6 = 324px) and the 6th peeks by ~28px (≈47%). */
 .categories-section { background: var(--color-surface); padding-bottom: 16px; }
-.cat-scroll { padding: 0 16px; gap: 6px; flex-wrap: nowrap; }
+.cat-scroll {
+  padding: 0 16px; gap: 6px; flex-wrap: nowrap;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: 16px;
+}
 .cat-card {
   flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
-  cursor: pointer; width: 54px;
+  cursor: pointer; width: 60px;
   background: none; border: none; padding: 0;
-  transition: opacity .15s;
+  text-decoration: none; color: inherit;
+  transition: opacity .15s, transform .12s;
+  scroll-snap-align: start;
 }
+.cat-card:active { transform: scale(.94); }
 .cat-img-wrap {
-  width: 50px; height: 44px;
+  width: 56px; height: 50px;
   background: var(--color-surface);
   margin-bottom: 6px; position: relative;
   display: flex; align-items: flex-end; justify-content: center;
@@ -522,12 +539,22 @@ body:has(.product-page) {
   transition: transform .18s cubic-bezier(.34,1.56,.64,1);
   filter: drop-shadow(0 3px 7px rgba(0,0,0,0.13));
 }
+/* Photographic JPG categories get a rounded clip instead of cartoon drop-shadow */
+.cat-img-wrap img[src$=".jpg"],
+.cat-img-wrap img[src$=".jpeg"],
+.cat-img-wrap img[src$=".webp"] {
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  filter: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
 .cat-card:active .cat-img-wrap img,
 .cat-card.active .cat-img-wrap img { transform: scale(1.08); }
 .cat-name {
   font-size: 10px; font-weight: 400;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 54px;
+  max-width: 60px;
   color: var(--color-text); text-align: center; line-height: 1;
 }
 .cat-card.active .cat-name { color: var(--color-text); font-weight: 700; }
@@ -576,11 +603,16 @@ body:has(.product-page) {
 
 /* ── MINI PRODUCT CARDS ── */
 .mini-section { background: var(--color-surface); padding-bottom: 16px; }
-/* Horizontal-scroll row of dish cards (1 row, swipe to see more) */
+/* Horizontal-scroll row of dish cards (1 row, swipe to see more)
+   padding-left 16px + scroll-padding-left 16px ensures the first card
+   stays inset from the screen edge both at rest and after scroll-snap.
+   The card's box-shadow is intentionally tight (8px blur) so the soft halo
+   doesn't visually bleed past the 16px inset toward the screen edge. */
 .mini-grid {
-  display: flex; overflow-x: auto; scrollbar-width: none;
-  gap: 12px; padding: 2px 16px 6px;
+  display: flex; overflow-x: auto; overflow-y: visible; scrollbar-width: none;
+  gap: 12px; padding: 6px 16px 14px;
   scroll-snap-type: x proximity;
+  scroll-padding-left: 16px;
   -webkit-overflow-scrolling: touch;
 }
 .mini-grid::-webkit-scrollbar { display: none; }
@@ -593,7 +625,7 @@ body:has(.product-page) {
   border-radius: var(--r-card); overflow: hidden;
   background: var(--color-surface);
   border: none;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.09);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   cursor: pointer; position: relative;
   display: flex; flex-direction: column;
   transition: transform .12s, box-shadow .12s;
@@ -917,7 +949,10 @@ body:has(.product-page) {
   border-radius: var(--r-card); overflow: hidden;
   position: relative; cursor: pointer;
   display: flex; align-items: flex-end; padding: 10px 12px;
+  text-decoration: none; color: inherit;
+  transition: transform .12s;
 }
+.ev-card:active { transform: scale(.97); }
 .ev-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ev-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.48); }
 .ev-content { position: relative; z-index: 2; }
@@ -1254,8 +1289,9 @@ body:has(.product-page) {
   background: var(--color-surface);
   display: flex; align-items: center; gap: 10px;
   padding: 14px 16px 14px;
-  border-bottom: 1px solid var(--color-border);
   min-height: 56px;
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
 }
 .page-back {
   width: 36px; height: 36px; border-radius: 50%; border: none;
@@ -1287,12 +1323,17 @@ body:has(.product-page) {
 }
 .page-header-icon svg { width: 18px; height: 18px; stroke: var(--color-text); stroke-width: 2; fill: none; }
 
-/* Page-level tab bar (sticky just below header) */
+/* Page-level tab bar — top half of a merged "tabs + content" rounded card.
+   Rounded top corners only; divider line at bottom; bottom corners flat so it
+   sits flush against the content section beneath it. */
 .page-tabs {
-  position: sticky; top: 56px; z-index: 90;
+  position: sticky; top: 64px; z-index: 90;
   background: var(--color-surface);
   display: flex; gap: 6px; padding: 10px 16px 12px;
+  margin: 8px 0 0;
+  border-radius: 22px 22px 0 0;
   border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
 }
 .page-tab {
   flex: 1; padding: 9px 10px; border: none; cursor: pointer;
@@ -1682,7 +1723,8 @@ body:has(.product-page) {
   background: var(--color-surface);
   display: flex; align-items: center; gap: 8px;
   padding: 12px 14px;
-  border-bottom: 1px solid var(--color-border);
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
 }
 .search-input-wrap {
   flex: 1; position: relative;
@@ -1695,12 +1737,12 @@ body:has(.product-page) {
 }
 .search-input-wrap .si-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; }
 .search-input {
-  width: 100%; height: 42px;
+  width: 100%; height: 54px;
   background: var(--color-bg);
-  border: none; border-radius: 14px;
-  padding: 0 38px 0 38px;
+  border: none; border-radius: 16px;
+  padding: 0 40px 0 40px;
   font-family: var(--font-main);
-  font-size: 14px; color: var(--color-text);
+  font-size: 15px; color: var(--color-text);
   outline: none;
 }
 .search-input::placeholder { color: var(--color-muted); }
@@ -1863,3 +1905,969 @@ mark.search-hl {
   text-align: center; padding: 30px 20px;
   color: var(--color-muted); font-size: 13px;
 }
+
+/* ──────────────────────────────────────────────────────────────
+   LIST PAGES (restaurants / dishes / events) + DETAIL PAGES
+   Reuses .product-block / .related-grid / .related-card etc.
+   ────────────────────────────────────────────────────────────── */
+
+/* Filter chip bar — top half of merged "filter + content" rounded card */
+.filter-bar {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 10px 16px 12px;
+  background: var(--color-surface);
+  position: sticky; top: 64px; z-index: 90;
+  margin: 8px 0 0;
+  border-radius: 22px 22px 0 0;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0;
+  padding: 8px 14px; border-radius: 18px;
+  background: var(--color-bg); color: var(--color-text);
+  font-family: var(--font-main);
+  font-size: 13px; font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .14s, color .14s, border-color .14s;
+}
+.filter-chip:active { opacity: .85; }
+.filter-chip.active {
+  background: var(--color-text); color: #fff;
+  border-color: var(--color-text);
+}
+
+/* Generic page list container (white card holding result list/grid) */
+.list-page {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+
+/* RESTAURANTS — big card with photo + meta */
+.rest-list {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 12px 16px 4px;
+}
+.rest-list-card {
+  display: block;
+  background: var(--color-surface);
+  border-radius: 16px; overflow: hidden;
+  cursor: pointer; text-decoration: none; color: inherit;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: transform .14s;
+}
+.rest-list-card:active { transform: scale(0.98); }
+.rest-list-photo {
+  position: relative;
+  width: 100%; aspect-ratio: 16/9;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+.rest-list-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rest-list-badge {
+  position: absolute; top: 10px; left: 10px;
+  background: var(--color-orange); color: #fff;
+  padding: 4px 10px; border-radius: 10px;
+  font-size: 12px; font-weight: 800; letter-spacing: -0.2px;
+  box-shadow: 0 2px 6px rgba(252,63,29,0.4);
+}
+.rest-list-fav {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; padding: 0;
+}
+.rest-list-fav svg { width: 16px; height: 16px; fill: none; stroke: var(--color-text); stroke-width: 2; }
+.rest-list-fav.active svg { fill: var(--color-orange); stroke: var(--color-orange); }
+.rest-list-body {
+  padding: 12px 14px 14px;
+}
+.rest-list-name {
+  font-size: 16px; font-weight: 800; letter-spacing: -0.2px;
+  margin-bottom: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rest-list-meta {
+  font-size: 12px; color: var(--color-muted);
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+}
+.rest-list-meta .rlm-rating {
+  display: inline-flex; align-items: center; gap: 3px;
+  color: var(--color-text); font-weight: 700;
+}
+.rest-list-meta .rlm-rating svg { width: 12px; height: 12px; fill: #F59E0B; }
+.rest-list-meta .rlm-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-muted); }
+
+/* RESTAURANT DETAIL hero (similar to product hero but 16:9) */
+.rest-detail-hero {
+  position: relative;
+  width: 100%; aspect-ratio: 16/9;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+.rest-detail-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rest-detail-info {
+  /* uses .product-block product-block-main */
+}
+.rest-detail-name {
+  font-size: 24px; font-weight: 800; letter-spacing: -0.4px;
+  margin-bottom: 6px;
+}
+.rest-detail-meta {
+  font-size: 13px; color: var(--color-muted);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.rest-detail-meta .rdm-rating {
+  color: var(--color-text); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.rest-detail-meta .rdm-rating svg { width: 13px; height: 13px; fill: #F59E0B; }
+.rest-detail-meta .rdm-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-muted); }
+.rest-detail-desc {
+  font-size: 13px; line-height: 1.5; color: var(--color-text);
+}
+
+/* Menu category header inside restaurant page */
+.menu-cat-title {
+  font-size: 18px; font-weight: 800; letter-spacing: -0.2px;
+  padding: 4px 0 12px;
+}
+
+/* EVENTS — list of event categories (Помолвка / Бешик туй / etc.) */
+.event-list {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 12px 16px 4px;
+}
+.event-list-card {
+  position: relative;
+  display: block;
+  height: 140px;
+  border-radius: 16px; overflow: hidden;
+  cursor: pointer; text-decoration: none; color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+}
+.event-list-card img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.event-list-card .elc-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.75) 100%);
+}
+.event-list-card .elc-body {
+  position: absolute; left: 14px; right: 14px; bottom: 12px;
+}
+.event-list-emoji { font-size: 26px; line-height: 1; margin-bottom: 4px; }
+.event-list-title {
+  font-size: 18px; font-weight: 800; letter-spacing: -0.3px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  margin-bottom: 2px;
+}
+.event-list-sub {
+  font-size: 12px; opacity: 0.92;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   FILTER ACTIONS + BOTTOM SHEET
+   Compact filter triggers + bottom-sheet selectors (sort/price/vendor)
+   ────────────────────────────────────────────────────────────── */
+/* Yandex-Eda style filter chip row: pill chips on light grey,
+   selected chip fills with dark text/border background.  */
+.filter-actions {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 10px 16px 12px;
+  background: var(--color-surface);
+  position: sticky; top: 64px; z-index: 89;
+  margin: 8px 0 0;
+  border-radius: 22px 22px 0 0;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+.filter-actions::-webkit-scrollbar { display: none; }
+.filter-action-btn {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--color-bg);
+  border: none;
+  padding: 9px 14px; border-radius: 999px;
+  font-family: var(--font-main);
+  font-size: 14px; font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .12s, border-color .12s;
+}
+.filter-action-btn:active { background: #E6E7E9; }
+.filter-action-btn.active {
+  background: var(--color-text);
+  color: #fff;
+}
+.filter-action-btn .fab-label { display: none; }
+.filter-action-btn .fab-value {
+  font-weight: 500; color: inherit;
+  max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-action-btn.active .fab-value { color: #fff; font-weight: 600; }
+.filter-action-btn svg {
+  width: 12px; height: 12px;
+  stroke: currentColor; stroke-width: 2.4; fill: none;
+  transition: transform .15s;
+}
+.filter-action-btn.active svg { transform: rotate(180deg); }
+/* Reset chip looks a bit different — text-only ghost button */
+.filter-action-btn#resetAll {
+  background: transparent;
+  color: var(--color-muted);
+  padding: 9px 10px;
+}
+.filter-action-btn#resetAll:active { background: var(--color-bg); }
+.filter-action-btn#resetAll svg { width: 14px; height: 14px; }
+
+/* Bottom sheet overlay + sheet */
+.filter-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(0,0,0,0.45);
+  opacity: 0; pointer-events: none;
+  transition: opacity .26s ease;
+  backdrop-filter: blur(2px);
+}
+.filter-overlay.show { opacity: 1; pointer-events: all; }
+.filter-sheet {
+  position: fixed; bottom: 0; left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 390px; max-width: 100vw;
+  background: var(--color-surface);
+  border-radius: 24px 24px 0 0;
+  z-index: 850;
+  max-height: 80vh; display: flex; flex-direction: column;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+  transition: transform .38s cubic-bezier(.32,1,.64,1);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+.filter-sheet.show { transform: translateX(-50%) translateY(0); }
+.filter-sheet::before {
+  content: ''; display: block;
+  width: 36px; height: 4px; border-radius: 2px;
+  background: #D9DBDE;
+  margin: 8px auto 0; flex-shrink: 0;
+}
+.filter-sheet-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 8px; flex-shrink: 0;
+}
+.filter-sheet-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800; letter-spacing: -0.4px;
+  color: var(--color-text);
+}
+.filter-sheet-reset {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 14px; font-weight: 500;
+  color: var(--color-muted);
+  padding: 6px 8px;
+}
+.filter-sheet-reset:active { color: var(--color-text); }
+.filter-sheet-list {
+  overflow-y: auto;
+  padding: 4px 20px 8px;
+}
+.filter-option {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #EEEEF0;
+  cursor: pointer;
+  gap: 12px;
+}
+.filter-option:last-child { border-bottom: none; }
+.filter-option-label {
+  font-size: 16px; font-weight: 400;
+  color: var(--color-text);
+  flex: 1;
+}
+.filter-option.selected .filter-option-label {
+  font-weight: 500;
+  color: var(--color-text);
+}
+.filter-option-radio {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #D9DBDE;
+  background: var(--color-surface);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .12s;
+}
+.filter-option.selected .filter-option-radio {
+  border-color: var(--color-orange);
+  border-width: 6px;
+  background: var(--color-surface);
+}
+/* No inner dot — Yandex Eda uses a thick ring */
+.filter-sheet-apply {
+  margin: 8px 16px 16px;
+  height: 56px; border: none; border-radius: 16px;
+  background: var(--color-text); color: #fff;
+  font-family: var(--font-main); font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: opacity .12s;
+  flex-shrink: 0;
+}
+.filter-sheet-apply:active { opacity: .85; }
+
+/* ===== CART PAGE ===== */
+.cart-page { padding: 0; }
+
+.cart-empty {
+  min-height: calc(100vh - 200px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 24px 80px;
+  text-align: center;
+}
+.cart-empty-icon {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.cart-empty-icon svg { width: 60px; height: 60px; color: var(--color-muted); }
+.cart-empty-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.cart-empty-text {
+  font-family: var(--font-main);
+  font-size: 15px;
+  color: var(--color-muted);
+  margin: 0 0 24px;
+  max-width: 280px;
+  line-height: 1.4;
+}
+.cart-empty-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 24px;
+  background: var(--color-orange); color: #fff;
+  border: none; border-radius: 12px;
+  font-family: var(--font-main); font-size: 15px; font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cart-multi-warning {
+  margin: 12px 16px;
+  padding: 12px 14px;
+  background: #FFF4E5;
+  border: 1px solid #FFD9A8;
+  border-radius: 12px;
+  display: flex; gap: 10px;
+  align-items: flex-start;
+}
+.cart-multi-warning-icon {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  color: #E68A00;
+  margin-top: 1px;
+}
+.cart-multi-warning-text {
+  font-family: var(--font-main);
+  font-size: 13px;
+  line-height: 1.4;
+  color: #6B4500;
+}
+.cart-multi-warning-text strong { font-weight: 700; }
+
+.cart-vendor {
+  background: var(--color-surface);
+  border-radius: 22px;
+  margin: 8px 0 0;
+  padding: 14px 16px 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  position: relative;
+  overflow: hidden;
+}
+.cart-vendor-head {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 4px;
+}
+.cart-vendor-name {
+  font-family: var(--font-main);
+  font-size: 16px; font-weight: 700;
+  color: var(--color-text);
+  flex: 1;
+  text-decoration: none;
+}
+.cart-vendor-meta {
+  font-family: var(--font-main);
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.cart-vendor-closed {
+  margin: -4px -14px 12px;
+  padding: 10px 14px;
+  background: #FFEFEF;
+  color: #B00020;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #FFD9D9;
+}
+.cart-vendor-minwarn {
+  margin: 8px -14px -8px;
+  padding: 10px 14px;
+  background: #FFF7E5;
+  color: #8A5A00;
+  font-family: var(--font-main);
+  font-size: 12.5px;
+  line-height: 1.35;
+  border-top: 1px solid var(--color-border);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.cart-item {
+  display: flex; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.cart-item:last-child { border-bottom: none; }
+.cart-item-img {
+  width: 64px; height: 64px;
+  border-radius: 12px;
+  background: var(--color-bg) center/cover no-repeat;
+  flex-shrink: 0;
+}
+.cart-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cart-item-name {
+  font-family: var(--font-main);
+  font-size: 14px;
+  color: var(--color-text);
+  line-height: 1.3;
+  margin: 0 0 4px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.cart-item-foot {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+.cart-item-price {
+  font-family: var(--font-main);
+  font-size: 15px; font-weight: 700;
+  color: var(--color-text);
+}
+.cart-item-stepper {
+  display: inline-flex; align-items: center;
+  background: var(--color-bg);
+  border-radius: 10px;
+  height: 32px;
+}
+.cart-item-stepper button {
+  width: 32px; height: 32px;
+  background: transparent; border: none;
+  font-size: 18px; font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.cart-item-stepper button:disabled { opacity: .4; cursor: default; }
+.cart-item-stepper .qty {
+  min-width: 22px;
+  text-align: center;
+  font-family: var(--font-main);
+  font-size: 14px; font-weight: 700;
+  color: var(--color-text);
+}
+
+.cart-summary {
+  margin: 12px 16px 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+.cart-summary-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--font-main);
+  font-size: 14px;
+  color: var(--color-muted);
+  padding: 4px 0;
+}
+.cart-summary-row.total {
+  border-top: 1px solid var(--color-border);
+  margin-top: 6px; padding-top: 10px;
+  font-size: 17px;
+  color: var(--color-text);
+  font-weight: 700;
+}
+.cart-summary-row span:last-child { color: var(--color-text); font-weight: 600; }
+
+.cart-checkout {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+  z-index: 30;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 30%);
+  pointer-events: none;
+}
+.cart-checkout-inner {
+  pointer-events: auto;
+  display: flex; align-items: center; gap: 10px;
+}
+.cart-checkout-btn {
+  flex: 1;
+  height: 52px;
+  background: var(--color-orange); color: #fff;
+  border: none; border-radius: 14px;
+  font-family: var(--font-main);
+  font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.cart-checkout-btn:disabled {
+  background: var(--color-bg);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+.cart-checkout-btn .ck-label { font-weight: 700; }
+.cart-checkout-btn .ck-total { font-weight: 700; }
+
+body:has(.cart-page) { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 152px); }
+body:has(.cart-empty) { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
+
+/* .cart-header-clear is now an icon button (uses .page-header-icon styles);
+   keep just an accent override so the trash icon reads as a "danger" action. */
+.cart-header-clear svg { stroke: var(--color-orange); }
+.cart-header-clear:hover { background: rgba(252,63,29,0.08); }
+
+/* warning modal */
+.cart-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.42);
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s;
+}
+.cart-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.cart-modal {
+  position: fixed;
+  left: 16px; right: 16px;
+  top: 50%; transform: translateY(-46%) scale(.96);
+  background: #fff;
+  border-radius: 20px;
+  padding: 22px 22px 18px;
+  z-index: 101;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s, transform .22s;
+  max-width: 380px;
+  margin: 0 auto;
+}
+.cart-modal.open { opacity: 1; pointer-events: auto; transform: translateY(-50%) scale(1); }
+.cart-modal-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #FFEFEF;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  color: #E03A1A;
+}
+.cart-modal-title {
+  font-family: var(--font-display);
+  font-size: 19px; font-weight: 800;
+  text-align: center;
+  margin: 0 0 6px;
+  color: var(--color-text);
+}
+.cart-modal-text {
+  font-family: var(--font-main);
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--color-muted);
+  margin: 0 0 18px;
+}
+.cart-modal-actions {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.cart-modal-btn {
+  height: 46px;
+  border: none; border-radius: 12px;
+  font-family: var(--font-main);
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+}
+.cart-modal-btn.primary { background: var(--color-orange); color: #fff; }
+.cart-modal-btn.ghost { background: var(--color-bg); color: var(--color-text); }
+
+/* ===== CATEGORY GRID (dishes.html — Все блюда landing) ===== */
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px 16px 24px;
+}
+.cat-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--color-bg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .12s;
+}
+.cat-tile:active { transform: scale(.97); }
+.cat-tile img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cat-tile-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%);
+}
+.cat-tile-name {
+  position: absolute;
+  left: 14px; right: 14px; bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+}
+.cat-tile-count {
+  position: absolute;
+  top: 12px; left: 14px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-family: var(--font-main);
+  font-size: 11px; font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.1px;
+}
+
+/* ===== Combined Filters Sheet (Yandex-Eda style block layout) =====
+   Single bottom sheet that holds multiple filter sections stacked.
+   Layout: drag handle + title (fixed) → scrollable body (grows to fill) →
+   sticky footer with Reset + Apply.  Footer pins to the bottom so there
+   is no empty space when the body is short. */
+.filter-sheet--blocks { padding-bottom: 0; }
+.fbs-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px 4px;
+  flex-shrink: 0;
+}
+.fbs-head .filter-sheet-title { margin: 0; }
+.fbs-close {
+  width: 32px; height: 32px;
+  border: none; background: var(--color-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+}
+.fbs-close svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.4; fill: none; }
+.fbs-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 8px 20px 8px;
+  min-height: 0;
+}
+.fbs-block {
+  padding: 14px 0 18px;
+  border-bottom: 1px solid #EEEEF0;
+}
+.fbs-block:last-child { border-bottom: none; padding-bottom: 8px; }
+.fbs-block-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+.fbs-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.fbs-pill {
+  flex-shrink: 0;
+  background: var(--color-bg);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-family: var(--font-main);
+  font-size: 14px; font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.fbs-pill:active { background: #E6E7E9; }
+.fbs-pill.selected {
+  background: var(--color-orange);
+  color: #fff;
+  font-weight: 600;
+}
+.fbs-foot {
+  display: flex; gap: 10px;
+  padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
+  background: var(--color-surface);
+  flex-shrink: 0;
+  border-top: 1px solid #EEEEF0;
+}
+.fbs-btn {
+  height: 52px;
+  border: none; border-radius: 14px;
+  font-family: var(--font-main);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: opacity .12s, background .12s;
+}
+.fbs-btn:active { opacity: .85; }
+.fbs-btn-reset {
+  flex: 1;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.fbs-btn-apply {
+  flex: 1.4;
+  background: var(--color-orange);
+  color: #fff;
+}
+/* Small dot indicator on the Filters chip when filters are active */
+.filter-action-btn .fab-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-orange);
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.filter-action-btn.active .fab-dot { background: #fff; }
+
+/* ===== Mini-card 2-column grid (used on dish category pages) =====
+   Reuses the home page's .mini-card visual (image + floating add button +
+   price/name/vendor) but lays cards out as a 2-column grid instead of
+   horizontal scroll.  Each cell stretches to the column width. */
+.mini-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 6px 16px 16px;
+}
+.mini-grid-2col > .mini-card {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ===== Merged "filter/tabs + content" rounded card =====
+   When a filter row (.filter-actions / .filter-bar / .page-tabs) is immediately
+   followed by a content block, the content block takes the BOTTOM half of the
+   merged card: rounded bottom corners only, flush top, same shadow. */
+
+/* dish.html / events.html: filter-actions / filter-bar -> list-page -> product-block */
+.filter-actions + .list-page > .product-block,
+.filter-bar + .list-page > .product-block {
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+
+/* notifications.html: page-tabs -> notif-page-list */
+.page-tabs + .notif-page-list {
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+
+/* search.html: when results are shown, the tabs row + all result sections
+   merge into ONE rounded card (same pattern as notifications: tabs at top,
+   continuous content below).  Uses ~ because #searchIdle and #searchEmpty
+   sit between .page-tabs and #searchResults in the DOM.  Idle/Empty states
+   keep their default look (individual rounded section cards). */
+.page-tabs ~ #searchResults {
+  background: var(--color-surface);
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
+  padding-bottom: 12px;
+}
+.page-tabs ~ #searchResults > .sep {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0 16px;
+}
+.page-tabs ~ #searchResults > .search-section {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 16px 16px 8px;
+}
+
+/* ===== Cart vendor tabs (shown when items from 2+ restaurants) =====
+   Horizontal row of two-line pill tabs: vendor name + subtotal stacked.
+   Active tab gets a thick dark border, inactive ones a subtle light border. */
+.cart-vendor-tabs {
+  display: flex; gap: 10px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 10px 16px 14px;
+  background: var(--color-surface);
+  margin-top: 8px;
+  border-radius: 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+.cart-vendor-tabs[hidden] { display: none; }
+.cart-vendor-tabs::-webkit-scrollbar { display: none; }
+.cart-vendor-tab {
+  flex-shrink: 0;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  text-align: left;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 18px;
+  padding: 10px 16px;
+  min-height: 56px;
+  min-width: 140px;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+  font-family: var(--font-main);
+}
+.cart-vendor-tab:active { background: var(--color-bg); }
+.cart-vendor-tab.active {
+  border-color: var(--color-text);
+  border-width: 2px;
+  padding: 9.5px 15.5px;
+}
+.cvt-name {
+  font-size: 15px; font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.cart-vendor-tab.active .cvt-name { color: var(--color-text); }
+.cart-vendor-tab:not(.active) .cvt-name { color: var(--color-muted); }
+.cvt-sub {
+  font-size: 12px; font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.cart-vendor-tab.active .cvt-sub { color: var(--color-text); font-weight: 500; }
+
+/* ===== Cart "suggest more" block (3-col grid after cart contents) =====
+   Full-width card matching the other blocks (cart-vendor-tabs, cart-vendor).
+   Inside is a 3-column grid of compact .mini-card variants with floating +. */
+.cart-suggest {
+  background: var(--color-surface);
+  border-radius: 22px;
+  margin: 8px 0 0;
+  padding: 16px 16px 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+.cart-suggest-title {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--color-text);
+  margin: 0 0 12px;
+}
+.mini-grid-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 0;
+}
+.mini-grid-3col > .mini-card {
+  width: 100%;
+  min-width: 0;
+}
+.mini-grid-3col .mini-img { height: 96px; }
+.mini-grid-3col .mini-body { padding: 8px 8px 10px; }
+.mini-grid-3col .mini-price { font-size: 12px; font-weight: 800; }
+.mini-grid-3col .mini-name {
+  font-size: 11px; font-weight: 600; line-height: 1.25;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.mini-grid-3col .mini-vendor { font-size: 10px; }
+.mini-grid-3col .add-btn-float {
+  width: 28px; height: 28px;
+  bottom: 6px; right: 6px;
+  box-shadow: 0 2px 6px rgba(33,160,56,0.4);
+}
+.mini-grid-3col .add
+
+/* ===== Yandex-Eda style swipe-to-delete for cart items =====
+   .cart-item-row is the clipped viewport. Inside is .cart-item-track —
+   a flex container holding the cart-item (full width) + a 60×60 rounded
+   delete button.  Track width = row width + button width + gap, so the
+   delete button hangs off the right edge until the track is translated
+   left to reveal it. */
+.cart-item-row {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--color-border);
+}
+.cart-vendor > .cart-item-row:last-of-type { border-bottom: none; }
+.cart-item-track {
+  position: relative;
+  width: 100%;
+  transform: translateX(0);
+  transition: transform .25s cubic-bezier(.25,.1,.25,1);
+  touch-action: pan-y;
+  will-change: transform;
+}
+.cart-item-track.swiping { transition: none; }
+.cart-item-track.open { transform: translateX(-72px); }
+.cart-item-track .cart-item {
+  width: 100%;
+  border-bottom: none;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+/* Delete button sits 12px outside the right edge of the track at rest;
+   when the track translates -72 the button slides into view inside the row. */
+.cart-item-delete {
+  position: absolute;
+  right: -72px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px; height: 60px;
+  background: var(--color-orange);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.cart-item-delete svg {
+  width: 22px; height: 22px;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.cart-item-delete:active { transform: translateY(-50%) scale(.94); }

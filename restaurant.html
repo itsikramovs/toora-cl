@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Ресторан — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="product-page">
+
+  <div class="product-hero rest-detail-hero" style="aspect-ratio:16/9">
+    <img id="restImg" src="./img/dish-04.jpg" alt="">
+    <div class="product-hero-top">
+      <button class="ph-btn" id="ph-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ph-btn-group">
+        <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+        <button class="ph-btn fav" id="ph-fav" aria-label="В избранное">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section class="product-block product-block-main">
+    <h1 class="rest-detail-name" id="restName">Rayhon Milliy</h1>
+    <div class="rest-detail-meta" id="restMeta">
+      <span class="rdm-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><span id="restRating">4.8</span></span>
+      <span class="rdm-dot"></span>
+      <span id="restEta">20–30 мин</span>
+      <span class="rdm-dot"></span>
+      <span>Доставка: <span id="restFee">Бесплатно</span></span>
+    </div>
+    <div class="rest-detail-desc" id="restDesc">
+      Уютный ресторан традиционной узбекской кухни. Дровяной тандыр, свежие лепёшки, плов на углях.
+    </div>
+  </section>
+  <div class="sep"></div>
+
+  <section class="product-block" id="menuBlock">
+    <!-- Menu sections rendered by JS -->
+  </section>
+
+</div>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none"><path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/></svg></div>
+    <span>Главная</span>
+  </a>
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/><rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+      <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/><rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+    </svg></div>
+    <span>Каталог</span>
+  </a>
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+      <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+    </svg></div>
+    <div class="cart-pill">3</div>
+    <span>Корзина</span>
+  </a>
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <circle class="ni" cx="13" cy="9" r="4.5"/>
+      <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+    </svg></div>
+    <span>Профиль</span>
+  </a>
+</nav>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FE5196"/><stop offset="100%" stop-color="#F77062"/></linearGradient></defs></svg>
+
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  var REST_CATALOG = {
+    'Rayhon Milliy': {
+      img: './img/dish-04.jpg', rating: 4.8, eta: '20–30 мин', fee: 'Бесплатно',
+      desc: 'Уютный ресторан традиционной узбекской кухни. Дровяной тандыр, свежие лепёшки, плов на углях.',
+      menu: [
+        { title: 'Лепёшки и тандыр', items: [
+          { name: "Qo'qon patir", img: './img/ev-02.jpg', price: 15000 },
+          { name: 'Patir gulli',  img: './img/ev-01.jpg',  price: 17000 },
+          { name: 'Тандыр-нон',   img: './img/dish-06.jpg', price: 12000 },
+          { name: 'Kulcha non',   img: './img/dish-07.jpg', price: 14000 }
+        ]},
+        { title: 'Основные', items: [
+          { name: 'Osh Palav',         img: './img/dish-02.jpg', price: 28000 },
+          { name: 'Шашлык из ягнёнка', img: './img/dish-04.jpg', price: 42000 }
+        ]}
+      ]
+    },
+    'Osh Markazi': {
+      img: './img/dish-02.jpg', rating: 4.7, eta: '25–35 мин', fee: '5 000 сум',
+      desc: 'Палов-центр Ташкента: тошкент палов, фергана, бухара, свадебный палов — все классические рецепты в одном месте.',
+      menu: [
+        { title: 'Палов', items: [
+          { name: 'Osh Palav',       img: './img/dish-02.jpg', price: 28000 },
+          { name: 'Свадебный плов',  img: './img/dish-03.jpg', price: 38000 },
+          { name: 'Куриный плов',    img: './img/dish-04.jpg', price: 26000 },
+          { name: 'Фергана-палов',   img: './img/dish-05.jpg', price: 32000 }
+        ]},
+        { title: 'Лагман', items: [
+          { name: 'Лагман по-домашнему', img: './img/dish-11.jpg', price: 28000 }
+        ]}
+      ]
+    },
+    'Norin House': {
+      img: './img/dish-13.jpg', rating: 4.6, eta: '15–25 мин', fee: 'Бесплатно',
+      desc: 'Норин-мастера. Лапша вручную, мясо казы, наваристый бульон.',
+      menu: [
+        { title: 'Норин', items: [
+          { name: 'Qazili norin',    img: './img/dish-13.jpg', price: 35000 },
+          { name: 'Mayda norin',     img: './img/dish-12.jpg', price: 28000 },
+          { name: 'Куриный норин',   img: './img/dish-16.jpg', price: 32000 },
+          { name: 'Норин-семейный',  img: './img/dish-17.jpg', price: 65000 }
+        ]}
+      ]
+    },
+    'Khan Atlas': {
+      img: './img/dish-04.jpg', rating: 4.9, eta: '20–30 мин', fee: '7 000 сум',
+      desc: 'Лучший шашлык в городе. Молодая баранина, маринад 12 часов, угли из карагача.',
+      menu: [
+        { title: 'Шашлык', items: [
+          { name: 'Шашлык из ягнёнка', img: './img/dish-04.jpg', price: 42000 },
+          { name: 'Lula kabob',        img: './img/dish-01.jpg', price: 32000 },
+          { name: 'Куриный шашлык',    img: './img/dish-03.jpg', price: 28000 },
+          { name: 'Говяжий шашлык',    img: './img/dish-05.jpg', price: 38000 }
+        ]}
+      ]
+    },
+    'Tandur Master': {
+      img: './img/dish-08.jpg', rating: 4.7, eta: '15–25 мин', fee: 'Бесплатно',
+      desc: 'Самса и лепёшки прямо из тандыра. Слоёное тесто, рубленая баранина, кунжут.',
+      menu: [
+        { title: 'Самса', items: [
+          { name: 'Самса с мясом',    img: './img/dish-08.jpg', price: 12000 },
+          { name: 'Самса с тыквой',   img: './img/dish-09.jpg', price: 11000 },
+          { name: 'Самса с курицей',  img: './img/dish-10.jpg', price: 13000 }
+        ]},
+        { title: 'Лепёшки', items: [
+          { name: 'Тандыр-нон', img: './img/dish-06.jpg', price: 12000 }
+        ]}
+      ]
+    },
+    'Beshqozon Plov': {
+      img: './img/dish-02.jpg', rating: 4.9, eta: '30–40 мин', fee: 'Бесплатно',
+      desc: 'Палов на дровах. 8 видов риса, выдержанная баранина, нохат и айва. Готовим с 5 утра.',
+      menu: [
+        { title: 'Палов', items: [
+          { name: 'Osh Palav',       img: './img/dish-02.jpg', price: 28000 },
+          { name: 'Махалля-палов',   img: './img/dish-08.jpg', price: 30000 },
+          { name: 'Бухара-палов',    img: './img/dish-14.jpg', price: 36000 }
+        ]}
+      ]
+    }
+  };
+
+  var params = new URLSearchParams(location.search);
+  var name = params.get('name') || 'Rayhon Milliy';
+  var r = REST_CATALOG[name] || REST_CATALOG['Rayhon Milliy'];
+
+  document.title = name + ' — Togora';
+  document.getElementById('restImg').src = r.img;
+  document.getElementById('restName').textContent = name;
+  document.getElementById('restRating').textContent = r.rating;
+  document.getElementById('restEta').textContent = r.eta;
+  document.getElementById('restFee').textContent = r.fee;
+  document.getElementById('restDesc').textContent = r.desc;
+
+  function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
+
+  var menuHtml = (r.menu || []).map(function(section) {
+    var cards = section.items.map(function(it) {
+      return '<div class="related-card" data-name="' + TG.escHTML(it.name).replace(/"/g,'&quot;') +
+             '" data-img="' + TG.escHTML(it.img).replace(/"/g,'&quot;') + '">' +
+        '<div class="related-img"><img src="' + it.img + '" alt=""></div>' +
+        '<div class="related-body">' +
+          '<div class="related-price">' + fmt(it.price) + '</div>' +
+          '<div class="related-name">' + TG.escHTML(it.name) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="menu-cat-title">' + TG.escHTML(section.title) + '</div>' +
+           '<div class="related-grid" style="margin-bottom:18px">' + cards + '</div>';
+  }).join('');
+  document.getElementById('menuBlock').innerHTML = menuHtml;
+
+  document.getElementById('menuBlock').addEventListener('click', function(e) {
+    var card = e.target.closest('.related-card');
+    if (!card) return;
+    var qs = 'name=' + encodeURIComponent(card.dataset.name) + '&img=' + encodeURIComponent(card.dataset.img);
+    location.href = 'product.html?' + qs;
+  });
+
+  document.getElementById('ph-back').addEventListener('click', function() {
+    if (history.length > 1) history.back(); else location.href = 'restaurants.html';
+  });
+  document.getElementById('ph-share').addEventListener('click', function() {
+    if (navigator.share) navigator.share({title: name, url: location.href}).catch(function() {});
+    else TG.showToast('Ссылка скопирована');
+  });
+  document.getElementById('ph-fav').addEventListener('click', function() {
+    var btn = document.getElementById('ph-fav');
+    btn.classList.toggle('active');
+    TG.showToast(btn.classList.contains('active') ? 'Добавлено в избранное' : 'Убрано из избранного');
+  });
+})();
+</script>
+
+</body>
+</html>

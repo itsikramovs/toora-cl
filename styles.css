@@ -73,6 +73,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Pages without bottom-nav (product, etc.) only need room for the sticky CTA */
+body:has(.product-page) {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+}
+
 .scroll-x { display: flex; overflow-x: auto; scrollbar-width: none; }
 .scroll-x::-webkit-scrollbar { display: none; }
 .surface { background: var(--color-surface); }
@@ -420,6 +425,8 @@ body {
   display: flex; align-items: center; gap: 10px;
   background: var(--color-bg); border-radius: var(--r-btn);
   padding: 0 14px; height: 54px; cursor: text;
+  text-decoration: none; color: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 .search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-muted); stroke-width: 2; flex-shrink: 0; }
 .search-bar span { font-size: 15px; color: var(--color-muted); }
@@ -1365,7 +1372,7 @@ body {
    PRODUCT PAGE — hero, sheet with modifiers, sticky CTA
    ────────────────────────────────────────────────────────────── */
 .product-page {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+  padding-bottom: 0;
   background: var(--color-bg);
 }
 
@@ -1658,4 +1665,201 @@ body {
   overflow: hidden;
 }
 .related-title {
-  font-size: 17px; font-weight: 800; letter-spacing: -0.2p
+  font-size: 17px; font-weight: 800; letter-spacing: -0.2px;
+  margin-bottom: 16px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   SEARCH PAGE — header, chips, results, empty state
+   ────────────────────────────────────────────────────────────── */
+.search-page {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+}
+
+/* Sticky header with back + input + voice */
+.search-page-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--color-surface);
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+.search-input-wrap {
+  flex: 1; position: relative;
+  display: flex; align-items: center;
+}
+.search-input-wrap .si-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; pointer-events: none;
+  color: var(--color-muted);
+}
+.search-input-wrap .si-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; }
+.search-input {
+  width: 100%; height: 42px;
+  background: var(--color-bg);
+  border: none; border-radius: 14px;
+  padding: 0 38px 0 38px;
+  font-family: var(--font-main);
+  font-size: 14px; color: var(--color-text);
+  outline: none;
+}
+.search-input::placeholder { color: var(--color-muted); }
+.search-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 24px; height: 24px; border-radius: 50%; border: none;
+  background: var(--color-border); color: var(--color-text);
+  display: none; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+}
+.search-clear svg { width: 11px; height: 11px; stroke: var(--color-text); stroke-width: 2.5; fill: none; }
+.search-input-wrap.has-text .search-clear { display: flex; }
+
+/* Sections inside page */
+.search-section {
+  background: var(--color-surface);
+  border-radius: 18px;
+  padding: 16px 16px 18px;
+}
+.search-section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.search-section-title {
+  font-size: 15px; font-weight: 800; letter-spacing: -0.2px;
+}
+.search-clear-history {
+  background: none; border: none;
+  color: var(--color-orange);
+  font-family: var(--font-main); font-size: 12px; font-weight: 700;
+  cursor: pointer; padding: 4px 8px;
+}
+
+/* Chips (recent + popular) */
+.search-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.search-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--color-bg);
+  padding: 8px 12px; border-radius: 18px;
+  font-size: 13px; font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background .12s, border-color .12s;
+}
+.search-chip:active { background: var(--color-border); }
+.search-chip.trending {
+  background: #FFF0EC; color: var(--color-orange);
+}
+.search-chip .sc-x {
+  width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center;
+  opacity: .65; margin-left: 2px;
+}
+.search-chip .sc-x svg { width: 9px; height: 9px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+.search-chip .sc-fire {
+  width: 13px; height: 13px; display: inline-flex; align-items: center; justify-content: center;
+}
+.search-chip .sc-fire svg { width: 13px; height: 13px; fill: var(--color-orange); }
+
+/* Categories grid in idle state */
+.search-cat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.search-cat-card {
+  background: var(--color-bg);
+  border-radius: 14px;
+  padding: 12px 8px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .12s;
+}
+.search-cat-card:active { transform: scale(0.96); }
+.search-cat-img {
+  width: 56px; height: 56px;
+  margin: 0 auto 8px;
+  display: block;
+  object-fit: contain;
+}
+.search-cat-name {
+  font-size: 12px; font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Restaurant search result card (horizontal) */
+.search-rest-list {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.search-rest-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px;
+  background: var(--color-bg);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform .12s;
+}
+.search-rest-card:active { transform: scale(0.98); }
+.search-rest-photo {
+  width: 64px; height: 64px; border-radius: 12px;
+  overflow: hidden; flex-shrink: 0;
+  background: var(--color-border);
+}
+.search-rest-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.search-rest-body { flex: 1; min-width: 0; }
+.search-rest-name {
+  font-size: 14px; font-weight: 700;
+  line-height: 1.2; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.search-rest-meta {
+  font-size: 12px; color: var(--color-muted);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.search-rest-meta .src-rating {
+  color: var(--color-text); font-weight: 700;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.search-rest-meta .src-rating svg { width: 12px; height: 12px; fill: #F59E0B; }
+.search-rest-meta .src-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-muted); }
+
+/* Highlight matched substring */
+mark.search-hl {
+  background: rgba(252,63,29,0.15);
+  color: var(--color-orange);
+  padding: 0 2px;
+  border-radius: 3px;
+  font-weight: 800;
+}
+
+/* Empty state */
+.search-empty-state {
+  display: none;
+  flex-direction: column; align-items: center;
+  text-align: center; padding: 60px 30px 40px;
+  background: var(--color-surface);
+  border-radius: 18px;
+  min-height: 50vh; justify-content: center;
+}
+.search-empty-state.show { display: flex; }
+.search-empty-ill {
+  width: 110px; height: 110px; border-radius: 50%;
+  background: var(--color-bg);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+}
+.search-empty-ill svg { width: 54px; height: 54px; stroke: var(--color-muted); stroke-width: 1.6; fill: none; }
+.search-empty-title {
+  font-size: 18px; font-weight: 800; letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+.search-empty-text {
+  font-size: 13px; color: var(--color-muted); line-height: 1.45;
+  max-width: 280px; margin-bottom: 18px;
+}
+.search-empty-text b { color: var(--color-text); font-weight: 800; }
+
+/* Loading placeholder bar */
+.search-loading {
+  text-align: center; padding: 30px 20px;
+  color: var(--color-muted); font-size: 13px;
+}

@@ -136,7 +136,7 @@ window.TG = (function() {
   function registerSW() {
     if (!('serviceWorker' in navigator)) return;
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js?v=10').then(function(reg) {
+      navigator.serviceWorker.register('./sw.js?v=15').then(function(reg) {
         if (reg.waiting) reg.waiting.postMessage({ type: 'skip-waiting' });
         reg.addEventListener('updatefound', function() {
           var nw = reg.installing;

@@ -6,7 +6,7 @@
    - Supports skip-waiting message for instant activation
    ────────────────────────────────────────────────────────────── */
 
-const CACHE_NAME = 'togora-v10';
+const CACHE_NAME = 'togora-v15';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -18,7 +18,8 @@ const CORE_ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './icon-512-maskable.png',
-  './product.html'
+  './product.html',
+  './search.html'
 ];
 
 self.addEventListener('install', function(event) {

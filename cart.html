@@ -603,12 +603,8 @@
       });
       return;
     }
-    showModal({
-      title: 'Заказ оформляется',
-      text:  'Страница оформления заказа пока в разработке. Вы будете перенаправлены на главную.',
-      primaryLabel: 'На главную',
-      onPrimary: function(){ location.href = 'index.html'; }
-    });
+    // Active vendor is already set; go to checkout
+    location.href = 'checkout.html';
   });
 
   window.addEventListener('storage', function(e){ if (e.key === KEY) render(); });

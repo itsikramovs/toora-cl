@@ -175,33 +175,33 @@ body {
 .promo-section { background: var(--color-surface); padding: 14px 0; }
 .promo-scroll { padding: 0 16px; gap: 10px; }
 .promo-card {
-  flex-shrink: 0; width: 270px; height: 130px;
+  flex-shrink: 0; width: 100%; height: 140px;
   border-radius: var(--r-card); overflow: hidden;
   position: relative; cursor: pointer;
   display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 14px 16px;
+  padding: 18px 18px;
 }
-.promo-card .photo-wrap { position: absolute; inset: 0; }
-.promo-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 100%);
-}
+.promo-card.pc1 { background: linear-gradient(140deg, #FF6B35 0%, #FC3F1D 100%); }
+.promo-card.pc2 { background: linear-gradient(140deg, #27AE60 0%, #21A038 100%); }
+.promo-card.pc3 { background: linear-gradient(140deg, #F9A825 0%, #FF8F00 100%); }
+.promo-overlay { display: none; }
 .promo-content { position: relative; z-index: 2; }
-.promo-eyebrow { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.82); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
-.promo-title { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.15; }
-.promo-sub { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 3px; }
+.promo-eyebrow { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+.promo-title { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.05; font-family: var(--font-compressed); letter-spacing: -0.3px; }
+.promo-sub { font-size: 12px; color: rgba(255,255,255,0.82); margin-top: 5px; font-weight: 500; }
 .promo-badge {
-  position: absolute; top: 12px; right: 12px; z-index: 3;
-  background: var(--color-yellow); color: var(--color-text);
-  font-size: 18px; font-weight: 900;
-  width: 52px; height: 52px; border-radius: 50%;
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  background: rgba(255,255,255,0.22); color: #fff;
+  font-size: 20px; font-weight: 900;
+  width: 54px; height: 54px; border-radius: 50%;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   line-height: 1; font-family: var(--font-compressed);
+  backdrop-filter: blur(4px); border: 1.5px solid rgba(255,255,255,0.3);
 }
-.promo-badge .pb-sub { font-size: 8px; font-weight: 700; }
+.promo-badge .pb-sub { font-size: 8px; font-weight: 700; opacity: 0.9; }
 
 /* ── INFO CHIPS ── */
-.discount-section { background: var(--color-surface); padding: 0 0 14px; }
+.discount-section { background: var(--color-surface); padding: 14px 0 14px; }
 .discount-scroll { padding: 0 16px; gap: 8px; }
 .d-pill { flex-shrink: 0; border-radius: 16px; padding: 12px 14px; min-width: 130px; cursor: pointer; transition: transform .12s; }
 .d-pill:active { transform: scale(0.97); }
@@ -219,80 +219,82 @@ body {
 .section-title { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; }
 .section-all { font-size: 14px; font-weight: 500; color: var(--color-orange); text-decoration: none; cursor: pointer; }
 
-/* ── BRAND SHORTCUTS ── */
-.brands-section { background: var(--color-surface); padding-bottom: 16px; }
-.brands-scroll { padding: 0 16px; gap: 10px; }
-.brand-chip { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; width: 70px; }
-.brand-logo {
-  width: 64px; height: 64px; border-radius: var(--r-card);
-  overflow: hidden; position: relative;
-  border: 1px solid var(--color-border);
-}
-.brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.brand-logo-overlay {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.38);
-}
-.brand-logotype {
-  color: #fff; font-family: var(--font-compressed); font-weight: 800;
-  font-size: 12px; text-align: center; line-height: 1.1; padding: 0 3px;
-}
-.brand-name { font-size: 11px; font-weight: 500; text-align: center; line-height: 1.2; }
 
 /* ── CATEGORIES ── */
-.categories-section { background: var(--color-surface); padding-bottom: 16px; }
-.cat-scroll { padding: 0 16px; gap: 8px; }
+.categories-section { background: var(--color-surface); padding-bottom: 20px; }
+.cat-scroll { padding: 0 16px; gap: 4px; }
 .cat-card {
-  flex-shrink: 0;
-  display: flex; align-items: center; gap: 7px;
-  padding: 9px 16px; border-radius: 50px;
-  border: 1.5px solid var(--color-border);
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  cursor: pointer; width: 110px;
+  background: none; border: none; padding: 0 4px;
+  transition: opacity .15s;
+}
+.cat-img-wrap {
+  width: 106px; height: 90px;
   background: var(--color-surface);
-  cursor: pointer;
-  transition: background .15s, border-color .15s;
+  margin-bottom: 9px; position: relative;
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: visible;
 }
-.cat-card.active {
-  background: var(--color-orange); border-color: var(--color-orange);
+.cat-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain; object-position: bottom center;
+  display: block;
+  transition: transform .18s cubic-bezier(.34,1.56,.64,1);
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
 }
-.cat-emoji { font-size: 18px; line-height: 1; }
+.cat-card:active .cat-img-wrap img,
+.cat-card.active .cat-img-wrap img { transform: scale(1.06); }
+.cat-emoji-placeholder {
+  font-size: 52px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.10));
+}
 .cat-name {
-  font-size: 13px; font-weight: 700; white-space: nowrap;
-  color: var(--color-text);
+  font-size: 15px; font-weight: 400; white-space: nowrap;
+  color: var(--color-text); text-align: center; line-height: 1;
 }
-.cat-card.active .cat-name { color: #fff; }
+.cat-card.active .cat-name { color: var(--color-text); font-weight: 700; }
+.cat-underline {
+  width: 24px; height: 2px; background: transparent;
+  border-radius: 2px; margin-top: 5px;
+  transition: background .15s;
+}
+.cat-card.active .cat-underline { background: var(--color-orange); }
 
 /* ── RESTAURANTS ── */
 .rests-section { background: var(--color-surface); padding-bottom: 16px; }
-.rests-scroll { padding: 0 16px; gap: 12px; }
+.rests-scroll { padding: 0 16px; gap: 12px; align-items: flex-start; }
+.rest-item { flex-shrink: 0; display: flex; flex-direction: column; cursor: pointer; width: 158px; }
 .rest-card {
-  flex-shrink: 0; width: 200px;
+  width: 158px; height: 116px;
   border-radius: var(--r-card); overflow: hidden;
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  cursor: pointer; position: relative;
+  position: relative; cursor: pointer;
+  border: none; background: #2a2a2a;
+  display: block;
 }
-.rest-img { height: var(--h-rest); position: relative; overflow: hidden; }
-.rest-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.rest-img-overlay {
+.rest-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.rest-photo-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.08) 60%, transparent 100%);
 }
-.rest-wordmark {
-  position: absolute; bottom: 12px; left: 12px;
-  font-family: var(--font-compressed); font-weight: 800; font-size: 18px;
-  color: #fff; line-height: 1.1;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+.rest-name-over {
+  position: absolute; bottom: 10px; left: 10px; right: 10px;
+  font-family: var(--font-compressed); font-weight: 800; font-size: 19px;
+  color: #fff; line-height: 1.1; letter-spacing: -0.2px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.35);
 }
-.disc-sticker {
-  position: absolute; top: 10px; left: 10px;
-  background: var(--color-discount); color: #fff;
-  font-size: 12px; font-weight: 800; border-radius: 8px; padding: 3px 8px;
+.rest-name-over small {
+  display: block; font-family: var(--font-main); font-size: 11px;
+  font-weight: 400; opacity: 0.82; margin-top: 1px; letter-spacing: 0;
 }
-.rest-body { padding: 10px 10px 12px; }
-.rest-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-.rest-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-muted); }
-.rest-rating { display: flex; align-items: center; gap: 3px; font-weight: 700; color: var(--color-text); font-size: 13px; }
-.star { fill: #FFB300; width: 13px; height: 13px; }
+.rest-meta-row {
+  display: flex; align-items: center; gap: 4px;
+  margin-top: 8px; font-size: 12px; color: var(--color-muted);
+}
+.rest-star-icon { fill: #FFB300; width: 12px; height: 12px; flex-shrink: 0; }
+.rest-rv { font-weight: 700; color: var(--color-text); font-size: 12px; }
 .dot { width: 2px; height: 2px; background: var(--color-muted); border-radius: 50%; }
 .rest-badges { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
 .badge { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; display: inline-flex; align-items: center; gap: 3px; line-height: 1; }
@@ -326,19 +328,16 @@ body {
   padding: 10px 10px 12px;
   display: flex; flex-direction: column; flex: 1;
 }
-.mini-price-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 4px;
-}
+.mini-price-row { margin-bottom: 4px; }
 .mini-price { font-size: 15px; font-weight: 800; }
 .mini-name { font-size: 13px; font-weight: 700; color: var(--color-text); line-height: 1.3; }
 .mini-vendor { font-size: 11px; font-weight: 400; color: var(--color-muted); margin-top: 3px; }
 .add-btn-float {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--color-orange); border: none; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-orange); border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(252,63,29,0.38);
+  cursor: pointer; position: absolute; bottom: 10px; right: 10px; z-index: 3;
+  box-shadow: 0 3px 12px rgba(252,63,29,0.48);
   transition: transform .12s, box-shadow .12s;
 }
 .add-btn-float:active { transform: scale(0.88); box-shadow: 0 1px 4px rgba(252,63,29,0.2); }
@@ -413,7 +412,6 @@ body {
 /* ── SECTION RADIUS ── */
 .promo-section,
 .discount-section,
-.brands-section,
 .categories-section,
 .rests-section,
 .history-section,
@@ -493,11 +491,7 @@ body {
 <section class="promo-section surface">
   <div class="scroll-x promo-scroll">
 
-    <div class="promo-card">
-      <div class="photo-wrap" style="position:absolute;inset:0;">
-        <img src="https://loremflickr.com/270/130/uzbek,bread,food?lock=1" alt="" class="photo">
-      </div>
-      <div class="promo-overlay"></div>
+    <div class="promo-card pc1">
       <div class="promo-badge">−30%<span class="pb-sub">скидка</span></div>
       <div class="promo-content">
         <div class="promo-eyebrow">🎉 Акция</div>
@@ -506,12 +500,8 @@ body {
       </div>
     </div>
 
-    <div class="promo-card">
-      <div class="photo-wrap" style="position:absolute;inset:0;">
-        <img src="https://loremflickr.com/270/130/pilaf,plov,rice?lock=2" alt="" class="photo">
-      </div>
-      <div class="promo-overlay"></div>
-      <div class="promo-badge" style="background:#fff; color:var(--color-text);">0 сум<span class="pb-sub">достав.</span></div>
+    <div class="promo-card pc2">
+      <div class="promo-badge">0 сум<span class="pb-sub">достав.</span></div>
       <div class="promo-content">
         <div class="promo-eyebrow">✦ Togora+</div>
         <div class="promo-title">Бесплатная<br>доставка</div>
@@ -519,11 +509,7 @@ body {
       </div>
     </div>
 
-    <div class="promo-card">
-      <div class="photo-wrap" style="position:absolute;inset:0;">
-        <img src="https://loremflickr.com/270/130/kebab,grilled,meat?lock=3" alt="" class="photo">
-      </div>
-      <div class="promo-overlay"></div>
+    <div class="promo-card pc3">
       <div class="promo-content">
         <div class="promo-eyebrow">🌸 Наврӯз</div>
         <div class="promo-title">Сезонное<br>меню</div>
@@ -571,146 +557,115 @@ body {
 </section>
 <div class="sep"></div>
 
-<!-- ═══ BRAND SHORTCUTS ═══ -->
-<section class="brands-section surface">
-  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all">Все →</a></div>
-  <div class="scroll-x brands-scroll">
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/uzbek,food,restaurant?lock=10" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">RAYHON<br>Milliy</div></div>
-      </div>
-      <div class="brand-name">Rayhon</div>
-    </div>
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/plov,rice,pilaf?lock=11" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">OSH<br>MARKAZI</div></div>
-      </div>
-      <div class="brand-name">Osh Markazi</div>
-    </div>
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/noodles,soup?lock=12" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">NORIN<br>HOUSE</div></div>
-      </div>
-      <div class="brand-name">Norin House</div>
-    </div>
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/bread,tandoor,naan?lock=13" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">SAMAR-<br>QAND</div></div>
-      </div>
-      <div class="brand-name">Samarqand</div>
-    </div>
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/feast,traditional,food?lock=14" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">NAVRUZ<br>TAOM</div></div>
-      </div>
-      <div class="brand-name">Navruz</div>
-    </div>
-
-    <div class="brand-chip">
-      <div class="brand-logo">
-        <img src="https://loremflickr.com/64/64/kebab,grilled?lock=16" alt="">
-        <div class="brand-logo-overlay"><div class="brand-logotype">FERGANA<br>PALAV</div></div>
-      </div>
-      <div class="brand-name">Fergana</div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
 <!-- ═══ CATEGORIES ═══ -->
 <section class="categories-section surface">
-  <div class="section-head"><div class="section-title">Что заказать</div></div>
+  <div class="section-head" style="padding-bottom:4px;">
+    <div class="section-title" style="font-size:26px;font-weight:900;letter-spacing:-0.6px;">Что заказать</div>
+  </div>
   <div class="scroll-x cat-scroll">
-    <div class="cat-card active"><span class="cat-emoji">🫓</span><div class="cat-name">Лепёшки</div></div>
-    <div class="cat-card"><span class="cat-emoji">🍜</span><div class="cat-name">Норин</div></div>
-    <div class="cat-card"><span class="cat-emoji">🍚</span><div class="cat-name">Плов</div></div>
-    <div class="cat-card"><span class="cat-emoji">🍖</span><div class="cat-name">Шашлык</div></div>
-    <div class="cat-card"><span class="cat-emoji">🥟</span><div class="cat-name">Самса</div></div>
-    <div class="cat-card"><span class="cat-emoji">🍡</span><div class="cat-name">Сладости</div></div>
-    <div class="cat-card"><span class="cat-emoji">🧋</span><div class="cat-name">Напитки</div></div>
+
+    <div class="cat-card active">
+      <div class="cat-img-wrap"><img src="./img/cat-lepyoshka.png" alt="Лепёшки"></div>
+      <div class="cat-name">Лепёшки</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-manti.png" alt="Манты"></div>
+      <div class="cat-name">Манты</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-plov.png" alt="Плов"></div>
+      <div class="cat-name">Плов</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-shashlik.png" alt="Шашлык"></div>
+      <div class="cat-name">Шашлык</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sweets.png" alt="Сладости"></div>
+      <div class="cat-name">Сладости</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sushi.png" alt="Суши"></div>
+      <div class="cat-name">Суши</div>
+      <div class="cat-underline"></div>
+    </div>
+
   </div>
 </section>
 <div class="sep"></div>
 
 <!-- ═══ RESTAURANTS ═══ -->
 <section class="rests-section surface">
-  <div class="section-head"><div class="section-title">Популярные</div><a class="section-all">Все →</a></div>
+  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all">Все →</a></div>
   <div class="scroll-x rests-scroll">
 
-    <div class="rest-card">
-      <div class="rest-img">
-        <img src="https://loremflickr.com/200/195/uzbek,food,traditional?lock=30" alt="Rayhon">
-        <div class="rest-img-overlay"></div>
-        <div class="disc-sticker">−15%</div>
-        <div class="rest-wordmark">RAYHON<br>Milliy Taomlar</div>
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-04.jpg" alt="Rayhon">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
       </div>
-      <div class="rest-body">
-        <div class="rest-name">Rayhon Milliy Taomlar</div>
-        <div class="rest-meta">
-          <div class="rest-rating"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.8</div>
-          <div class="dot"></div><span>20–35 мин</span>
-        </div>
-        <div class="rest-badges"><span class="badge badge-disc">−15%</span><span class="badge badge-free">🚚 Бесплатно</span></div>
+      <div class="rest-meta-row">
+        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="rest-rv">4.8</span>
       </div>
     </div>
 
-    <div class="rest-card">
-      <div class="rest-img">
-        <img src="https://loremflickr.com/200/195/plov,pilaf,rice,uzbek?lock=31" alt="Osh Markazi">
-        <div class="rest-img-overlay"></div>
-        <div class="rest-wordmark">OSH<br>MARKAZI</div>
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">OSH<small>Markazi</small></div>
       </div>
-      <div class="rest-body">
-        <div class="rest-name">Osh Markazi</div>
-        <div class="rest-meta">
-          <div class="rest-rating"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.7</div>
-          <div class="dot"></div><span>25–40 мин</span>
-        </div>
-        <div class="rest-badges"><span class="badge badge-plus">✦ Togora+</span></div>
+      <div class="rest-meta-row">
+        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="rest-rv">4.7</span>
       </div>
     </div>
 
-    <div class="rest-card">
-      <div class="rest-img">
-        <img src="https://loremflickr.com/200/195/noodle,soup,bowl?lock=32" alt="Norin House">
-        <div class="rest-img-overlay"></div>
-        <div class="disc-sticker">Новый</div>
-        <div class="rest-wordmark">NORIN<br>HOUSE</div>
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-12.jpg" alt="Norin House">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">NORIN<small>House</small></div>
       </div>
-      <div class="rest-body">
-        <div class="rest-name">Norin House</div>
-        <div class="rest-meta">
-          <div class="rest-rating"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.6</div>
-          <div class="dot"></div><span>15–30 мин</span>
-        </div>
-        <div class="rest-badges"><span class="badge badge-new">Новый</span><span class="badge badge-free">🚚 Бесплатно</span></div>
+      <div class="rest-meta-row">
+        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="rest-rv">4.6</span>
       </div>
     </div>
 
-    <div class="rest-card">
-      <div class="rest-img">
-        <img src="https://loremflickr.com/200/195/bread,tandoor,baked?lock=33" alt="Samarqand">
-        <div class="rest-img-overlay"></div>
-        <div class="rest-wordmark">SAMAR-<br>QAND</div>
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-16.jpg" alt="Samarqand">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
       </div>
-      <div class="rest-body">
-        <div class="rest-name">Samarqand Taomi</div>
-        <div class="rest-meta">
-          <div class="rest-rating"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9</div>
-          <div class="dot"></div><span>30–45 мин</span>
-        </div>
-        <div class="rest-badges"><span class="badge badge-plus">✦ Togora+</span></div>
+      <div class="rest-meta-row">
+        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="rest-rv">4.9</span>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">FERGANA<small>Palav</small></div>
+      </div>
+      <div class="rest-meta-row">
+        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="rest-rv">4.5</span>
       </div>
     </div>
 
@@ -773,12 +728,10 @@ body {
       <div class="mini-img">
         <img src="./img/ev-02.jpg" alt="patir">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">15 000 сум</div>
-          <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">15 000 сум</div>
         <div class="mini-name">Qo'qon patir</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -788,12 +741,10 @@ body {
       <div class="mini-img">
         <img src="./img/ev-03.jpg" alt="patirlar">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">12 000 сум</div>
-          <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">12 000 сум</div>
         <div class="mini-name">Qirmizi patirlar</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -803,12 +754,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-16.jpg" alt="tandyr">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">18 000 сум</div>
-          <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">18 000 сум</div>
         <div class="mini-name">Non tandirdan</div>
         <div class="mini-vendor">Samarqand</div>
       </div>
@@ -818,12 +767,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-15.jpg" alt="kulcha">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">9 000 сум</div>
-          <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">9 000 сум</div>
         <div class="mini-name">Kulcha non</div>
         <div class="mini-vendor">Osh Markazi</div>
       </div>
@@ -842,12 +789,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-12.jpg" alt="norin">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">115 000 сум</div>
-          <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">115 000 сум</div>
         <div class="mini-name">Qazili norin</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -857,12 +802,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-13.jpg" alt="norin 2">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">94 000 сум</div>
-          <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">94 000 сум</div>
         <div class="mini-name">Mayda to'g'ralgan norin</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -881,12 +824,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-01.jpg" alt="shashlik">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">45 000 сум</div>
-          <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">45 000 сум</div>
         <div class="mini-name">Qo'y shashlik</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -896,12 +837,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-17.jpg" alt="lula">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">38 000 сум</div>
-          <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">38 000 сум</div>
         <div class="mini-name">Lula kabob</div>
         <div class="mini-vendor">Samarqand</div>
       </div>
@@ -911,12 +850,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-18.jpg" alt="chicken-kebab">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">32 000 сум</div>
-          <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">32 000 сум</div>
         <div class="mini-name">Tovuq kabob</div>
         <div class="mini-vendor">Osh Markazi</div>
       </div>
@@ -926,12 +863,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-09.jpg" alt="mix-grill">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">55 000 сум</div>
-          <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">55 000 сум</div>
         <div class="mini-name">Kabob assorted</div>
         <div class="mini-vendor">Fergana Palav</div>
       </div>
@@ -950,12 +885,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-14.jpg" alt="samsa-round">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">12 000 сум</div>
-          <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">12 000 сум</div>
         <div class="mini-name">Dumaloq samsa</div>
         <div class="mini-vendor">Samarqand</div>
       </div>
@@ -965,12 +898,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-15.jpg" alt="samsa-tri">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">10 000 сум</div>
-          <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">10 000 сум</div>
         <div class="mini-name">Uchburchak samsa</div>
         <div class="mini-vendor">Samarqand</div>
       </div>
@@ -980,12 +911,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-16.jpg" alt="samsa-mix">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">22 000 сум</div>
-          <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">22 000 сум</div>
         <div class="mini-name">Samsa assorted</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -995,12 +924,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-14.jpg" alt="samsa-small">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">8 000 сум</div>
-          <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">8 000 сум</div>
         <div class="mini-name">Kichkina samsa</div>
         <div class="mini-vendor">Osh Markazi</div>
       </div>
@@ -1051,12 +978,10 @@ body {
       <div class="mini-img">
         <img src="./img/ev-04.jpg" alt="norin">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">115 000 сум</div>
-          <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">115 000 сум</div>
         <div class="mini-name">Qazili norin</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -1065,12 +990,10 @@ body {
       <div class="mini-img">
         <img src="./img/ev-01.jpg" alt="plov">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">94 000 сум</div>
-          <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">94 000 сум</div>
         <div class="mini-name">Mayda norin</div>
         <div class="mini-vendor">Rayhon Milliy</div>
       </div>
@@ -1087,12 +1010,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-02.jpg" alt="palav">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">120 000 сум</div>
-          <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">120 000 сум</div>
         <div class="mini-name">Osh palav festiv.</div>
         <div class="mini-vendor">Osh Markazi</div>
       </div>
@@ -1101,12 +1022,10 @@ body {
       <div class="mini-img">
         <img src="./img/dish-03.jpg" alt="kavurdak">
         <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
       <div class="mini-body">
-        <div class="mini-price-row">
-          <div class="mini-price">85 000 сум</div>
-          <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-        </div>
+        <div class="mini-price">85 000 сум</div>
         <div class="mini-name">Kavurdak bayrami</div>
         <div class="mini-vendor">Samarqand</div>
       </div>
@@ -1170,7 +1089,7 @@ body {
     showToast(name);
   });
 
-  // Category pill switch
+  // Category switch
   document.querySelectorAll('.cat-card').forEach(function(card) {
     card.addEventListener('click', function() {
       document.querySelectorAll('.cat-card').forEach(function(c) { c.classList.remove('active'); });

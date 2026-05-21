@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Мои заказы — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <a class="page-back" href="profile.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Мои заказы</h1>
+</header>
+
+<div class="page-tabs" id="ordersTabs">
+  <button class="page-tab active" type="button" data-tab="all">Все <span class="pt-count" id="cntAll">0</span></button>
+  <button class="page-tab" type="button" data-tab="active">Активные <span class="pt-count" id="cntActive">0</span></button>
+  <button class="page-tab" type="button" data-tab="completed">Завершённые <span class="pt-count" id="cntCompleted">0</span></button>
+</div>
+
+<main class="orders-page">
+  <div class="orders-list" id="ordersList"></div>
+</main>
+
+<!-- Order detail bottom sheet -->
+<div class="filter-overlay" id="odOverlay"></div>
+<aside class="filter-sheet filter-sheet--blocks" id="odSheet" aria-modal="true" style="max-height: 90vh">
+  <div class="fbs-head">
+    <div class="filter-sheet-title">Заказ</div>
+    <button class="fbs-close" id="odClose" type="button" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fbs-body" id="odBody"></div>
+  <div class="fbs-foot">
+    <button class="fbs-btn fbs-btn-reset" id="odRepeat" type="button">Повторить</button>
+    <button class="fbs-btn fbs-btn-apply" id="odSupport" type="button">Поддержка</button>
+  </div>
+</aside>
+
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none"><path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/></svg></div>
+    <span>Главная</span>
+  </a>
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/><rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+      <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/><rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+    </svg></div>
+    <span>Каталог</span>
+  </a>
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+      <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+    </svg></div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+  <a class="nav-item" href="profile.html" data-page="profile.html" aria-current="page">
+    <div class="nav-bar"></div>
+    <div class="nav-icon"><svg viewBox="0 0 26 26" fill="none">
+      <circle class="ni" cx="13" cy="9" r="4.5"/>
+      <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+    </svg></div>
+    <span>Профиль</span>
+  </a>
+</nav>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FE5196"/><stop offset="100%" stop-color="#F77062"/></linearGradient></defs></svg>
+
+<div class="toast" id="cart-toast" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var escH = (window.TG && TG.escHTML) || function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  };
+  function fmtMoney(n){
+    n = Math.round(Number(n) || 0);
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+  function toast(msg){
+    var t = document.getElementById('cart-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  // ---- Status definitions ----
+  // Order of steps in the timeline
+  var STATUS_FLOW = ['new', 'accepted', 'cooking', 'delivering', 'completed'];
+  var STATUS_META = {
+    'new':        { label: 'Новый',            short: 'Передан', cls: 'new',        icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+    'accepted':   { label: 'Принят рестораном', short: 'Принят',  cls: 'accepted',   icon: '<polyline points="20 6 9 17 4 12"/>' },
+    'cooking':    { label: 'Готовится',         short: 'Готовится',cls: 'cooking',    icon: '<path d="M6 8h12l-1 11H7L6 8z"/><path d="M9 8V5a3 3 0 016 0v3"/>' },
+    'delivering': { label: 'В пути',            short: 'В пути',  cls: 'delivering', icon: '<circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/><path d="M3 17h2l2-7h8l3 4h3v3"/>' },
+    'completed':  { label: 'Завершён',          short: 'Доставлен',cls: 'completed',  icon: '<polyline points="20 6 9 17 4 12"/>' }
+  };
+  function isActive(status){ return status !== 'completed'; }
+
+  // ---- Mock orders ----
+  var ORDERS = [
+    {
+      id: 'TG-7821',
+      vendor: 'Hardees',
+      status: 'new',
+      datetime: '22 мая, 14:30',
+      slotText: 'как можно скорее',
+      address: 'ул. Амира Темура, 12, кв. 45',
+      payment: 'Картой курьеру',
+      items: [
+        { name: 'Chicken fillet box', qty: 1, price: 116000, img: './img/dish-10.jpg' },
+        { name: 'Coca-Cola 0.5л',    qty: 2, price: 12000, img: './img/dish-07.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7818',
+      vendor: 'Osh Markazi',
+      status: 'accepted',
+      datetime: '22 мая, 13:45',
+      slotText: '14:00 – 15:00',
+      address: 'ул. Амира Темура, 12, кв. 45',
+      payment: 'Картой онлайн',
+      items: [
+        { name: 'Свадебный плов', qty: 1, price: 38000, img: './img/dish-03.jpg' },
+        { name: 'Лепёшка обедненная (тандыр)', qty: 2, price: 8000, img: './img/dish-06.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7805',
+      vendor: 'Khan Atlas',
+      status: 'cooking',
+      datetime: '22 мая, 13:10',
+      slotText: '13:30 – 14:30',
+      address: 'Саларская набережная, 35А',
+      payment: 'Картой онлайн',
+      items: [
+        { name: 'Шашлык-сет 6 шамп.', qty: 1, price: 96000, img: './img/dish-04.jpg' },
+        { name: 'Овощной салат', qty: 1, price: 18000, img: './img/dish-05.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7792',
+      vendor: 'Norin House',
+      status: 'delivering',
+      datetime: '22 мая, 12:20',
+      slotText: 'к 13:00',
+      address: 'ул. Амира Темура, 12, кв. 45',
+      payment: 'Наличные',
+      items: [
+        { name: 'Qazili norin', qty: 2, price: 35000, img: './img/dish-13.jpg' },
+        { name: 'Чай чёрный', qty: 1, price: 6000, img: './img/dish-15.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7714',
+      vendor: 'Tandur Master',
+      status: 'completed',
+      datetime: '21 мая, 19:42',
+      slotText: '20:00 – 21:00',
+      address: 'ул. Амира Темура, 12, кв. 45',
+      payment: 'Картой онлайн',
+      items: [
+        { name: 'Самса с мясом', qty: 4, price: 12000, img: './img/dish-08.jpg' },
+        { name: 'Самса с тыквой', qty: 2, price: 11000, img: './img/dish-09.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7702',
+      vendor: 'Sweet Lab',
+      status: 'completed',
+      datetime: '20 мая, 16:15',
+      slotText: '16:30 – 17:30',
+      address: 'Саларская набережная, 35А',
+      payment: 'Click',
+      items: [
+        { name: 'Десертный набор', qty: 1, price: 25000, img: './img/dish-14.jpg' },
+        { name: 'Чак-чак', qty: 1, price: 18000, img: './img/dish-15.jpg' }
+      ]
+    }
+  ];
+
+  function orderTotal(o){
+    return o.items.reduce(function(s,i){ return s + (Number(i.price)||0) * (Number(i.qty)||0); }, 0);
+  }
+  function itemsPreview(o){
+    var names = o.items.map(function(i){ return i.name; });
+    if (names.length <= 2) return names.join(', ');
+    return names.slice(0,2).join(', ') + ' +' + (names.length - 2);
+  }
+
+  // ---- DOM refs ----
+  var $list   = document.getElementById('ordersList');
+  var $tabs   = document.getElementById('ordersTabs');
+  var $cntAll = document.getElementById('cntAll');
+  var $cntActive = document.getElementById('cntActive');
+  var $cntCompleted = document.getElementById('cntCompleted');
+  var $navPill = document.getElementById('navCartPill');
+
+  // Order detail
+  var $odOv   = document.getElementById('odOverlay');
+  var $odSh   = document.getElementById('odSheet');
+  var $odBody = document.getElementById('odBody');
+  var $odClose = document.getElementById('odClose');
+  var $odRepeat = document.getElementById('odRepeat');
+  var $odSupport= document.getElementById('odSupport');
+
+  var currentTab = 'all';
+  var currentOrderId = null;
+
+  // ---- Cart pill ----
+  function updateCartPill(){
+    if (!$navPill) return;
+    try {
+      var items = JSON.parse(localStorage.getItem('tg-cart') || '[]') || [];
+      var n = items.reduce(function(s, i){ return s + (Number(i.qty)||0); }, 0);
+      if (n > 0) { $navPill.hidden = false; $navPill.textContent = n; }
+      else { $navPill.hidden = true; }
+    } catch(e){}
+  }
+  updateCartPill();
+
+  // ---- Render list ----
+  function statusPill(status){
+    var m = STATUS_META[status]; if (!m) return '';
+    return '<div class="order-status-pill ' + m.cls + '">'
+      + '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' + m.icon + '</svg>'
+      + escH(m.label)
+      + '</div>';
+  }
+
+  function renderList(){
+    var all = ORDERS.length;
+    var active = ORDERS.filter(function(o){ return isActive(o.status); }).length;
+    var completed = all - active;
+    $cntAll.textContent = all;
+    $cntActive.textContent = active;
+    $cntCompleted.textContent = completed;
+
+    var filtered = ORDERS;
+    if (currentTab === 'active')    filtered = ORDERS.filter(function(o){ return isActive(o.status); });
+    if (currentTab === 'completed') filtered = ORDERS.filter(function(o){ return !isActive(o.status); });
+
+    if (!filtered.length) {
+      var emptyTitle = currentTab === 'active' ? 'Нет активных заказов' :
+                       currentTab === 'completed' ? 'Нет завершённых заказов' :
+                       'Заказов пока нет';
+      var emptyText = currentTab === 'active' ? 'Когда сделаете заказ, он появится здесь.' :
+                      currentTab === 'completed' ? 'Здесь будет история ваших заказов.' :
+                      'Загляните в каталог — там много вкусного.';
+      $list.innerHTML = '<div class="orders-empty">'
+        + '<div class="orders-empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></div>'
+        + '<div class="orders-empty-title">' + emptyTitle + '</div>'
+        + '<div class="orders-empty-text">' + emptyText + '</div>'
+        + '</div>';
+      return;
+    }
+
+    $list.innerHTML = filtered.map(function(o){
+      return '<article class="order-card" data-id="' + escH(o.id) + '">'
+        +   '<div class="order-head">'
+        +     statusPill(o.status)
+        +     '<div class="order-date">' + escH(o.datetime) + '</div>'
+        +   '</div>'
+        +   '<h2 class="order-vendor">' + escH(o.vendor) + '</h2>'
+        +   '<div class="order-items-preview">' + escH(itemsPreview(o)) + '</div>'
+        +   '<div class="order-foot">'
+        +     '<div class="order-total">' + fmtMoney(orderTotal(o)) + '</div>'
+        +     (o.status === 'completed'
+            ? '<button class="order-action" type="button" data-act="repeat" data-id="' + escH(o.id) + '">Повторить заказ →</button>'
+            : (o.status === 'delivering'
+              ? '<button class="order-action" type="button" data-act="track" data-id="' + escH(o.id) + '">Отследить →</button>'
+              : '<button class="order-action" type="button" data-act="open" data-id="' + escH(o.id) + '">Подробнее →</button>'))
+        +   '</div>'
+        + '</article>';
+    }).join('');
+  }
+  renderList();
+
+  // ---- Tab switching ----
+  $tabs.addEventListener('click', function(e){
+    var tab = e.target.closest('.page-tab');
+    if (!tab) return;
+    currentTab = tab.dataset.tab;
+    $tabs.querySelectorAll('.page-tab').forEach(function(t){
+      t.classList.toggle('active', t === tab);
+    });
+    renderList();
+  });
+
+  // ---- Detail sheet ----
+  function buildTimeline(status){
+    // For 'completed', all steps are done.
+    // For other statuses, steps up to current are 'done', current is 'active', rest are pending.
+    var currentIdx = STATUS_FLOW.indexOf(status);
+    var html = '<div class="od-timeline">';
+    STATUS_FLOW.forEach(function(step, i){
+      var meta = STATUS_META[step];
+      var cls = '';
+      if (status === 'completed') {
+        cls = 'done';
+      } else if (i < currentIdx) cls = 'done';
+      else if (i === currentIdx) cls = 'active';
+      var icon = (cls === 'done') ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="3" fill="currentColor"/>';
+      html += '<div class="od-step ' + cls + '">'
+        + '<div class="od-step-dot"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg></div>'
+        + '<div class="od-step-body">'
+        +   '<div class="od-step-title">' + escH(meta.label) + '</div>'
+        +   (cls === 'active' ? '<div class="od-step-time">сейчас</div>' : '')
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function openDetail(orderId){
+    var o = ORDERS.find(function(x){ return x.id === orderId; });
+    if (!o) return;
+    currentOrderId = orderId;
+    var total = orderTotal(o);
+
+    var itemsHtml = o.items.map(function(it){
+      var img = it.img ? "background-image: url('" + escH(it.img) + "');" : '';
+      return ''
+        + '<div class="od-item">'
+        +   '<div class="od-item-img" style="' + img + '"></div>'
+        +   '<div class="od-item-body">'
+        +     '<div class="od-item-name">' + escH(it.name) + '</div>'
+        +     '<div class="od-item-qty">' + (Number(it.qty)||0) + ' шт · ' + fmtMoney(it.price) + '</div>'
+        +   '</div>'
+        +   '<div class="od-item-price">' + fmtMoney((Number(it.price)||0) * (Number(it.qty)||0)) + '</div>'
+        + '</div>';
+    }).join('');
+
+    $odBody.innerHTML = ''
+      + '<div class="od-head">'
+      +   '<div class="od-vendor">' + escH(o.vendor) + '</div>'
+      +   '<div class="od-date">Заказ ' + escH(o.id) + ' · ' + escH(o.datetime) + '</div>'
+      + '</div>'
+      + '<div class="od-status-row">' + statusPill(o.status) + '</div>'
+
+      + '<div class="od-section">'
+      +   '<div class="od-section-title">Статус заказа</div>'
+      +   buildTimeline(o.status)
+      + '</div>'
+
+      + '<div class="od-section">'
+      +   '<div class="od-section-title">Состав</div>'
+      +   itemsHtml
+      + '</div>'
+
+      + '<div class="od-section">'
+      +   '<div class="od-section-title">Доставка</div>'
+      +   '<div class="od-info-row"><div class="od-info-label">Адрес</div><div class="od-info-value">' + escH(o.address) + '</div></div>'
+      +   '<div class="od-info-row"><div class="od-info-label">Время</div><div class="od-info-value">' + escH(o.slotText) + '</div></div>'
+      +   '<div class="od-info-row"><div class="od-info-label">Оплата</div><div class="od-info-value">' + escH(o.payment) + '</div></div>'
+      +   '<div class="od-info-row"><div class="od-info-label">Сумма</div><div class="od-info-value">' + fmtMoney(total) + '</div></div>'
+      + '</div>';
+
+    // Adjust footer buttons
+    var canRepeat = o.status === 'completed';
+    $odRepeat.style.display = canRepeat ? '' : 'none';
+
+    $odOv.classList.add('show');
+    $odSh.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDetail(){
+    $odOv.classList.remove('show');
+    $odSh.classList.remove('show');
+    document.body.style.overflow = '';
+    currentOrderId = null;
+  }
+  $odOv.addEventListener('click', closeDetail);
+  $odClose.addEventListener('click', closeDetail);
+
+  // ---- List click delegation ----
+  $list.addEventListener('click', function(e){
+    var btn = e.target.closest('.order-action');
+    if (btn) {
+      e.stopPropagation();
+      var act = btn.dataset.act;
+      var id = btn.dataset.id;
+      if (act === 'repeat') {
+        repeatOrder(id);
+        return;
+      }
+      if (act === 'track' || act === 'open') {
+        openDetail(id);
+        return;
+      }
+    }
+    var card = e.target.closest('.order-card');
+    if (card) openDetail(card.dataset.id);
+  });
+
+  // ---- Repeat order: add items to cart ----
+  function repeatOrder(orderId){
+    var o = ORDERS.find(function(x){ return x.id === orderId; });
+    if (!o) return;
+    var items = [];
+    try { items = JSON.parse(localStorage.getItem('tg-cart') || '[]') || []; } catch(e){}
+    // Vendor id derived from vendor name (lowercased, hyphenated)
+    var vId = o.vendor.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-');
+    o.items.forEach(function(it, i){
+      items.push({
+        id: o.id + '-' + i,
+        name: it.name,
+        img:  it.img,
+        price: it.price,
+        qty:   it.qty,
+        vendorId: vId
+      });
+    });
+    try {
+      localStorage.setItem('tg-cart', JSON.stringify(items));
+      localStorage.setItem('tg-cart-active-vendor', vId);
+    } catch(e){}
+    toast('Добавлено в корзину');
+    setTimeout(function(){ location.href = 'cart.html'; }, 700);
+  }
+  $odRepeat.addEventListener('click', function(){
+    if (currentOrderId) repeatOrder(currentOrderId);
+  });
+  $odSupport.addEventListener('click', function(){
+    toast('Поддержка: +998 71 200-00-00');
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if ($odSh.classList.contains('show')) closeDetail();
+  });
+})();
+</script>
+</body>
+</html>

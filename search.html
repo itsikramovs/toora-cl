@@ -64,14 +64,6 @@
       </div>
       <div class="search-chips" id="popularChips"></div>
     </section>
-    <div class="sep"></div>
-
-    <section class="search-section">
-      <div class="search-section-head">
-        <div class="search-section-title">Категории</div>
-      </div>
-      <div class="search-cat-grid" id="catGrid"></div>
-    </section>
   </div>
 
   <!-- ═══ NO-RESULTS STATE ═══ -->
@@ -307,6 +299,7 @@
   }
 
   function renderCategories() {
+    if (!catGrid) return;
     catGrid.innerHTML = CATEGORIES.map(function(c) {
       return '<div class="search-cat-card" data-query="' + TG.escHTML(c.q) + '">' +
                '<img class="search-cat-img" src="' + c.img + '" alt="' + TG.escHTML(c.name) + '">' +

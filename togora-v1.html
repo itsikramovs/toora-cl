@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="uz" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Togora — Toshkent</title>
+
+<style>
+@font-face {
+  font-family: YSText;
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
+}
+@font-face {
+  font-family: YSText;
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
+}
+@font-face {
+  font-family: YSText;
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Medium-7cc05513a9304e1b4be9.woff2") format("woff2");
+}
+@font-face {
+  font-family: YSText;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Regular-f689cf1dc4d29be27e17.woff2") format("woff2");
+}
+@font-face {
+  font-family: YSCompressed;
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSCompressed_Heavy-3e1dbef438e42c92bc38.woff2") format("woff2");
+}
+</style>
+
+<style>
+:root {
+  --font-main: 'YSText', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-compressed: 'YSCompressed', -apple-system, Arial Black, sans-serif;
+  --color-bg:       #F5F5F5;
+  --color-surface:  #FFFFFF;
+  --color-text:     #21201F;
+  --color-muted:    #A0A0A0;
+  --color-border:   #E8E8E8;
+  --color-orange:   #FC3F1D;
+  --color-discount: #FA6A3C;
+  --color-plus:     #21A038;
+  --color-plus-dk:  #1A7D2E;
+  --color-yellow:   #FCE000;
+  --r-card: 18px;
+  --r-badge: 12px;
+  --r-btn:  12px;
+  --h-cat:  130px;
+  --h-rest: 195px;
+  --h-mini: 97px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.scroll-x { display: flex; overflow-x: auto; scrollbar-width: none; }
+.scroll-x::-webkit-scrollbar { display: none; }
+.surface { background: var(--color-surface); }
+.sep { height: 8px; background: var(--color-bg); }
+
+/* ── Универсальный стиль фото ── */
+.photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+.photo-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* ── HEADER ── */
+.header {
+  background: var(--color-surface);
+}
+.search-sticky {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--color-surface);
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  padding: 8px 16px 14px;
+}
+.header-logo-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px 8px;
+}
+.logotype {
+  font-family: var(--font-compressed);
+  font-weight: 800; font-size: 28px; letter-spacing: -0.5px;
+  color: var(--color-text); line-height: 1;
+}
+.logotype span { color: var(--color-orange); }
+.address-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px 10px;
+}
+.address-left { display: flex; align-items: center; gap: 6px; cursor: pointer; flex: 1; min-width: 0; }
+.pin-icon {
+  width: 20px; height: 20px;
+  background: var(--color-orange);
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  flex-shrink: 0; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.pin-icon::after {
+  content: ''; width: 8px; height: 8px;
+  background: #fff; border-radius: 50%; transform: rotate(45deg);
+}
+.address-hint { font-size: 11px; color: var(--color-muted); font-weight: 400; }
+.address-main {
+  font-size: 15px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 4px;
+}
+.address-main svg { width: 14px; height: 14px; flex-shrink: 0; }
+.header-icons { display: flex; gap: 8px; flex-shrink: 0; }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--color-bg);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; position: relative;
+}
+.icon-btn svg { width: 20px; height: 20px; fill: none; stroke: var(--color-text); stroke-width: 1.8; }
+.notif-badge {
+  position: absolute; top: 7px; right: 7px;
+  width: 8px; height: 8px;
+  background: var(--color-orange); border-radius: 50%;
+  border: 1.5px solid var(--color-surface);
+}
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--color-bg); border-radius: var(--r-btn);
+  padding: 0 14px; height: 54px; cursor: text;
+}
+.search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-muted); stroke-width: 2; flex-shrink: 0; }
+.search-bar span { font-size: 15px; color: var(--color-muted); }
+
+/* ── PROMO BANNERS ── */
+.promo-section { background: var(--color-surface); padding: 14px 0; }
+.promo-scroll { padding: 0 16px; gap: 10px; }
+.promo-card {
+  flex-shrink: 0; width: 100%; height: 140px;
+  border-radius: var(--r-card); overflow: hidden;
+  position: relative; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 18px 18px;
+}
+.promo-card.pc1 { background: linear-gradient(140deg, #FF6B35 0%, #FC3F1D 100%); }
+.promo-card.pc2 { background: linear-gradient(140deg, #27AE60 0%, #21A038 100%); }
+.promo-card.pc3 { background: linear-gradient(140deg, #F9A825 0%, #FF8F00 100%); }
+.promo-overlay { display: none; }
+.promo-content { position: relative; z-index: 2; }
+.promo-eyebrow { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+.promo-title { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.05; font-family: var(--font-compressed); letter-spacing: -0.3px; }
+.promo-sub { font-size: 12px; color: rgba(255,255,255,0.82); margin-top: 5px; font-weight: 500; }
+.promo-badge {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  background: rgba(255,255,255,0.22); color: #fff;
+  font-size: 20px; font-weight: 900;
+  width: 54px; height: 54px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  line-height: 1; font-family: var(--font-compressed);
+  backdrop-filter: blur(4px); border: 1.5px solid rgba(255,255,255,0.3);
+}
+.promo-badge .pb-sub { font-size: 8px; font-weight: 700; opacity: 0.9; }
+
+/* ── INFO CHIPS ── */
+.discount-section { background: var(--color-surface); padding: 6px 0 18px; }
+.discount-scroll-x {
+  display: flex; overflow-x: auto; scrollbar-width: none; gap: 12px; padding: 0 16px 4px;
+}
+.discount-scroll-x::-webkit-scrollbar { display: none; }
+.d-pill {
+  flex-shrink: 0; width: 152px;
+  border-radius: 18px; padding: 14px 14px;
+  cursor: pointer; transition: transform .12s, box-shadow .12s;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.d-pill:active { transform: scale(0.97); }
+.d-pill.dp1 { background: #FFF3E0; }
+.d-pill.dp2 { background: #E8F5E9; }
+.d-pill.dp3 { background: #E8F0FE; }
+.d-pill.dp4 { background: #FBE9E7; }
+.d-icon {
+  flex-shrink: 0; width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 13px;
+}
+.d-icon svg { width: 22px; height: 22px; }
+.d-pill.dp1 .d-icon { background: rgba(255,152,0,0.18); }
+.d-pill.dp2 .d-icon { background: rgba(33,160,56,0.14); }
+.d-pill.dp3 .d-icon { background: rgba(59,130,246,0.13); }
+.d-pill.dp4 .d-icon { background: rgba(239,68,68,0.12); }
+.d-text { display: flex; flex-direction: column; gap: 2px; }
+.d-value { font-size: 15px; font-weight: 800; line-height: 1.15; color: var(--color-text); }
+.d-label { font-size: 11px; color: var(--color-muted); font-weight: 400; }
+.d-sub { display: none; }
+
+/* ── SECTION HEADER ── */
+.section-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 10px; }
+.section-title { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; }
+.section-all { font-size: 14px; font-weight: 500; color: var(--color-orange); text-decoration: none; cursor: pointer; }
+
+
+/* ── CATEGORIES ── */
+.categories-section { background: var(--color-surface); padding-bottom: 16px; }
+.cat-scroll { padding: 0 16px; gap: 6px; flex-wrap: nowrap; }
+.cat-card {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  cursor: pointer; width: 54px;
+  background: none; border: none; padding: 0;
+  transition: opacity .15s;
+}
+.cat-img-wrap {
+  width: 50px; height: 44px;
+  background: var(--color-surface);
+  margin-bottom: 6px; position: relative;
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: visible;
+}
+.cat-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain; object-position: bottom center;
+  display: block;
+  transition: transform .18s cubic-bezier(.34,1.56,.64,1);
+  filter: drop-shadow(0 3px 7px rgba(0,0,0,0.13));
+}
+.cat-card:active .cat-img-wrap img,
+.cat-card.active .cat-img-wrap img { transform: scale(1.08); }
+.cat-name {
+  font-size: 10px; font-weight: 400;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 54px;
+  color: var(--color-text); text-align: center; line-height: 1;
+}
+.cat-card.active .cat-name { color: var(--color-text); font-weight: 700; }
+.cat-underline {
+  width: 18px; height: 2px; background: transparent;
+  border-radius: 2px; margin-top: 4px;
+  transition: background .15s;
+}
+.cat-card.active .cat-underline { background: var(--color-orange); }
+
+/* ── RESTAURANTS ── */
+.rests-section { background: var(--color-surface); padding-bottom: 16px; }
+.rests-scroll { padding: 0 16px; gap: 12px; align-items: flex-start; }
+.rest-item { flex-shrink: 0; display: flex; flex-direction: column; cursor: pointer; width: 158px; }
+.rest-card {
+  width: 158px; height: 116px;
+  border-radius: var(--r-card); overflow: hidden;
+  position: relative; cursor: pointer;
+  border: none; background: #2a2a2a;
+  display: block;
+}
+.rest-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.rest-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.08) 60%, transparent 100%);
+}
+.rest-name-over {
+  position: absolute; bottom: 10px; left: 10px; right: 10px;
+  font-family: var(--font-compressed); font-weight: 800; font-size: 19px;
+  color: #fff; line-height: 1.1; letter-spacing: -0.2px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.35);
+}
+.rest-name-over small {
+  display: block; font-family: var(--font-main); font-size: 11px;
+  font-weight: 400; opacity: 0.82; margin-top: 1px; letter-spacing: 0;
+}
+.rest-star-icon { fill: #FFB300; width: 12px; height: 12px; flex-shrink: 0; }
+.rest-rv { font-weight: 700; color: var(--color-text); font-size: 12px; }
+.dot { width: 2px; height: 2px; background: var(--color-muted); border-radius: 50%; }
+.rest-badges { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+.badge { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; display: inline-flex; align-items: center; gap: 3px; line-height: 1; }
+.badge-free { background: #E8F5E9; color: #1A7D2E; }
+.badge-plus { background: var(--color-plus); color: #fff; }
+.badge-disc { background: #FFF0EB; color: var(--color-discount); }
+.badge-new  { background: #E3F2FD; color: #1565C0; }
+
+/* ── MINI PRODUCT CARDS ── */
+.mini-section { background: var(--color-surface); padding-bottom: 16px; }
+.mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
+.mini-card {
+  border-radius: var(--r-card); overflow: hidden;
+  background: var(--color-surface);
+  border: none;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.09);
+  cursor: pointer; position: relative;
+  display: flex; flex-direction: column;
+  transition: transform .12s, box-shadow .12s;
+}
+.mini-card:active { transform: scale(0.98); box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+.mini-img {
+  height: 130px; position: relative; overflow: hidden; flex-shrink: 0;
+}
+.mini-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mini-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.22) 0%, transparent 55%);
+}
+.mini-body {
+  padding: 10px 10px 12px;
+  display: flex; flex-direction: column; flex: 1;
+}
+.mini-price-row { margin-bottom: 4px; }
+.mini-price { font-size: 15px; font-weight: 800; color: var(--color-plus); }
+.mini-name { font-size: 13px; font-weight: 700; color: var(--color-text); line-height: 1.3; }
+.mini-vendor { font-size: 11px; font-weight: 400; color: var(--color-muted); margin-top: 3px; }
+.add-btn-float {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-plus); border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: absolute; bottom: 10px; right: 10px; z-index: 3;
+  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
+  transition: transform .12s, box-shadow .12s;
+}
+.add-btn-float:active { transform: scale(0.88); box-shadow: 0 1px 4px rgba(33,160,56,0.2); }
+
+/* ── QTY STEPPER ── */
+.qty-stepper {
+  position: absolute; bottom: 8px; right: 8px; z-index: 3;
+  display: flex; align-items: center;
+  background: var(--color-plus); border-radius: 20px;
+  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
+  height: 34px; overflow: hidden;
+}
+.qty-stepper .qs-btn {
+  width: 32px; height: 34px; border: none; background: transparent;
+  color: #fff; font-size: 20px; font-weight: 400; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; padding: 0;
+  font-family: var(--font-main);
+}
+.qty-stepper .qs-count {
+  font-size: 14px; font-weight: 800; color: #fff;
+  min-width: 22px; text-align: center; line-height: 1;
+  font-family: var(--font-main);
+}
+.add-btn-float svg { width: 16px; height: 16px; stroke: #fff; stroke-width: 2.8; fill: none; stroke-linecap: round; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 82px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: #21201F; color: #fff;
+  padding: 13px 20px; border-radius: 50px;
+  font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; gap: 9px;
+  opacity: 0; transition: opacity .2s ease, transform .2s ease;
+  z-index: 600; pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast-check {
+  width: 20px; height: 20px; background: var(--color-plus);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.toast-check svg { width: 11px; height: 11px; stroke: #fff; stroke-width: 3; fill: none; }
+
+
+/* ── EVENTS ── */
+.events-section { background: var(--color-surface); padding-bottom: 16px; }
+.events-scroll { padding: 0 16px; gap: 10px; }
+.ev-card {
+  flex-shrink: 0; width: 160px; height: 97px;
+  border-radius: var(--r-card); overflow: hidden;
+  position: relative; cursor: pointer;
+  display: flex; align-items: flex-end; padding: 10px 12px;
+}
+.ev-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ev-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.48); }
+.ev-content { position: relative; z-index: 2; }
+.ev-emoji { font-size: 22px; margin-bottom: 2px; }
+.ev-label { color: #fff; font-size: 13px; font-weight: 800; line-height: 1.2; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+/* ── HISTORY ── */
+.history-section { background: var(--color-surface); padding-bottom: 16px; }
+.history-scroll { padding: 0 16px; gap: 10px; }
+.hist-card {
+  flex-shrink: 0; width: 155px;
+  border-radius: var(--r-card); overflow: hidden;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  cursor: pointer; position: relative;
+}
+.hist-img { height: 97px; position: relative; overflow: hidden; }
+.hist-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hist-disc {
+  position: absolute; top: 6px; left: 6px;
+  background: var(--color-discount); color: #fff;
+  font-size: 11px; font-weight: 800; border-radius: 6px; padding: 2px 6px; z-index: 2;
+}
+.hist-body { padding: 8px 10px 10px; }
+.hist-name { font-size: 13px; font-weight: 700; margin-bottom: 1px; line-height: 1.2; }
+.hist-vendor { font-size: 11px; color: var(--color-muted); margin-bottom: 5px; }
+.hist-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; }
+.hist-rating svg { width: 11px; height: 11px; fill: #FFB300; }
+.hist-rating .rv { font-weight: 700; }
+.hist-rating .rt { color: var(--color-muted); }
+.repeat-btn {
+  width: 100%; background: var(--color-bg); border: none;
+  border-radius: 8px; padding: 6px 0; font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-top: 7px; font-family: var(--font-main);
+}
+
+
+/* ── SECTION RADIUS ── */
+.promo-section,
+.discount-section,
+.categories-section,
+.rests-section,
+.history-section,
+.events-section,
+.mini-section {
+  border-radius: 18px;
+}
+
+/* ── BOTTOM NAV ── */
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 390px;
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 -4px 16px rgba(13,10,44,0.07);
+  display: flex; z-index: 300;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 14px 0 10px; cursor: pointer; position: relative;
+  transition: opacity .12s;
+}
+.nav-item:active { opacity: .72; }
+.nav-bar {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 56px; height: 3px; border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg,#222222 0%,#222222 100%);
+  opacity: 0; transition: opacity .2s;
+}
+.nav-item.active .nav-bar { opacity: 1; }
+.nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 26px; height: 26px; }
+.ni { fill: #CFD6DC; transition: fill .18s; }
+.nav-item.active .ni { fill: url(#navGradient); }
+.nav-item span {
+  font-size: 11px; font-weight: 500; color: #ABB7C2;
+  background: transparent; -webkit-text-fill-color: #ABB7C2;
+  transition: color .15s;
+}
+.nav-item.active span {
+  font-weight: 600;
+  background: linear-gradient(to bottom, #222222, #222222);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cart-pill {
+  position: absolute; top: 10px; right: calc(50% - 18px);
+  background: var(--color-orange); color: #fff;
+  font-size: 9px; font-weight: 900; min-width: 16px; height: 16px;
+  border-radius: 8px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-logo-row">
+    <div class="logotype">togora<span>.</span></div>
+    <div class="header-icons">
+      <button class="icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-badge"></div>
+      </button>
+    </div>
+  </div>
+  <div class="address-row">
+    <div class="address-left">
+      <div class="pin-icon"></div>
+      <div>
+        <div class="address-hint">Ташкент, доставка</div>
+        <div class="address-main">
+          Амир Темур, Бобур 23
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="search-sticky">
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Блюда, рестораны...</span>
+  </div>
+</div>
+<div class="sep"></div>
+
+<!-- ═══ PROMO BANNERS ═══ -->
+<section class="promo-section surface">
+  <div class="scroll-x promo-scroll">
+
+    <div class="promo-card pc1">
+      <div class="promo-badge">−30%<span class="pb-sub">скидка</span></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">🎉 Акция</div>
+        <div class="promo-title">Первый заказ<br>дешевле</div>
+        <div class="promo-sub">Промокод TOGORA30</div>
+      </div>
+    </div>
+
+    <div class="promo-card pc2">
+      <div class="promo-badge">0 сум<span class="pb-sub">достав.</span></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">✦ Togora+</div>
+        <div class="promo-title">Бесплатная<br>доставка</div>
+        <div class="promo-sub">Каждый день с подпиской</div>
+      </div>
+    </div>
+
+    <div class="promo-card pc3">
+      <div class="promo-content">
+        <div class="promo-eyebrow">🌸 Наврӯз</div>
+        <div class="promo-title">Сезонное<br>меню</div>
+        <div class="promo-sub">Ограниченное время</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ INFO CHIPS ═══ -->
+<section class="discount-section surface">
+  <div class="discount-scroll-x">
+
+    <!-- 500+ ресторанов — storefront -->
+    <div class="d-pill dp1">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18M3 10V19a1 1 0 001 1h16a1 1 0 001-1V10M3 10L6 4h12l3 6"/>
+          <path d="M9 21v-6h6v6"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">500+</div>
+        <div class="d-label">ресторанов</div>
+      </div>
+    </div>
+
+    <!-- 0 сум — delivery scooter -->
+    <div class="d-pill dp2">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1B7A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="18" r="2"/>
+          <circle cx="18" cy="18" r="2"/>
+          <path d="M8 18h6M14 18V9h3l3 4v5h-2"/>
+          <path d="M6 18H3v-5l5-4h4v9"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">0 сум</div>
+        <div class="d-label">доставка</div>
+      </div>
+    </div>
+
+    <!-- Предзаказ — clock -->
+    <div class="d-pill dp3">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3.5 3.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Предзаказ</div>
+        <div class="d-label">удобное время</div>
+      </div>
+    </div>
+
+    <!-- Гарантия — shield + check -->
+    <div class="d-pill dp4">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5.25-3.5 9.25-8 10.5C7.5 21.25 4 17.25 4 12V6l8-4z"/>
+          <path d="M8.5 12l2.5 2.5 4.5-4.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Гарантия</div>
+        <div class="d-label">вернём деньги</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ CATEGORIES ═══ -->
+<section class="categories-section surface">
+  <div class="section-head" style="padding-bottom:4px;">
+    <div class="section-title" style="font-size:26px;font-weight:900;letter-spacing:-0.6px;">Что заказать</div>
+  </div>
+  <div class="scroll-x cat-scroll">
+
+    <div class="cat-card active">
+      <div class="cat-img-wrap"><img src="./img/cat-lepyoshka.png" alt="Лепёшки"></div>
+      <div class="cat-name">Лепёшки</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-manti.png" alt="Манты"></div>
+      <div class="cat-name">Манты</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-plov.png" alt="Плов"></div>
+      <div class="cat-name">Плов</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-shashlik.png" alt="Шашлык"></div>
+      <div class="cat-name">Шашлык</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sweets.png" alt="Сладости"></div>
+      <div class="cat-name">Сладости</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sushi.png" alt="Суши"></div>
+      <div class="cat-name">Суши</div>
+      <div class="cat-underline"></div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ RESTAURANTS ═══ -->
+<section class="rests-section surface">
+  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all">Все →</a></div>
+  <div class="scroll-x rests-scroll">
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-04.jpg" alt="Rayhon">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">OSH<small>Markazi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-12.jpg" alt="Norin House">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">NORIN<small>House</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-16.jpg" alt="Samarqand">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">FERGANA<small>Palav</small></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ORDER HISTORY ═══ -->
+<section class="history-section surface">
+  <div class="section-head"><div class="section-title">Вы заказывали</div><a class="section-all">Все →</a></div>
+  <div class="scroll-x history-scroll">
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <div class="hist-disc">−15%</div>
+        <img src="./img/ev-02.jpg" alt="patir">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qo'qon patir</div>
+        <div class="hist-vendor">Rayhon Milliy</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.8</span><span class="rt">· 20 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-13.jpg" alt="norin">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qazili norin</div>
+        <div class="hist-vendor">Norin House</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.6</span><span class="rt">· 25 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-02.jpg" alt="plov">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Osh Palav</div>
+        <div class="hist-vendor">Osh Markazi</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.7</span><span class="rt">· 30 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ЛЕПЁШКИ — mini grid ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Лепёшки</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-02.jpg" alt="patir">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">15 000 сум</div>
+        <div class="mini-name">Qo'qon patir</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-03.jpg" alt="patirlar">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Qirmizi patirlar</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="tandyr">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">18 000 сум</div>
+        <div class="mini-name">Non tandirdan</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="kulcha">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">9 000 сум</div>
+        <div class="mini-name">Kulcha non</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ НОРИН ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Норин</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-12.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-13.jpg" alt="norin 2">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda to'g'ralgan norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ШАШЛЫК ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Шашлык</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-01.jpg" alt="shashlik">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">45 000 сум</div>
+        <div class="mini-name">Qo'y shashlik</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-17.jpg" alt="lula">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">38 000 сум</div>
+        <div class="mini-name">Lula kabob</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-18.jpg" alt="chicken-kebab">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">32 000 сум</div>
+        <div class="mini-name">Tovuq kabob</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-09.jpg" alt="mix-grill">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">55 000 сум</div>
+        <div class="mini-name">Kabob assorted</div>
+        <div class="mini-vendor">Fergana Palav</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ САМСА ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Самса</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-round">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Dumaloq samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="samsa-tri">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">10 000 сум</div>
+        <div class="mini-name">Uchburchak samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="samsa-mix">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">22 000 сум</div>
+        <div class="mini-name">Samsa assorted</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-small">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">8 000 сум</div>
+        <div class="mini-name">Kichkina samsa</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ EVENTS ═══ -->
+<section class="events-section surface">
+  <div class="section-head"><div class="section-title">Мероприятия</div><a class="section-all">Все →</a></div>
+  <div class="scroll-x events-scroll">
+
+    <div class="ev-card">
+      <img src="./img/ev-02.jpg" alt="Кавурдак">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">🍖</div><div class="ev-label">Кавурдак</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-01.jpg" alt="Куда чакирик">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">💍</div><div class="ev-label">Куда чакирик</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-04.jpg" alt="Помолвка">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">🌸</div><div class="ev-label">Помолвка</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-05.jpg" alt="Бешик туй">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">👶</div><div class="ev-label">Бешик туй</div></div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ДЛЯ ПОМОЛВКИ ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Для помолвки</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-04.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-01.jpg" alt="plov">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ДЛЯ БЕШИК ТУЙ ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Для бешик туй</div><a class="section-all">Все →</a></div>
+  <div class="mini-grid">
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-02.jpg" alt="palav">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">120 000 сум</div>
+        <div class="mini-name">Osh palav festiv.</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-03.jpg" alt="kavurdak">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">85 000 сум</div>
+        <div class="mini-name">Kavurdak bayrami</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text">Добавлено в корзину</span>
+</div>
+
+<!-- Gradient defs for active nav icons -->
+<svg style="width:0;height:0;position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="navGradient" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#222222"/>
+      <stop offset="100%" stop-color="#222222"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <!-- 1. Главная — house icon -->
+  <div class="nav-item active">
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- roof -->
+        <path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </div>
+
+  <!-- 2. Каталог — 2×2 grid -->
+  <div class="nav-item">
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/>
+        <rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+        <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/>
+        <rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </div>
+
+  <!-- 3. Корзина — shopping bag -->
+  <div class="nav-item">
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- bag body -->
+        <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+        <!-- handle detail -->
+        <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+      </svg>
+    </div>
+    <div class="cart-pill">3</div>
+    <span>Корзина</span>
+  </div>
+
+  <!-- 4. Профиль — person -->
+  <div class="nav-item">
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- head -->
+        <circle class="ni" cx="13" cy="9" r="4.5"/>
+        <!-- body/shoulders -->
+        <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </div>
+</nav>
+
+
+<script>
+(function() {
+  var toast = document.getElementById('cart-toast');
+  var toastText = toast.querySelector('.toast-text');
+  var cartPill = document.querySelector('.cart-pill');
+  var cartCount = parseInt(cartPill ? cartPill.textContent : 3);
+  // Nav item active state click
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+      item.classList.add('active');
+    });
+  });
+  var timer;
+
+  function showToast(name) {
+    toastText.textContent = (name || 'Блюдо') + ' — в корзине';
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function() { toast.classList.remove('show'); }, 2400);
+  }
+
+  document.addEventListener('click', function(e) {
+    // Handle + (add-btn-float) tap
+    var btn = e.target.closest('.add-btn-float');
+    if (btn) {
+      e.stopPropagation();
+      var card = btn.closest('.mini-img');
+      var name = btn.dataset.name || btn.closest('.mini-card')?.querySelector('.mini-name')?.textContent || 'Блюдо';
+      cartCount++;
+      if (cartPill) cartPill.textContent = cartCount;
+      // Replace + button with stepper
+      var stepper = document.createElement('div');
+      stepper.class

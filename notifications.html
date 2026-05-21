@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
 <title>Уведомления — Togora</title>
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,6 +27,9 @@
   </a>
   <h1 class="page-title">Уведомления</h1>
   <button class="page-header-action" id="markAllBtn">Прочитать все</button>
+  <button class="page-header-icon" id="testBtn" aria-label="Тестовое уведомление" title="Тест: звук + push + новое уведомление">
+    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+  </button>
   <button class="page-header-icon" id="settingsBtn" aria-label="Настройки уведомлений">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
   </button>
@@ -31,34 +45,32 @@
 <!-- ═══ LIST ═══ -->
 <div class="notif-page-list" id="notifList"></div>
 
-<!-- Empty state -->
+<!-- Empty state — only on "unread" / "read" tabs -->
 <div class="notif-page-empty" id="notifEmpty">
   <div class="notif-empty-ill">
     <svg viewBox="0 0 24 24">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
-  <div class="notif-empty-title" id="notifEmptyTitle">Пока нет уведомлений</div>
+  <div class="notif-empty-title" id="notifEmptyTitle">Всё прочитано</div>
   <div class="notif-empty-text"  id="notifEmptyText">
-    Здесь появятся новости о&nbsp;ваших заказах, акциях и&nbsp;бонусах.
+    Новых уведомлений нет — здесь будут появляться непрочитанные.
   </div>
 </div>
 
-<!-- ═══ NOTIFICATION DETAIL (slide-in panel) ═══ -->
+<!-- ═══ NOTIFICATION DETAIL (bottom sheet) ═══ -->
+<div class="notif-detail-overlay" id="notifDetailOverlay"></div>
 <div class="notif-detail" id="notifDetail" role="dialog" aria-label="Уведомление">
   <div class="nd-head">
-    <button class="nd-back" id="ndBack" aria-label="Назад">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
     <div class="nd-head-title">Уведомление</div>
     <button class="nd-delete" id="ndDelete" aria-label="Удалить">
       <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
     </button>
+    <button class="nd-back" id="ndBack" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+    </button>
   </div>
-  <div class="nd-body" id="ndBody">
-    <!-- rendered by JS -->
-  </div>
+  <div class="nd-body" id="ndBody"></div>
 </div>
 
 <!-- ═══ BOTTOM NAV ═══ -->
@@ -105,7 +117,6 @@
   </a>
 </nav>
 
-<!-- Gradient definition for active nav icons -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -115,7 +126,7 @@
   </defs>
 </svg>
 
-<!-- Toast (shared, used by TG.showToast) -->
+<!-- Toast (shared) -->
 <div class="toast" id="cart-toast" aria-live="polite">
   <div class="toast-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
   <span class="toast-text"></span>
@@ -125,24 +136,24 @@
 <script>
 (function() {
 
-  // ───── DOM refs ─────
-  var notifList     = document.getElementById('notifList');
-  var notifEmpty    = document.getElementById('notifEmpty');
+  var notifList       = document.getElementById('notifList');
+  var notifEmpty      = document.getElementById('notifEmpty');
   var notifEmptyTitle = document.getElementById('notifEmptyTitle');
   var notifEmptyText  = document.getElementById('notifEmptyText');
-  var notifTabs     = document.getElementById('notifTabs');
-  var ntcAll        = document.getElementById('ntcAll');
-  var ntcUnread     = document.getElementById('ntcUnread');
-  var ntcRead       = document.getElementById('ntcRead');
-  var markAllBtn    = document.getElementById('markAllBtn');
-  var settingsBtn   = document.getElementById('settingsBtn');
+  var notifTabs       = document.getElementById('notifTabs');
+  var ntcAll          = document.getElementById('ntcAll');
+  var ntcUnread       = document.getElementById('ntcUnread');
+  var ntcRead         = document.getElementById('ntcRead');
+  var markAllBtn      = document.getElementById('markAllBtn');
+  var settingsBtn     = document.getElementById('settingsBtn');
+  var testBtn         = document.getElementById('testBtn');
 
-  var notifDetail   = document.getElementById('notifDetail');
-  var ndBack        = document.getElementById('ndBack');
-  var ndDelete      = document.getElementById('ndDelete');
-  var ndBody        = document.getElementById('ndBody');
+  var notifDetail        = document.getElementById('notifDetail');
+  var notifDetailOverlay = document.getElementById('notifDetailOverlay');
+  var ndBack             = document.getElementById('ndBack');
+  var ndDelete           = document.getElementById('ndDelete');
+  var ndBody             = document.getElementById('ndBody');
 
-  // ───── State (loaded from shared store) ─────
   var notifications = TG.loadNotifications();
   var currentTab = 'all';
   var currentDetailId = null;
@@ -151,10 +162,8 @@
     TG.saveNotifications(notifications);
     TG.updateBellBadge();
   }
-
   function escH(s) { return TG.escHTML(s); }
 
-  // ───── Counts & tab counters ─────
   function updateCounts() {
     var total  = notifications.length;
     var unread = notifications.filter(function(n) { return !n.read; }).length;
@@ -166,28 +175,26 @@
     markAllBtn.style.visibility = unread === 0 ? 'hidden' : 'visible';
   }
 
-  // ───── Filtering ─────
   function getFiltered() {
     if (currentTab === 'unread') return notifications.filter(function(n) { return !n.read; });
     if (currentTab === 'read')   return notifications.filter(function(n) { return n.read; });
     return notifications.slice();
   }
 
-  // ───── Render ─────
   function render() {
     var list = getFiltered();
     if (!list.length) {
       notifList.innerHTML = '';
-      notifEmpty.classList.add('show');
       if (currentTab === 'unread') {
+        notifEmpty.classList.add('show');
         notifEmptyTitle.textContent = 'Всё прочитано';
         notifEmptyText.innerHTML = 'Новых уведомлений нет — здесь будут появляться непрочитанные.';
       } else if (currentTab === 'read') {
+        notifEmpty.classList.add('show');
         notifEmptyTitle.textContent = 'Нет прочитанных';
         notifEmptyText.innerHTML = 'Прочитанные уведомления будут отображаться здесь.';
       } else {
-        notifEmptyTitle.textContent = 'Пока нет уведомлений';
-        notifEmptyText.innerHTML = 'Здесь появятся новости о&nbsp;ваших заказах, акциях и&nbsp;бонусах.';
+        notifEmpty.classList.remove('show');
       }
       return;
     }
@@ -214,16 +221,13 @@
     notifList.innerHTML = html;
   }
 
-  // ───── Detail panel ─────
   function openDetail(id) {
     var n = notifications.find(function(x) { return x.id === id; });
     if (!n) return;
     currentDetailId = id;
     if (!n.read) {
       n.read = true;
-      persist();
-      updateCounts();
-      render();
+      persist(); updateCounts(); render();
     }
     var icon = TG.NICON[n.type] || '';
     var fullText = escH(n.full).replace(/\n/g, '<br>');
@@ -235,6 +239,7 @@
       + '<div class="nd-text">' + fullText + '</div>'
       + ctaHtml
       + '<button class="nd-action secondary" id="ndCloseBtn">Закрыть</button>';
+    notifDetailOverlay.classList.add('show');
     notifDetail.classList.add('show');
     document.body.style.overflow = 'hidden';
     var ndCta = document.getElementById('ndCta');
@@ -243,6 +248,7 @@
   }
   function closeDetail() {
     notifDetail.classList.remove('show');
+    notifDetailOverlay.classList.remove('show');
     currentDetailId = null;
     document.body.style.overflow = '';
   }
@@ -256,7 +262,6 @@
     TG.showToast('Уведомление удалено');
   }
 
-  // ───── Tab switching ─────
   function setTab(tab) {
     currentTab = tab;
     notifTabs.querySelectorAll('.page-tab').forEach(function(b) {
@@ -265,7 +270,6 @@
     render();
   }
 
-  // ───── Bindings ─────
   notifTabs.addEventListener('click', function(e) {
     var btn = e.target.closest('.page-tab');
     if (!btn) return;
@@ -290,15 +294,55 @@
     TG.showToast('Настройки уведомлений — скоро');
   });
 
+  // ───── Test notification (sound + system push + new entry) ─────
+  testBtn.addEventListener('click', function() {
+    TG.playNotifSound();
+
+    var nextId = notifications.reduce(function(max, n) { return Math.max(max, n.id); }, 0) + 1;
+    var stamp = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    var item = {
+      id: nextId,
+      type: 'system',
+      title: 'Тестовое уведомление #' + nextId,
+      preview: 'Сработала кнопка теста · ' + stamp + '. Звук + системный пуш отправлены.',
+      full: 'Это тестовое уведомление, отправленное в ' + stamp + '.\n\nПроверка возможностей:\n• Звуковое оповещение (Web Audio "ding")\n• Системный push (Notification API)\n• Запись в общем хранилище (localStorage)\n\nСчётчик колокольчика на других страницах обновится автоматически.',
+      time: 'Только что',
+      day:  'Сегодня',
+      read: false,
+      cta:  null
+    };
+    notifications.unshift(item);
+    persist();
+    updateCounts();
+    render();
+
+    TG.requestNotificationPermission().then(function(state) {
+      if (state === 'granted') {
+        TG.sendSystemNotif({
+          title: item.title,
+          body:  item.preview,
+          tag:   'togora-test-' + item.id,
+          url:   './notifications.html',
+          id:    item.id
+        });
+        TG.showToast('Звук + системное уведомление отправлены');
+      } else if (state === 'denied') {
+        TG.showToast('Разрешите уведомления в браузере для системного пуша');
+      } else {
+        TG.showToast('Уведомления не поддерживаются');
+      }
+    });
+  });
+
   ndBack.addEventListener('click', closeDetail);
   ndDelete.addEventListener('click', deleteCurrent);
+  notifDetailOverlay.addEventListener('click', closeDetail);
 
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
     if (notifDetail.classList.contains('show')) closeDetail();
   });
 
-  // ───── Initial render ─────
   updateCounts();
   render();
 

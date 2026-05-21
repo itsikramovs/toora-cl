@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
 <title>Togora — Toshkent</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -78,6 +90,468 @@
 </section>
 <div class="sep"></div>
 
+<!-- ═══ CATEGORIES ═══ -->
+<section class="categories-section surface">
+  <div class="section-head" style="padding-bottom:4px;">
+    <div class="section-title" style="font-size:26px;font-weight:900;letter-spacing:-0.6px;">Что заказать</div>
+  </div>
+  <div class="scroll-x cat-scroll">
+
+    <div class="cat-card active">
+      <div class="cat-img-wrap"><img src="./img/cat-lepyoshka.png" alt="Лепёшки"></div>
+      <div class="cat-name">Лепёшки</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-manti.png" alt="Манты"></div>
+      <div class="cat-name">Манты</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-plov.png" alt="Плов"></div>
+      <div class="cat-name">Плов</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-shashlik.png" alt="Шашлык"></div>
+      <div class="cat-name">Шашлык</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sweets.png" alt="Сладости"></div>
+      <div class="cat-name">Сладости</div>
+      <div class="cat-underline"></div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-img-wrap"><img src="./img/cat-sushi.png" alt="Суши"></div>
+      <div class="cat-name">Суши</div>
+      <div class="cat-underline"></div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ORDER HISTORY ═══ -->
+<section class="history-section surface">
+  <div class="section-head"><div class="section-title">Вы заказывали</div><a class="section-all">Все →</a></div>
+  <div class="scroll-x history-scroll">
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <div class="hist-disc">−15%</div>
+        <img src="./img/ev-02.jpg" alt="patir">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qo'qon patir</div>
+        <div class="hist-vendor">Rayhon Milliy</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.8</span><span class="rt">· 20 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-13.jpg" alt="norin">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qazili norin</div>
+        <div class="hist-vendor">Norin House</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.6</span><span class="rt">· 25 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-02.jpg" alt="plov">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Osh Palav</div>
+        <div class="hist-vendor">Osh Markazi</div>
+        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.7</span><span class="rt">· 30 мин</span></div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ RESTAURANTS ═══ -->
+<section class="rests-section surface">
+  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all">Все →</a></div>
+  <div class="scroll-x rests-scroll">
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-04.jpg" alt="Rayhon">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">OSH<small>Markazi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-12.jpg" alt="Norin House">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">NORIN<small>House</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-16.jpg" alt="Samarqand">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">FERGANA<small>Palav</small></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ REELS (restaurant videos) ═══ -->
+<section class="reels-section surface">
+  <div class="section-head">
+    <div class="section-title">Рилсы ресторанов</div>
+    <a class="section-all">Все →</a>
+  </div>
+  <div class="scroll-x reels-scroll" id="reelsScroll">
+    <!-- rendered by JS -->
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ POPULAR DISHES (tabbed) ═══ -->
+<section class="tabbed-section surface" data-tabbed-group="popular">
+  <div class="ts-head">
+    <div class="ts-title">Популярные блюда</div>
+    <a class="section-all">Все →</a>
+  </div>
+  <div class="ts-tabs">
+    <button class="ts-tab active" data-pane="popular-lepyoshka">Лепёшки</button>
+    <button class="ts-tab" data-pane="popular-norin">Норин</button>
+    <button class="ts-tab" data-pane="popular-shashlik">Шашлык</button>
+    <button class="ts-tab" data-pane="popular-samsa">Самса</button>
+  </div>
+  <div class="ts-pane active" data-pane-name="popular-lepyoshka">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-02.jpg" alt="patir">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">15 000 сум</div>
+        <div class="mini-name">Qo'qon patir</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-03.jpg" alt="patirlar">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Qirmizi patirlar</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="tandyr">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">18 000 сум</div>
+        <div class="mini-name">Non tandirdan</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="kulcha">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">9 000 сум</div>
+        <div class="mini-name">Kulcha non</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="ts-pane" data-pane-name="popular-norin">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-12.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-13.jpg" alt="norin 2">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda to'g'ralgan norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="ts-pane" data-pane-name="popular-shashlik">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-01.jpg" alt="shashlik">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">45 000 сум</div>
+        <div class="mini-name">Qo'y shashlik</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-17.jpg" alt="lula">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">38 000 сум</div>
+        <div class="mini-name">Lula kabob</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-18.jpg" alt="chicken-kebab">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">32 000 сум</div>
+        <div class="mini-name">Tovuq kabob</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-09.jpg" alt="mix-grill">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">55 000 сум</div>
+        <div class="mini-name">Kabob assorted</div>
+        <div class="mini-vendor">Fergana Palav</div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="ts-pane" data-pane-name="popular-samsa">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-round">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Dumaloq samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="samsa-tri">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">10 000 сум</div>
+        <div class="mini-name">Uchburchak samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="samsa-mix">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">22 000 сум</div>
+        <div class="mini-name">Samsa assorted</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-small">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">8 000 сум</div>
+        <div class="mini-name">Kichkina samsa</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ EVENTS (tabbed) ═══ -->
+<section class="tabbed-section surface" data-tabbed-group="events">
+  <div class="ts-head">
+    <div class="ts-title">События</div>
+    <a class="section-all">Все →</a>
+  </div>
+  <div class="ts-tabs">
+    <button class="ts-tab active" data-pane="events-all">Все</button>
+    <button class="ts-tab" data-pane="events-wedding">Для помолвки</button>
+    <button class="ts-tab" data-pane="events-beshik">Для бешик туй</button>
+  </div>
+  <div class="ts-pane active" data-pane-name="events-all">
+    <div class="scroll-x events-scroll">
+<div class="ev-card">
+      <img src="./img/ev-02.jpg" alt="Кавурдак">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">🍖</div><div class="ev-label">Кавурдак</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-01.jpg" alt="Куда чакирик">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">💍</div><div class="ev-label">Куда чакирик</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-04.jpg" alt="Помолвка">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">🌸</div><div class="ev-label">Помолвка</div></div>
+    </div>
+
+    <div class="ev-card">
+      <img src="./img/ev-05.jpg" alt="Бешик туй">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-emoji">👶</div><div class="ev-label">Бешик туй</div></div>
+    </div>
+    </div>
+  </div>
+  <div class="ts-pane" data-pane-name="events-wedding">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-04.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-01.jpg" alt="plov">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="ts-pane" data-pane-name="events-beshik">
+    <div class="mini-grid">
+<div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-02.jpg" alt="palav">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">120 000 сум</div>
+        <div class="mini-name">Osh palav festiv.</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-03.jpg" alt="kavurdak">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">85 000 сум</div>
+        <div class="mini-name">Kavurdak bayrami</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+<div class="sep"></div>
+
+
+
 <!-- ═══ INFO CHIPS ═══ -->
 <section class="discount-section surface">
   <div class="discount-scroll-x">
@@ -140,378 +614,6 @@
       </div>
     </div>
 
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ CATEGORIES ═══ -->
-<section class="categories-section surface">
-  <div class="section-head" style="padding-bottom:4px;">
-    <div class="section-title" style="font-size:26px;font-weight:900;letter-spacing:-0.6px;">Что заказать</div>
-  </div>
-  <div class="scroll-x cat-scroll">
-
-    <div class="cat-card active">
-      <div class="cat-img-wrap"><img src="./img/cat-lepyoshka.png" alt="Лепёшки"></div>
-      <div class="cat-name">Лепёшки</div>
-      <div class="cat-underline"></div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-img-wrap"><img src="./img/cat-manti.png" alt="Манты"></div>
-      <div class="cat-name">Манты</div>
-      <div class="cat-underline"></div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-img-wrap"><img src="./img/cat-plov.png" alt="Плов"></div>
-      <div class="cat-name">Плов</div>
-      <div class="cat-underline"></div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-img-wrap"><img src="./img/cat-shashlik.png" alt="Шашлык"></div>
-      <div class="cat-name">Шашлык</div>
-      <div class="cat-underline"></div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-img-wrap"><img src="./img/cat-sweets.png" alt="Сладости"></div>
-      <div class="cat-name">Сладости</div>
-      <div class="cat-underline"></div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-img-wrap"><img src="./img/cat-sushi.png" alt="Суши"></div>
-      <div class="cat-name">Суши</div>
-      <div class="cat-underline"></div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ RESTAURANTS ═══ -->
-<section class="rests-section surface">
-  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all">Все →</a></div>
-  <div class="scroll-x rests-scroll">
-
-    <div class="rest-item">
-      <div class="rest-card">
-        <img class="rest-photo" src="./img/dish-04.jpg" alt="Rayhon">
-        <div class="rest-photo-overlay"></div>
-        <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
-      </div>
-    </div>
-
-    <div class="rest-item">
-      <div class="rest-card">
-        <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
-        <div class="rest-photo-overlay"></div>
-        <div class="rest-name-over">OSH<small>Markazi</small></div>
-      </div>
-    </div>
-
-    <div class="rest-item">
-      <div class="rest-card">
-        <img class="rest-photo" src="./img/dish-12.jpg" alt="Norin House">
-        <div class="rest-photo-overlay"></div>
-        <div class="rest-name-over">NORIN<small>House</small></div>
-      </div>
-    </div>
-
-    <div class="rest-item">
-      <div class="rest-card">
-        <img class="rest-photo" src="./img/dish-16.jpg" alt="Samarqand">
-        <div class="rest-photo-overlay"></div>
-        <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
-      </div>
-    </div>
-
-    <div class="rest-item">
-      <div class="rest-card">
-        <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
-        <div class="rest-photo-overlay"></div>
-        <div class="rest-name-over">FERGANA<small>Palav</small></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ ORDER HISTORY ═══ -->
-<section class="history-section surface">
-  <div class="section-head"><div class="section-title">Вы заказывали</div><a class="section-all">Все →</a></div>
-  <div class="scroll-x history-scroll">
-
-    <div class="hist-card">
-      <div class="hist-img">
-        <div class="hist-disc">−15%</div>
-        <img src="./img/ev-02.jpg" alt="patir">
-      </div>
-      <div class="hist-body">
-        <div class="hist-name">Qo'qon patir</div>
-        <div class="hist-vendor">Rayhon Milliy</div>
-        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.8</span><span class="rt">· 20 мин</span></div>
-        <button class="repeat-btn">Повторить</button>
-      </div>
-    </div>
-
-    <div class="hist-card">
-      <div class="hist-img">
-        <img src="./img/dish-13.jpg" alt="norin">
-      </div>
-      <div class="hist-body">
-        <div class="hist-name">Qazili norin</div>
-        <div class="hist-vendor">Norin House</div>
-        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.6</span><span class="rt">· 25 мин</span></div>
-        <button class="repeat-btn">Повторить</button>
-      </div>
-    </div>
-
-    <div class="hist-card">
-      <div class="hist-img">
-        <img src="./img/dish-02.jpg" alt="plov">
-      </div>
-      <div class="hist-body">
-        <div class="hist-name">Osh Palav</div>
-        <div class="hist-vendor">Osh Markazi</div>
-        <div class="hist-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="rv">4.7</span><span class="rt">· 30 мин</span></div>
-        <button class="repeat-btn">Повторить</button>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ ЛЕПЁШКИ — mini grid ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Лепёшки</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/ev-02.jpg" alt="patir">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">15 000 сум</div>
-        <div class="mini-name">Qo'qon patir</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/ev-03.jpg" alt="patirlar">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">12 000 сум</div>
-        <div class="mini-name">Qirmizi patirlar</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-16.jpg" alt="tandyr">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">18 000 сум</div>
-        <div class="mini-name">Non tandirdan</div>
-        <div class="mini-vendor">Samarqand</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-15.jpg" alt="kulcha">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">9 000 сум</div>
-        <div class="mini-name">Kulcha non</div>
-        <div class="mini-vendor">Osh Markazi</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ НОРИН ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Норин</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-12.jpg" alt="norin">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">115 000 сум</div>
-        <div class="mini-name">Qazili norin</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-13.jpg" alt="norin 2">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">94 000 сум</div>
-        <div class="mini-name">Mayda to'g'ralgan norin</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ ШАШЛЫК ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Шашлык</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-01.jpg" alt="shashlik">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">45 000 сум</div>
-        <div class="mini-name">Qo'y shashlik</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-17.jpg" alt="lula">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">38 000 сум</div>
-        <div class="mini-name">Lula kabob</div>
-        <div class="mini-vendor">Samarqand</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-18.jpg" alt="chicken-kebab">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">32 000 сум</div>
-        <div class="mini-name">Tovuq kabob</div>
-        <div class="mini-vendor">Osh Markazi</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-09.jpg" alt="mix-grill">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">55 000 сум</div>
-        <div class="mini-name">Kabob assorted</div>
-        <div class="mini-vendor">Fergana Palav</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ САМСА ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Самса</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-14.jpg" alt="samsa-round">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">12 000 сум</div>
-        <div class="mini-name">Dumaloq samsa</div>
-        <div class="mini-vendor">Samarqand</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-15.jpg" alt="samsa-tri">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">10 000 сум</div>
-        <div class="mini-name">Uchburchak samsa</div>
-        <div class="mini-vendor">Samarqand</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-16.jpg" alt="samsa-mix">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">22 000 сум</div>
-        <div class="mini-name">Samsa assorted</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-14.jpg" alt="samsa-small">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">8 000 сум</div>
-        <div class="mini-name">Kichkina samsa</div>
-        <div class="mini-vendor">Osh Markazi</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ REELS (restaurant videos) ═══ -->
-<section class="reels-section surface">
-  <div class="section-head">
-    <div class="section-title">Рилсы ресторанов</div>
-    <a class="section-all">Все →</a>
-  </div>
-  <div class="scroll-x reels-scroll" id="reelsScroll">
-    <!-- rendered by JS -->
   </div>
 </section>
 <div class="sep"></div>
@@ -593,102 +695,6 @@
     </div>
   </div>
 </div>
-
-<!-- ═══ EVENTS ═══ -->
-<section class="events-section surface">
-  <div class="section-head"><div class="section-title">Мероприятия</div><a class="section-all">Все →</a></div>
-  <div class="scroll-x events-scroll">
-
-    <div class="ev-card">
-      <img src="./img/ev-02.jpg" alt="Кавурдак">
-      <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">🍖</div><div class="ev-label">Кавурдак</div></div>
-    </div>
-
-    <div class="ev-card">
-      <img src="./img/ev-01.jpg" alt="Куда чакирик">
-      <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">💍</div><div class="ev-label">Куда чакирик</div></div>
-    </div>
-
-    <div class="ev-card">
-      <img src="./img/ev-04.jpg" alt="Помолвка">
-      <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">🌸</div><div class="ev-label">Помолвка</div></div>
-    </div>
-
-    <div class="ev-card">
-      <img src="./img/ev-05.jpg" alt="Бешик туй">
-      <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">👶</div><div class="ev-label">Бешик туй</div></div>
-    </div>
-
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ ДЛЯ ПОМОЛВКИ ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Для помолвки</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/ev-04.jpg" alt="norin">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">115 000 сум</div>
-        <div class="mini-name">Qazili norin</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/ev-01.jpg" alt="plov">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">94 000 сум</div>
-        <div class="mini-name">Mayda norin</div>
-        <div class="mini-vendor">Rayhon Milliy</div>
-      </div>
-    </div>
-  </div>
-</section>
-<div class="sep"></div>
-
-<!-- ═══ ДЛЯ БЕШИК ТУЙ ═══ -->
-<section class="mini-section surface">
-  <div class="section-head"><div class="section-title">Для бешик туй</div><a class="section-all">Все →</a></div>
-  <div class="mini-grid">
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-02.jpg" alt="palav">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">120 000 сум</div>
-        <div class="mini-name">Osh palav festiv.</div>
-        <div class="mini-vendor">Osh Markazi</div>
-      </div>
-    </div>
-    <div class="mini-card">
-      <div class="mini-img">
-        <img src="./img/dish-03.jpg" alt="kavurdak">
-        <div class="mini-img-overlay"></div>
-      <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-      </div>
-      <div class="mini-body">
-        <div class="mini-price">85 000 сум</div>
-        <div class="mini-name">Kavurdak bayrami</div>
-        <div class="mini-vendor">Samarqand</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══ ADDRESS SHEET ═══ -->
 <div class="addr-overlay" id="addrOverlay"></div>
@@ -822,6 +828,9 @@
 <script src="app.js"></script>
 <script>
 (function() {
+  // Helpers from shared module
+  var escNH = (window.TG && TG.escHTML) || function(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];}); };
+
   var toast = document.getElementById('cart-toast');
   var toastText = toast ? toast.querySelector('.toast-text') : null;
   var cartPill = document.querySelector('.cart-pill');
@@ -1194,6 +1203,58 @@
 
   // initial render
   renderReelsCards();
+
+  // ════════════════════════════════════════════════
+  //  TABBED SECTIONS — switch panes inside .tabbed-section
+  // ════════════════════════════════════════════════
+  document.querySelectorAll('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t)  { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.paneName === target); });
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
+═══════════════════════════════════
+  //  TABBED SECTIONS — switch panes inside .tabbed-section
+  // ════════════════════════════════════════════════
+  document.querySelectorAll('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t)  { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.paneName === target); });
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
+dy>
+</html>
+All('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t)  { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.paneName === target); });
+      });
+    });
+  });
 
 })();
 </script>

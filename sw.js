@@ -6,7 +6,7 @@
    - Supports skip-waiting message for instant activation
    ────────────────────────────────────────────────────────────── */
 
-const CACHE_NAME = 'togora-v8';
+const CACHE_NAME = 'togora-v10';
 const CORE_ASSETS = [
   './',
   './index.html',

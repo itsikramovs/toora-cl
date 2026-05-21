@@ -41,8 +41,8 @@
     <div class="product-discount-badge" id="productDiscount" style="display:none">−15%</div>
   </div>
 
-  <!-- ═══ SHEET ═══ -->
-  <div class="product-sheet">
+  <!-- ═══ MAIN INFO BLOCK ═══ -->
+  <section class="product-block product-block-main">
 
     <div class="product-price-row">
       <div class="product-price" id="productPrice">25 000 сум</div>
@@ -61,32 +61,20 @@
     <!-- Quick info chips: Halal / Spicy only -->
     <div class="product-chips" id="productChips"></div>
 
-    <!-- Description -->
+    <!-- Description (toggle "Развернуть" sits right under text) -->
     <div class="product-desc collapsed" id="productDesc"></div>
     <button class="product-desc-toggle" id="productDescToggle" style="display:none">Развернуть</button>
 
-    <!-- Reviews summary -->
-    <div class="product-reviews" id="productReviews">
-      <div class="product-reviews-rating">
-        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span id="reviewsRating">4.8</span>
-      </div>
-      <div class="product-reviews-text">
-        <div style="font-size:14px;font-weight:600">Отзывы покупателей</div>
-        <div class="product-reviews-count" id="reviewsCount">128 отзывов</div>
-      </div>
-      <div class="product-reviews-arrow">
-        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-    </div>
+  </section>
+  <div class="sep"></div>
 
-    <!-- Related products from same vendor -->
+  <!-- ═══ RELATED PRODUCTS BLOCK ═══ -->
+  <section class="product-block">
     <div class="related-section">
       <div class="related-title" id="relatedTitle">Другие блюда от ресторана</div>
       <div class="related-grid" id="relatedGrid"></div>
     </div>
-
-  </div>
+  </section>
 
 </div>
 
@@ -271,11 +259,6 @@
   }
 
   // Reviews
-  document.getElementById('reviewsRating').textContent = product.reviewsRating || '—';
-  document.getElementById('reviewsCount').textContent = (product.reviewsCount || 0) + ' отзывов';
-  document.getElementById('productReviews').addEventListener('click', function() {
-    TG.showToast('Список отзывов — скоро');
-  });
 
   // ───── Related products grid (3 columns) ─────
   var relatedHost = document.getElementById('relatedGrid');

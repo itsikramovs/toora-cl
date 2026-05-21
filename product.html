@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Товар — Togora</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="product-page">
+
+  <!-- ═══ HERO ═══ -->
+  <div class="product-hero" id="productHero">
+    <img id="productImg" src="./img/dish-01.jpg" alt="">
+    <div class="product-hero-top">
+      <button class="ph-btn" id="ph-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ph-btn-group">
+        <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+        <button class="ph-btn fav" id="ph-fav" aria-label="В избранное">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="product-discount-badge" id="productDiscount" style="display:none">−15%</div>
+  </div>
+
+  <!-- ═══ SHEET ═══ -->
+  <div class="product-sheet">
+
+    <div class="product-price-row">
+      <div class="product-price" id="productPrice">25 000 сум</div>
+      <div class="product-old-price" id="productOldPrice" style="display:none"></div>
+    </div>
+
+    <h1 class="product-title" id="productTitle">Qo'qon patir</h1>
+
+    <div class="product-vendor">
+      <span>от</span>
+      <a id="productVendor" href="#">Rayhon Milliy</a>
+      <span>·</span>
+      <span id="productVendorRating">★ 4.8</span>
+    </div>
+
+    <!-- Quick info chips -->
+    <div class="product-chips" id="productChips">
+      <!-- rendered by JS -->
+    </div>
+
+    <!-- Description -->
+    <div class="product-desc collapsed" id="productDesc">
+      <!-- rendered by JS -->
+    </div>
+    <button class="product-desc-toggle" id="productDescToggle" style="display:none">Развернуть</button>
+
+    <!-- Modifier groups -->
+    <div id="productMods"></div>
+
+    <!-- Reviews summary -->
+    <div class="product-reviews" id="productReviews">
+      <div class="product-reviews-rating">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="reviewsRating">4.8</span>
+      </div>
+      <div class="product-reviews-text">
+        <div style="font-size:14px;font-weight:600">Отзывы покупателей</div>
+        <div class="product-reviews-count" id="reviewsCount">128 отзывов</div>
+      </div>
+      <div class="product-reviews-arrow">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══ STICKY BOTTOM ADD-TO-CART BAR ═══ -->
+<div class="product-bottom-bar">
+  <div class="product-qty" id="productQty">
+    <button id="qtyMinus" aria-label="Уменьшить">−</button>
+    <span id="qtyValue">1</span>
+    <button id="qtyPlus" aria-label="Увеличить">+</button>
+  </div>
+  <button class="product-add-btn" id="productAddBtn">
+    <span class="pa-label">Добавить</span>
+    <span class="pa-price" id="paPrice">25 000 сум</span>
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+
+  // ───── Product catalog ─────
+  // Keyed by name. If not found, falls back to first entry with name from URL.
+  var CATALOG = {
+    "Qo'qon patir": {
+      img: './img/ev-02.jpg',
+      price: 15000,
+      oldPrice: 18000,
+      vendor: 'Rayhon Milliy',
+      vendorRating: '★ 4.8',
+      chips: [
+        { icon: 'scale', text: '320 г' },
+        { icon: 'flame', text: '780 ккал' },
+        { icon: 'clock', text: '15 мин' },
+        { icon: 'halal', text: 'Halal', cls: 'halal' }
+      ],
+      desc: 'Классическая узбекская лепёшка, выпекается в дровяном тандыре. Хрустящая корочка снаружи, мягкая и пышная внутри. Подаётся горячей. Идеально с пловом, шашлыком или просто с чаем. Один из любимых символов Кокандской долины.',
+      mods: [
+        { title: 'Размер', required: true, type: 'radio', options: [
+          { name: 'Стандартный (320 г)', price: 0, selected: true },
+          { name: 'Большой (450 г)', price: 5000 },
+          { name: 'Семейный (600 г)', price: 9000 }
+        ]},
+        { title: 'Добавить к заказу', required: false, type: 'check', sub: 'Можно выбрать несколько', options: [
+          { name: 'Сливочное масло', price: 3000 },
+          { name: 'Кунжут сверху', price: 2000 },
+          { name: 'Сметана', price: 4000 }
+        ]}
+      ],
+      reviewsRating: '4.8',
+      reviewsCount: 128
+    },
+    "Qazili norin": {
+      img: './img/dish-13.jpg',
+      price: 35000,
+      oldPrice: null,
+      vendor: 'Norin House',
+      vendorRating: '★ 4.6',
+      chips: [
+        { icon: 'scale', text: '450 г' },
+        { icon: 'flame', text: '620 ккал' },
+        { icon: 'clock', text: '25 мин' },
+        { icon: 'halal', text: 'Halal', cls: 'halal' }
+      ],
+      desc: 'Норин с казы — традиционное узбекское блюдо из тонко нарезанного теста и сочного отварного мяса. Подаётся с лапшой и горячим бульоном. Сытно, ароматно, согревает в любую погоду.',
+      mods: [
+        { title: 'Острота', required: true, type: 'radio', options: [
+          { name: 'Без острого', price: 0, selected: true },
+          { name: 'Средне', price: 0 },
+          { name: 'Острый', price: 0 }
+        ]},
+        { title: 'Добавки', required: false, type: 'check', sub: 'Любое количество', options: [
+          { name: 'Лимон', price: 1500 },
+          { name: 'Зелень', price: 2000 },
+          { name: 'Двойная порция мяса', price: 8000 }
+        ]}
+      ],
+      reviewsRating: '4.6',
+      reviewsCount: 87
+    },
+    "Osh Palav": {
+      img: './img/dish-02.jpg',
+      price: 28000,
+      oldPrice: null,
+      vendor: 'Osh Markazi',
+      vendorRating: '★ 4.7',
+      chips: [
+        { icon: 'scale', text: '380 г' },
+        { icon: 'flame', text: '720 ккал' },
+        { icon: 'clock', text: '30 мин' },
+        { icon: 'halal', text: 'Halal', cls: 'halal' }
+      ],
+      desc: 'Тошкент палов на дровах — рис лазер, выдержанная баранина, морковь, нохат и айва. Готовится в чугунном казане. Подаётся с салатом «ачичук», чаем и лепёшкой.',
+      mods: [
+        { title: 'Мясо', required: true, type: 'radio', options: [
+          { name: 'Баранина', price: 0, selected: true },
+          { name: 'Говядина', price: 0 },
+          { name: 'Двойная порция мяса', price: 12000 }
+        ]},
+        { title: 'Гарнир', required: false, type: 'check', options: [
+          { name: 'Салат ачичук', price: 5000 },
+          { name: 'Айва (доп.)', price: 4000 },
+          { name: 'Лепёшка', price: 5000 }
+        ]}
+      ],
+      reviewsRating: '4.7',
+      reviewsCount: 256
+    },
+    "Шашлык из ягнёнка": {
+      img: './img/dish-04.jpg',
+      price: 42000,
+      oldPrice: 48000,
+      vendor: 'Khan Atlas',
+      vendorRating: '★ 4.9',
+      chips: [
+        { icon: 'scale', text: '250 г' },
+        { icon: 'flame', text: '540 ккал' },
+        { icon: 'clock', text: '25 мин' },
+        { icon: 'spicy', text: 'Острый', cls: 'spicy' },
+        { icon: 'halal', text: 'Halal', cls: 'halal' }
+      ],
+      desc: 'Сочный шашлык из молодой баранины — мариновали в луке и специях 12 часов. Жарится на углях, подаётся с тонкой лепёшкой и сумаком.',
+      mods: [
+        { title: 'Количество шампуров', required: true, type: 'radio', options: [
+          { name: '2 шт', price: 0, selected: true },
+          { name: '3 шт', price: 18000 },
+          { name: '5 шт', price: 40000 }
+        ]},
+        { title: 'К шашлыку', required: false, type: 'check', options: [
+          { name: 'Тандырная лепёшка', price: 5000 },
+          { name: 'Маринованный лук', price: 3000 },
+          { name: 'Сумак', price: 1500 },
+          { name: 'Соус барбекю', price: 4000 }
+        ]}
+      ],
+      reviewsRating: '4.9',
+      reviewsCount: 312
+    },
+    "Самса с мясом": {
+      img: './img/dish-08.jpg',
+      price: 12000,
+      oldPrice: null,
+      vendor: 'Tandur Master',
+      vendorRating: '★ 4.7',
+      chips: [
+        { icon: 'scale', text: '180 г' },
+        { icon: 'flame', text: '420 ккал' },
+        { icon: 'clock', text: '20 мин' },
+        { icon: 'halal', text: 'Halal', cls: 'halal' }
+      ],
+      desc: 'Классическая самса из тандыра — слоёное тесто, рубленая баранина с луком, специи. Хрустящая корочка с кунжутом.',
+      mods: [
+        { title: 'Количество', required: true, type: 'radio', options: [
+          { name: '1 шт', price: 0, selected: true },
+          { name: '3 шт', price: 22000 },
+          { name: '5 шт', price: 38000 }
+        ]},
+        { title: 'Соусы', required: false, type: 'check', options: [
+          { name: 'Аджика', price: 2000 },
+          { name: 'Сметана', price: 3000 },
+          { name: 'Зелёный соус', price: 2500 }
+        ]}
+      ],
+      reviewsRating: '4.7',
+      reviewsCount: 94
+    }
+  };
+
+  // Generic fallback for items not in catalog
+  function fallback(name, img) {
+    return {
+      img: img || './img/dish-01.jpg',
+      price: 15000,
+      oldPrice: null,
+      vendor: 'Togora',
+      vendorRating: '★ 4.5',
+      chips: [
+        { icon: 'scale', text: '300 г' },
+        { icon: 'flame', text: '500 ккал' },
+        { icon: 'clock', text: '20 мин' }
+      ],
+      desc: 'Свежее блюдо от лучших ресторанов Ташкента. Готовится по фирменному рецепту, доставляется горячим.',
+      mods: [
+        { title: 'Порция', required: true, type: 'radio', options: [
+          { name: 'Стандартная', price: 0, selected: true },
+          { name: 'Большая', price: 8000 }
+        ]}
+      ],
+      reviewsRating: '4.5',
+      reviewsCount: 24
+    };
+  }
+
+  // ───── Read product name from URL ─────
+  var params = new URLSearchParams(location.search);
+  var pname = params.get('name') || "Qo'qon patir";
+  var pimg = params.get('img');
+
+  var product = CATALOG[pname] || fallback(pname, pimg);
+  product._name = pname;
+
+  // ───── Icons for chips ─────
+  var CHIP_ICONS = {
+    scale: '<svg viewBox="0 0 24 24"><path d="M3 6l3-3 15 15-3 3z"/><path d="M14 11.5l-1.5 1.5"/><path d="M11 8.5L9.5 10"/><path d="M17 14.5l-1.5 1.5"/></svg>',
+    flame: '<svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 5 5 10a5 5 0 11-10 0c0-3 2-3 2-7 1 2 3 0 3-3z"/></svg>',
+    clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+    halal: '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>',
+    spicy: '<svg viewBox="0 0 24 24"><path d="M8 21c4 0 9-1 11-7-2-2-4-1-6 0 1-3 3-5 5-6-3 0-6 1-8 4-1-3-3-6-5-6 1 2 0 4-3 5 4 1 6 3 6 10z"/></svg>'
+  };
+
+  // ───── Render product ─────
+  document.getElementById('productImg').src = product.img;
+  document.getElementById('productImg').alt = product._name;
+  document.getElementById('productTitle').textContent = product._name;
+  document.getElementById('productVendor').textContent = product.vendor;
+  document.getElementById('productVendorRating').textContent = product.vendorRating || '★ 4.5';
+
+  function formatPrice(n) {
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+
+  function renderPrice() {
+    document.getElementById('productPrice').textContent = formatPrice(product.price);
+    if (product.oldPrice) {
+      var op = document.getElementById('productOldPrice');
+      op.textContent = formatPrice(product.oldPrice);
+      op.style.display = '';
+      var pct = Math.round((1 - product.price / product.oldPrice) * 100);
+      var disc = document.getElementById('productDiscount');
+      disc.textContent = '−' + pct + '%';
+      disc.style.display = '';
+    }
+  }
+  renderPrice();
+
+  // Chips
+  var chipsHost = document.getElementById('productChips');
+  chipsHost.innerHTML = (product.chips || []).map(function(c) {
+    var icon = CHIP_ICONS[c.icon] || '';
+    var cls = c.cls ? ' ' + c.cls : '';
+    return '<span class="product-chip' + cls + '">' + icon + ' ' + TG.escHTML(c.text) + '</span>';
+  }).join('');
+
+  // Description with collapse-toggle (if too long)
+  var descEl = document.getElementById('productDesc');
+  var toggleBtn = document.getElementById('productDescToggle');
+  descEl.textContent = product.desc;
+  // Show toggle only if description overflows 3 lines (rough heuristic by length)
+  if (product.desc.length > 120) {
+    toggleBtn.style.display = '';
+    toggleBtn.addEventListener('click', function() {
+      var collapsed = descEl.classList.toggle('collapsed');
+      toggleBtn.textContent = collapsed ? 'Развернуть' : 'Свернуть';
+    });
+  } else {
+    descEl.classList.remove('collapsed');
+  }
+
+  // Reviews
+  document.getElementById('reviewsRating').textContent = product.reviewsRating || '—';
+  document.getElementById('reviewsCount').textContent = (product.reviewsCount || 0) + ' отзывов';
+  document.getElementById('productReviews').addEventListener('click', function() {
+    TG.showToast('Список отзывов — скоро');
+  });
+
+  // ───── Modifiers ─────
+  var modsHost = document.getElementById('productMods');
+
+  function renderMods() {
+    var html = '';
+    (product.mods || []).forEach(function(group, gi) {
+      html += '<div class="product-mod-group" data-group="' + gi + '" data-type="' + group.type + '">';
+      html += '  <div class="product-mod-header">';
+      html += '    <div class="product-mod-title">' + TG.escHTML(group.title) + '</div>';
+      html += '    <div class="product-mod-hint ' + (group.required ? 'required' : 'optional') + '">' + (group.required ? 'Обязательно' : 'По желанию') + '</div>';
+      html += '  </div>';
+      if (group.sub) html += '<div class="product-mod-sub">' + TG.escHTML(group.sub) + '</div>';
+      html += '  <div class="product-mod-list">';
+      group.options.forEach(function(opt, oi) {
+        var sel = opt.selected ? ' selected' : '';
+        var ctrl = group.type === 'radio'
+          ? '<span class="product-mod-radio"></span>'
+          : '<span class="product-mod-check"></span>';
+        var priceCls = opt.price > 0 ? '' : ' free';
+        var priceTxt = opt.price > 0 ? '+ ' + formatPrice(opt.price) : 'Бесплатно';
+        html += '<div class="product-mod-item' + sel + '" data-opt="' + oi + '">';
+        html += '  <div class="pmi-left">' + ctrl + '<span class="product-mod-name">' + TG.escHTML(opt.name) + '</span></div>';
+        html += '  <span class="product-mod-price' + priceCls + '">' + priceTxt + '</span>';
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+    });
+    modsHost.innerHTML = html;
+  }
+  renderMods();
+
+  // Modifier interactions
+  modsHost.addEventListener('click', function(e) {
+    var item = e.target.closest('.product-mod-item');
+    if (!item) return;
+    var group = item.closest('.product-mod-group');
+    var gi = parseInt(group.dataset.group);
+    var oi = parseInt(item.dataset.opt);
+    var type = group.dataset.type;
+    var groupData = product.mods[gi];
+    if (type === 'radio') {
+      groupData.options.forEach(function(o, i) { o.selected = (i === oi); });
+    } else {
+      groupData.options[oi].selected = !groupData.options[oi].selected;
+    }
+    renderMods();
+    updateTotal();
+  });
+
+  // ───── Quantity + total price ─────
+  var qty = 1;
+  var qtyEl = document.getElementById('qtyValue');
+  var paPrice = document.getElementById('paPrice');
+
+  function modAddons() {
+    var sum = 0;
+    (product.mods || []).forEach(function(g) {
+      g.options.forEach(function(o) {
+        if (o.selected) sum += (o.price || 0);
+      });
+    });
+    return sum;
+  }
+  function updateTotal() {
+    var total = (product.price + modAddons()) * qty;
+    paPrice.textContent = formatPrice(total);
+  }
+  updateTotal();
+
+  document.getElementById('qtyPlus').addEventListener('click', function() {
+    qty = Math.min(20, qty + 1);
+    qtyEl.textContent = qty;
+    updateTotal();
+  });
+  document.getElementById('qtyMinus').addEventListener('click', function() {
+    qty = Math.max(1, qty - 1);
+    qtyEl.textContent = qty;
+    updateTotal();
+  });
+
+  // ───── Top buttons ─────
+  document.getElementById('ph-back').addEventListener('click', function() {
+    if (history.length > 1) history.back();
+    else location.href = 'index.html';
+  });
+  document.getElementById('ph-share').addEventListener('click', function() {
+    if (navigator.share) {
+      navigator.share({ title: product._name, text: product._name + ' — Togora', url: location.href }).catch(function() {});
+    } else {
+      TG.showToast('Ссылка скопирована');
+    }
+  });
+  document.getElementById('ph-fav').addEventListener('click', function() {
+    var btn = document.getElementById('ph-fav');
+    btn.classList.toggle('active');
+    TG.showToast(btn.classList.contains('active') ? 'Добавлено в избранное' : 'Удалено из избранного');
+  });
+
+  // ───── Add to cart ─────
+  document.getElementById('productAddBtn').addEventListener('click', function() {
+    var total = (product.price + modAddons()) * qty;
+    TG.showToast(product._name + ' × ' + qty + ' — добавлено');
+    // Persist quantity to localStorage cart (simple example)
+    try {
+      var cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
+      cart.push({
+        name: product._name,
+        img: product.img,
+        vendor: product.vendor,
+        unitPrice: product.price + modAddons(),
+        qty: qty,
+        total: total,
+        ts: Date.now()
+      });
+      localStorage.setItem('tg_cart', JSON.stringify(cart));
+    } catch (e) {}
+    TG.playNotifSound && TG.playNotifSound();
+  });
+
+  document.getElementById('productVendor').addEventListener('click', function(e) {
+    e.preventDefault();
+    TG.showToast('Страница ресторана — скоро');
+  });
+
+})();
+</script>
+
+</body>
+</html>

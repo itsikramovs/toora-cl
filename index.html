@@ -7,720 +7,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<style>
-@font-face {
-  font-family: YSText;
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
-}
-@font-face {
-  font-family: YSText;
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Bold-7ca699e091bd1757c30a.woff2") format("woff2");
-}
-@font-face {
-  font-family: YSText;
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Medium-7cc05513a9304e1b4be9.woff2") format("woff2");
-}
-@font-face {
-  font-family: YSText;
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSText_Regular-f689cf1dc4d29be27e17.woff2") format("woff2");
-}
-@font-face {
-  font-family: YSCompressed;
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-  src: url("https://yastatic.net/s3/eda-front/www/assets/buildid/desktop.YSCompressed_Heavy-3e1dbef438e42c92bc38.woff2") format("woff2");
-}
-</style>
-
-<style>
-:root {
-  --font-main: 'YSText', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-compressed: 'YSCompressed', -apple-system, Arial Black, sans-serif;
-  --color-bg:       #F5F5F5;
-  --color-surface:  #FFFFFF;
-  --color-text:     #21201F;
-  --color-muted:    #A0A0A0;
-  --color-border:   #E8E8E8;
-  --color-orange:   #FC3F1D;
-  --color-discount: #FA6A3C;
-  --color-plus:     #21A038;
-  --color-plus-dk:  #1A7D2E;
-  --color-yellow:   #FCE000;
-  --r-card: 18px;
-  --r-badge: 12px;
-  --r-btn:  12px;
-  --h-cat:  130px;
-  --h-rest: 195px;
-  --h-mini: 97px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-body {
-  font-family: var(--font-main);
-  background: var(--color-bg);
-  color: var(--color-text);
-  max-width: 390px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding-bottom: 80px;
-  -webkit-font-smoothing: antialiased;
-}
-
-.scroll-x { display: flex; overflow-x: auto; scrollbar-width: none; }
-.scroll-x::-webkit-scrollbar { display: none; }
-.surface { background: var(--color-surface); }
-.sep { height: 8px; background: var(--color-bg); }
-
-/* ── Универсальный стиль фото ── */
-.photo {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-  position: absolute;
-  inset: 0;
-}
-.photo-wrap {
-  position: relative;
-  overflow: hidden;
-}
-
-
-/* ── HEADER ── */
-.header {
-  background: var(--color-surface);
-}
-.search-sticky {
-  position: sticky; top: 0; z-index: 200;
-  background: var(--color-surface);
-  border-radius: 0 0 22px 22px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-  padding: 14px 16px 16px;
-}
-.header-logo-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px 8px;
-}
-.logotype {
-  font-family: var(--font-compressed);
-  font-weight: 800; font-size: 28px; letter-spacing: -0.5px;
-  color: var(--color-text); line-height: 1;
-}
-.logotype span { color: var(--color-orange); }
-.address-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px 10px;
-}
-.address-left { display: flex; align-items: center; gap: 6px; cursor: pointer; flex: 1; min-width: 0; }
-.pin-icon {
-  width: 20px; height: 20px;
-  background: var(--color-orange);
-  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
-  flex-shrink: 0; position: relative;
-  display: flex; align-items: center; justify-content: center;
-}
-.pin-icon::after {
-  content: ''; width: 8px; height: 8px;
-  background: #fff; border-radius: 50%; transform: rotate(45deg);
-}
-.address-hint { font-size: 11px; color: var(--color-muted); font-weight: 400; }
-.address-main {
-  font-size: 15px; font-weight: 700;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  display: flex; align-items: center; gap: 4px;
-}
-.address-main svg { width: 14px; height: 14px; flex-shrink: 0; }
-.header-icons { display: flex; gap: 8px; flex-shrink: 0; }
-.icon-btn {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--color-bg);
-  display: flex; align-items: center; justify-content: center;
-  border: none; cursor: pointer; position: relative;
-}
-.icon-btn svg { width: 20px; height: 20px; fill: none; stroke: var(--color-text); stroke-width: 1.8; }
-.notif-badge {
-  position: absolute; top: 7px; right: 7px;
-  width: 8px; height: 8px;
-  background: var(--color-orange); border-radius: 50%;
-  border: 1.5px solid var(--color-surface);
-}
-.search-bar {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--color-bg); border-radius: var(--r-btn);
-  padding: 0 14px; height: 54px; cursor: text;
-}
-.search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-muted); stroke-width: 2; flex-shrink: 0; }
-.search-bar span { font-size: 15px; color: var(--color-muted); }
-
-/* ── PROMO BANNERS ── */
-.promo-section { background: var(--color-surface); padding: 14px 0; }
-.promo-scroll { padding: 0 16px; gap: 10px; }
-.promo-card {
-  flex-shrink: 0; width: 100%; height: 140px;
-  border-radius: var(--r-card); overflow: hidden;
-  position: relative; cursor: pointer;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 18px 18px;
-}
-.promo-card.pc1 { background: linear-gradient(140deg, #FF6B35 0%, #FC3F1D 100%); }
-.promo-card.pc2 { background: linear-gradient(140deg, #27AE60 0%, #21A038 100%); }
-.promo-card.pc3 { background: linear-gradient(140deg, #F9A825 0%, #FF8F00 100%); }
-.promo-overlay { display: none; }
-.promo-content { position: relative; z-index: 2; }
-.promo-eyebrow { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
-.promo-title { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.05; font-family: var(--font-compressed); letter-spacing: -0.3px; }
-.promo-sub { font-size: 12px; color: rgba(255,255,255,0.82); margin-top: 5px; font-weight: 500; }
-.promo-badge {
-  position: absolute; top: 14px; right: 14px; z-index: 3;
-  background: rgba(255,255,255,0.22); color: #fff;
-  font-size: 20px; font-weight: 900;
-  width: 54px; height: 54px; border-radius: 50%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  line-height: 1; font-family: var(--font-compressed);
-  backdrop-filter: blur(4px); border: 1.5px solid rgba(255,255,255,0.3);
-}
-.promo-badge .pb-sub { font-size: 8px; font-weight: 700; opacity: 0.9; }
-
-/* ── INFO CHIPS ── */
-.discount-section { background: var(--color-surface); padding: 6px 0 18px; }
-.discount-scroll-x {
-  display: flex; overflow-x: auto; scrollbar-width: none; gap: 12px; padding: 0 16px 4px;
-}
-.discount-scroll-x::-webkit-scrollbar { display: none; }
-.d-pill {
-  flex-shrink: 0; width: 152px;
-  border-radius: 18px; padding: 14px 14px;
-  cursor: pointer; transition: transform .12s, box-shadow .12s;
-  display: flex; align-items: center; gap: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-}
-.d-pill:active { transform: scale(0.97); }
-.d-pill.dp1 { background: #FFF3E0; }
-.d-pill.dp2 { background: #E8F5E9; }
-.d-pill.dp3 { background: #E8F0FE; }
-.d-pill.dp4 { background: #FBE9E7; }
-.d-icon {
-  flex-shrink: 0; width: 42px; height: 42px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 13px;
-}
-.d-icon svg { width: 22px; height: 22px; }
-.d-pill.dp1 .d-icon { background: rgba(255,152,0,0.18); }
-.d-pill.dp2 .d-icon { background: rgba(33,160,56,0.14); }
-.d-pill.dp3 .d-icon { background: rgba(59,130,246,0.13); }
-.d-pill.dp4 .d-icon { background: rgba(239,68,68,0.12); }
-.d-text { display: flex; flex-direction: column; gap: 2px; }
-.d-value { font-size: 15px; font-weight: 800; line-height: 1.15; color: var(--color-text); }
-.d-label { font-size: 11px; color: var(--color-muted); font-weight: 400; }
-.d-sub { display: none; }
-
-/* ── SECTION HEADER ── */
-.section-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 10px; }
-.section-title { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; }
-.section-all { font-size: 14px; font-weight: 500; color: var(--color-orange); text-decoration: none; cursor: pointer; }
-
-
-/* ── CATEGORIES ── */
-.categories-section { background: var(--color-surface); padding-bottom: 16px; }
-.cat-scroll { padding: 0 16px; gap: 6px; flex-wrap: nowrap; }
-.cat-card {
-  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
-  cursor: pointer; width: 54px;
-  background: none; border: none; padding: 0;
-  transition: opacity .15s;
-}
-.cat-img-wrap {
-  width: 50px; height: 44px;
-  background: var(--color-surface);
-  margin-bottom: 6px; position: relative;
-  display: flex; align-items: flex-end; justify-content: center;
-  overflow: visible;
-}
-.cat-img-wrap img {
-  width: 100%; height: 100%;
-  object-fit: contain; object-position: bottom center;
-  display: block;
-  transition: transform .18s cubic-bezier(.34,1.56,.64,1);
-  filter: drop-shadow(0 3px 7px rgba(0,0,0,0.13));
-}
-.cat-card:active .cat-img-wrap img,
-.cat-card.active .cat-img-wrap img { transform: scale(1.08); }
-.cat-name {
-  font-size: 10px; font-weight: 400;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 54px;
-  color: var(--color-text); text-align: center; line-height: 1;
-}
-.cat-card.active .cat-name { color: var(--color-text); font-weight: 700; }
-.cat-underline {
-  width: 18px; height: 2px; background: transparent;
-  border-radius: 2px; margin-top: 4px;
-  transition: background .15s;
-}
-.cat-card.active .cat-underline { background: var(--color-orange); }
-
-/* ── RESTAURANTS ── */
-.rests-section { background: var(--color-surface); padding-bottom: 16px; }
-.rests-scroll { padding: 0 16px; gap: 12px; align-items: flex-start; }
-.rest-item { flex-shrink: 0; display: flex; flex-direction: column; cursor: pointer; width: 158px; }
-.rest-card {
-  width: 158px; height: 116px;
-  border-radius: var(--r-card); overflow: hidden;
-  position: relative; cursor: pointer;
-  border: none; background: #2a2a2a;
-  display: block;
-}
-.rest-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.rest-photo-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.08) 60%, transparent 100%);
-}
-.rest-name-over {
-  position: absolute; bottom: 10px; left: 10px; right: 10px;
-  font-family: var(--font-compressed); font-weight: 800; font-size: 19px;
-  color: #fff; line-height: 1.1; letter-spacing: -0.2px;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.35);
-}
-.rest-name-over small {
-  display: block; font-family: var(--font-main); font-size: 11px;
-  font-weight: 400; opacity: 0.82; margin-top: 1px; letter-spacing: 0;
-}
-.rest-star-icon { fill: #FFB300; width: 12px; height: 12px; flex-shrink: 0; }
-.rest-rv { font-weight: 700; color: var(--color-text); font-size: 12px; }
-.dot { width: 2px; height: 2px; background: var(--color-muted); border-radius: 50%; }
-.rest-badges { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
-.badge { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; display: inline-flex; align-items: center; gap: 3px; line-height: 1; }
-.badge-free { background: #E8F5E9; color: #1A7D2E; }
-.badge-plus { background: var(--color-plus); color: #fff; }
-.badge-disc { background: #FFF0EB; color: var(--color-discount); }
-.badge-new  { background: #E3F2FD; color: #1565C0; }
-
-/* ── MINI PRODUCT CARDS ── */
-.mini-section { background: var(--color-surface); padding-bottom: 16px; }
-.mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
-.mini-card {
-  border-radius: var(--r-card); overflow: hidden;
-  background: var(--color-surface);
-  border: none;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.09);
-  cursor: pointer; position: relative;
-  display: flex; flex-direction: column;
-  transition: transform .12s, box-shadow .12s;
-}
-.mini-card:active { }
-.mini-img {
-  height: 130px; position: relative; overflow: hidden; flex-shrink: 0;
-}
-.mini-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mini-img-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.22) 0%, transparent 55%);
-}
-.mini-body {
-  padding: 10px 10px 12px;
-  display: flex; flex-direction: column; flex: 1;
-}
-.mini-price-row { margin-bottom: 4px; }
-.mini-price { font-size: 15px; font-weight: 800; color: var(--color-plus); }
-.mini-name { font-size: 13px; font-weight: 700; color: var(--color-text); line-height: 1.3; }
-.mini-vendor { font-size: 11px; font-weight: 400; color: var(--color-muted); margin-top: 3px; }
-.add-btn-float {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--color-plus); border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; position: absolute; bottom: 10px; right: 10px; z-index: 3;
-  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
-  transition: transform .12s, box-shadow .12s;
-}
-.add-btn-float:active { transform: scale(0.88); box-shadow: 0 1px 4px rgba(33,160,56,0.2); }
-
-/* ── QTY STEPPER ── */
-.qty-stepper {
-  position: absolute; bottom: 8px; right: 8px; z-index: 3;
-  display: flex; align-items: center;
-  background: var(--color-plus); border-radius: 20px;
-  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
-  height: 34px; overflow: hidden;
-}
-.qty-stepper .qs-btn {
-  width: 32px; height: 34px; border: none; background: transparent;
-  color: #fff; font-size: 20px; font-weight: 400; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0; padding: 0;
-  font-family: var(--font-main);
-}
-.qty-stepper .qs-count {
-  font-size: 14px; font-weight: 800; color: #fff;
-  min-width: 22px; text-align: center; line-height: 1;
-  font-family: var(--font-main);
-}
-.add-btn-float svg { width: 16px; height: 16px; stroke: #fff; stroke-width: 2.8; fill: none; stroke-linecap: round; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 82px; left: 50%;
-  transform: translateX(-50%) translateY(12px);
-  background: #21201F; color: #fff;
-  padding: 13px 20px; border-radius: 50px;
-  font-size: 14px; font-weight: 600;
-  display: flex; align-items: center; gap: 9px;
-  opacity: 0; transition: opacity .2s ease, transform .2s ease;
-  z-index: 600; pointer-events: none;
-  white-space: nowrap;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast-check {
-  width: 20px; height: 20px; background: var(--color-plus);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.toast-check svg { width: 11px; height: 11px; stroke: #fff; stroke-width: 3; fill: none; }
-
-
-/* ── EVENTS ── */
-.events-section { background: var(--color-surface); padding-bottom: 16px; }
-.events-scroll { padding: 0 16px; gap: 10px; }
-.ev-card {
-  flex-shrink: 0; width: 160px; height: 97px;
-  border-radius: var(--r-card); overflow: hidden;
-  position: relative; cursor: pointer;
-  display: flex; align-items: flex-end; padding: 10px 12px;
-}
-.ev-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ev-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.48); }
-.ev-content { position: relative; z-index: 2; }
-.ev-emoji { font-size: 22px; margin-bottom: 2px; }
-.ev-label { color: #fff; font-size: 13px; font-weight: 800; line-height: 1.2; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-
-/* ── HISTORY ── */
-.history-section { background: var(--color-surface); padding-bottom: 16px; }
-.history-scroll { padding: 0 16px; gap: 10px; }
-.hist-card {
-  flex-shrink: 0; width: 155px;
-  border-radius: var(--r-card); overflow: hidden;
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  cursor: pointer; position: relative;
-}
-.hist-img { height: 97px; position: relative; overflow: hidden; }
-.hist-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.hist-disc {
-  position: absolute; top: 6px; left: 6px;
-  background: var(--color-discount); color: #fff;
-  font-size: 11px; font-weight: 800; border-radius: 6px; padding: 2px 6px; z-index: 2;
-}
-.hist-body { padding: 8px 10px 10px; }
-.hist-name { font-size: 13px; font-weight: 700; margin-bottom: 1px; line-height: 1.2; }
-.hist-vendor { font-size: 11px; color: var(--color-muted); margin-bottom: 5px; }
-.hist-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; }
-.hist-rating svg { width: 11px; height: 11px; fill: #FFB300; }
-.hist-rating .rv { font-weight: 700; }
-.hist-rating .rt { color: var(--color-muted); }
-.repeat-btn {
-  width: 100%; background: var(--color-bg); border: none;
-  border-radius: 8px; padding: 6px 0; font-size: 12px; font-weight: 700;
-  cursor: pointer; margin-top: 7px; font-family: var(--font-main);
-}
-
-
-/* ── SECTION RADIUS ── */
-.promo-section,
-.discount-section,
-.categories-section,
-.rests-section,
-.history-section,
-.events-section,
-.mini-section {
-  border-radius: 18px;
-}
-
-/* ── ADDRESS SHEET ── */
-.addr-overlay {
-  position: fixed; inset: 0; z-index: 800;
-  background: rgba(0,0,0,0.45);
-  opacity: 0; pointer-events: none;
-  transition: opacity .3s ease;
-  backdrop-filter: blur(2px);
-}
-.addr-overlay.show { opacity: 1; pointer-events: all; }
-
-.addr-sheet {
-  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
-  width: 390px; z-index: 900;
-  background: var(--color-surface);
-  border-radius: 24px 24px 0 0;
-  transition: transform .38s cubic-bezier(.32,1,.64,1);
-  max-height: 88vh; display: flex; flex-direction: column;
-  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
-}
-.addr-sheet.show { transform: translateX(-50%) translateY(0); }
-
-.addr-handle {
-  width: 40px; height: 4px; border-radius: 2px;
-  background: var(--color-border); margin: 12px auto 0; flex-shrink: 0;
-}
-.addr-sheet-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px 10px; flex-shrink: 0;
-}
-.addr-sheet-title { font-size: 19px; font-weight: 800; letter-spacing: -0.3px; }
-.addr-close-btn {
-  width: 32px; height: 32px; border-radius: 50%; border: none;
-  background: var(--color-bg); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--color-muted);
-}
-.addr-close-btn svg { width: 16px; height: 16px; stroke: var(--color-text); stroke-width: 2.2; fill: none; }
-
-/* ── Leaflet map ── */
-.addr-map {
-  margin: 4px 16px 14px; border-radius: 18px; overflow: hidden;
-  height: 200px; position: relative; flex-shrink: 0;
-  z-index: 1; isolation: isolate;
-}
-#leafletMap { width: 100%; height: 100%; }
-/* Hide Leaflet attribution */
-.leaflet-control-attribution { display: none !important; }
-/* Custom Leaflet pin */
-.lf-pin-wrap { position: relative; width: 32px; height: 42px; }
-.lf-pin-head {
-  width: 26px; height: 26px; border-radius: 50% 50% 50% 0;
-  background: var(--color-orange); border: 3px solid #fff;
-  box-shadow: 0 3px 12px rgba(252,63,29,0.55);
-  transform: rotate(-45deg); position: absolute; top: 0; left: 3px;
-}
-.lf-pin-head::after {
-  content: ''; width: 9px; height: 9px; background: #fff; border-radius: 50%;
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%,-50%) rotate(45deg);
-}
-.lf-pin-shadow {
-  width: 10px; height: 4px; background: rgba(0,0,0,0.22); border-radius: 50%;
-  position: absolute; bottom: 0; left: 11px;
-}
-/* Confirm btn on map */
-.addr-map-confirm {
-  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 500;
-  background: var(--color-surface); border: none; border-radius: 22px;
-  padding: 9px 18px; font-size: 13px; font-weight: 700;
-  font-family: var(--font-main); cursor: pointer; white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.18); color: var(--color-text);
-  display: flex; align-items: center; gap: 7px; max-width: 280px;
-}
-.addr-map-confirm svg { width: 14px; height: 14px; fill: var(--color-orange); flex-shrink: 0; }
-#addrConfirmText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* Geo button on map */
-.addr-geo-btn {
-  position: absolute; bottom: 54px; right: 10px; z-index: 500;
-  width: 40px; height: 40px; border-radius: 50%; border: none;
-  background: var(--color-surface); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.18); transition: background .12s;
-}
-.addr-geo-btn:active { background: var(--color-bg); }
-.addr-geo-btn svg { width: 20px; height: 20px; stroke: var(--color-orange); stroke-width: 2; fill: none; stroke-linecap: round; }
-
-/* ── Welcome bar (first-visit) ── */
-.addr-welcome-bar {
-  position: fixed; top: -220px; left: 50%; transform: translateX(-50%);
-  width: 358px; z-index: 750;
-  background: var(--color-surface); border-radius: 22px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.07);
-  padding: 16px 16px 14px;
-  transition: top .44s cubic-bezier(.32,1,.64,1);
-}
-.addr-welcome-bar.show { top: 14px; }
-.awb-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-.awb-icon {
-  width: 40px; height: 40px; border-radius: 50%; background: #FFF0EC; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.awb-icon svg { width: 20px; height: 20px; fill: var(--color-orange); }
-.awb-title { font-size: 16px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 3px; }
-.awb-addr { font-size: 13px; color: var(--color-muted); line-height: 1.4; }
-.awb-name-input {
-  width: 100%; background: var(--color-bg); border: none; outline: none;
-  border-radius: 10px; padding: 10px 14px; font-size: 14px;
-  font-family: var(--font-main); color: var(--color-text); margin-bottom: 10px;
-  display: block;
-}
-.awb-btns { display: flex; gap: 10px; }
-.awb-btn {
-  flex: 1; height: 46px; border: none; border-radius: 13px; font-size: 15px;
-  font-weight: 700; font-family: var(--font-main); cursor: pointer; transition: opacity .1s;
-}
-.awb-btn:active { opacity: .85; }
-.awb-no  { background: var(--color-bg); color: var(--color-text); }
-.awb-yes { background: var(--color-plus); color: #fff; }
-
-/* ── Search suggest dropdown ── */
-.addr-input-wrap { position: relative; }
-.addr-suggest-list {
-  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 60;
-  background: var(--color-surface); border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.13); overflow: hidden;
-  display: none;
-}
-.addr-suggest-list.show { display: block; }
-.addr-suggest-item {
-  padding: 11px 14px; cursor: pointer; font-size: 14px;
-  border-top: 1px solid var(--color-border); transition: background .1s;
-}
-.addr-suggest-item:first-child { border-top: none; }
-.addr-suggest-item:active { background: var(--color-bg); }
-.addr-suggest-item b { font-weight: 700; color: var(--color-text); display: block; margin-bottom: 1px; }
-.addr-suggest-item span { font-size: 11px; color: var(--color-muted); }
-
-/* Search input */
-.addr-search-wrap {
-  padding: 0 16px 12px; flex-shrink: 0;
-  position: relative; z-index: 10;
-}
-.addr-search-input {
-  width: 100%; background: var(--color-bg);
-  border: none; border-radius: var(--r-btn); outline: none;
-  padding: 0 14px 0 42px; height: 48px;
-  font-size: 15px; font-family: var(--font-main);
-  color: var(--color-text); position: relative;
-}
-.addr-input-wrap {
-  position: relative;
-}
-.addr-input-wrap svg {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  width: 18px; height: 18px; stroke: var(--color-muted); stroke-width: 2; fill: none;
-  pointer-events: none;
-}
-
-/* Address list */
-.addr-list { overflow-y: auto; flex: 1; padding: 0 0 24px; }
-.addr-divider {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.6px; color: var(--color-muted);
-  padding: 6px 20px 4px;
-}
-.addr-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 13px 20px; cursor: pointer;
-  transition: background .1s;
-}
-.addr-item:active { background: var(--color-bg); }
-.addr-item-icon {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.addr-item-icon.loc  { background: #E8F5E9; }
-.addr-item-icon.home { background: #FFF3E0; }
-.addr-item-icon.work { background: #E8F0FE; }
-.addr-item-icon.pin  { background: var(--color-bg); }
-.addr-item-icon svg  { width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.addr-item-icon.loc  svg { stroke: #21A038; }
-.addr-item-icon.home svg { stroke: #E65100; }
-.addr-item-icon.work svg { stroke: #2563EB; }
-.addr-item-icon.pin  svg { stroke: var(--color-muted); }
-.addr-item-body { flex: 1; min-width: 0; }
-.addr-item-title { font-size: 15px; font-weight: 600; line-height: 1.2; }
-.addr-item-sub   { font-size: 12px; color: var(--color-muted); margin-top: 1px; }
-.addr-item-arrow { flex-shrink: 0; }
-.addr-item-arrow svg { width: 16px; height: 16px; stroke: var(--color-border); stroke-width: 2; fill: none; }
-.addr-sep-line { height: 1px; background: var(--color-border); margin: 0 20px; }
-
-/* Delete button */
-.addr-delete-btn {
-  width: 34px; height: 34px; border-radius: 50%; border: none;
-  background: #FBE9E7; cursor: pointer; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .12s;
-}
-.addr-delete-btn:active { background: #FFCDD2; }
-.addr-delete-btn svg { width: 14px; height: 14px; fill: none; stroke: #DC2626; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* Save new address button */
-.addr-save-btn {
-  display: none; width: 100%; margin-top: 10px;
-  background: var(--color-plus); color: #fff;
-  border: none; border-radius: var(--r-btn);
-  height: 48px; font-size: 15px; font-weight: 700;
-  font-family: var(--font-main); cursor: pointer;
-  transition: opacity .12s;
-}
-.addr-save-btn.visible { display: block; }
-.addr-save-btn:active { opacity: .88; }
-
-/* Add address row */
-.addr-add-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 20px; cursor: pointer; transition: background .1s;
-}
-.addr-add-row:active { background: var(--color-bg); }
-.addr-add-icon {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-  background: var(--color-bg);
-  display: flex; align-items: center; justify-content: center;
-}
-.addr-add-icon svg { width: 20px; height: 20px; stroke: var(--color-orange); stroke-width: 2.5; fill: none; stroke-linecap: round; }
-.addr-add-label { font-size: 15px; font-weight: 600; color: var(--color-orange); }
-
-/* ── BOTTOM NAV ── */
-/* ── BOTTOM NAV ── */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 390px; max-width: 100vw;
-  background: #fff;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 -4px 16px rgba(13,10,44,0.07);
-  display: flex; z-index: 300;
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 14px 0 10px; cursor: pointer; position: relative;
-  transition: opacity .12s;
-}
-.nav-item:active { opacity: .72; }
-.nav-bar {
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 56px; height: 3px; border-radius: 0 0 3px 3px;
-  background: linear-gradient(90deg,#FE5196 0%,#F77062 100%);
-  opacity: 0; transition: opacity .2s;
-}
-.nav-item.active .nav-bar { opacity: 1; }
-.nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
-.nav-icon svg { width: 26px; height: 26px; }
-.ni { fill: #CFD6DC; transition: fill .18s; }
-.nav-item.active .ni { fill: url(#navGradient); }
-.nav-item span {
-  font-size: 11px; font-weight: 500; color: #ABB7C2;
-  background: transparent; -webkit-text-fill-color: #ABB7C2;
-  transition: color .15s;
-}
-.nav-item.active span {
-  font-weight: 600;
-  background: linear-gradient(to bottom, #222222, #222222);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.cart-pill {
-  position: absolute; top: 10px; right: calc(50% - 18px);
-  background: var(--color-orange); color: #fff;
-  font-size: 9px; font-weight: 900; min-width: 16px; height: 16px;
-  border-radius: 8px; padding: 0 4px;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid #fff;
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -730,10 +17,10 @@ body {
   <div class="header-logo-row">
     <div class="logotype">togora<span>.</span></div>
     <div class="header-icons">
-      <button class="icon-btn">
+      <a class="icon-btn" href="notifications.html" aria-label="Уведомления">
         <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <div class="notif-badge"></div>
-      </button>
+        <div class="notif-badge hidden" id="notifBadge"></div>
+      </a>
     </div>
   </div>
   <div class="address-row">
@@ -1217,6 +504,96 @@ body {
 </section>
 <div class="sep"></div>
 
+<!-- ═══ REELS (restaurant videos) ═══ -->
+<section class="reels-section surface">
+  <div class="section-head">
+    <div class="section-title">Рилсы ресторанов</div>
+    <a class="section-all">Все →</a>
+  </div>
+  <div class="scroll-x reels-scroll" id="reelsScroll">
+    <!-- rendered by JS -->
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ REELS FULLSCREEN PLAYER ═══ -->
+<div class="reels-player" id="reelsPlayer" role="dialog" aria-label="Видео ресторана">
+  <div class="rp-stage" id="rpStage">
+    <div class="rp-media" id="rpMedia"></div>
+
+    <!-- Tap zones -->
+    <div class="rp-zone prev" id="rpPrev"></div>
+    <div class="rp-zone next" id="rpNext"></div>
+
+    <!-- Progress bar -->
+    <div class="rp-progress" id="rpProgress"></div>
+
+    <!-- Top bar -->
+    <div class="rp-top">
+      <div class="rp-rest" id="rpRest">
+        <div class="rp-rest-avatar"><img id="rpAvatar" alt=""></div>
+        <div class="rp-rest-meta">
+          <div class="rp-rest-name" id="rpRestName">Ресторан</div>
+          <div class="rp-rest-sub"  id="rpRestSub">★ 4.8 · 25–35 мин</div>
+        </div>
+      </div>
+      <div class="rp-top-actions">
+        <button class="rp-icon-btn" id="rpMute" aria-label="Звук">
+          <svg viewBox="0 0 24 24">
+            <g class="vol-on"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></g>
+            <g class="vol-off"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></g>
+          </svg>
+        </button>
+        <button class="rp-icon-btn" id="rpClose" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pause indicator -->
+    <div class="rp-pause-ind">
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </div>
+
+    <!-- Side actions -->
+    <div class="rp-side">
+      <button class="rp-action" id="rpLike">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="rp-action-num" id="rpLikeNum">128</div>
+      </button>
+      <button class="rp-action" id="rpComment">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="rp-action-num">42</div>
+      </button>
+      <button class="rp-action" id="rpShare">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="rp-action-num">Поделиться</div>
+      </button>
+      <button class="rp-action" id="rpSave">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="rp-action-num">Сохр.</div>
+      </button>
+    </div>
+
+    <!-- Bottom info -->
+    <div class="rp-bottom">
+      <div class="rp-caption" id="rpCaption">Подпись</div>
+      <button class="rp-cta" id="rpCta">
+        <svg viewBox="0 0 24 24"><path d="M3 10h18M3 10V19a1 1 0 001 1h16a1 1 0 001-1V10M3 10L6 4h12l3 6"/></svg>
+        <span>Перейти в ресторан</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ EVENTS ═══ -->
 <section class="events-section surface">
   <div class="section-head"><div class="section-title">Мероприятия</div><a class="section-all">Все →</a></div>
@@ -1391,19 +768,18 @@ body {
 <nav class="bottom-nav">
 
   <!-- 1. Главная — house icon -->
-  <div class="nav-item active">
+  <a class="nav-item" href="index.html" data-page="index.html">
     <div class="nav-bar"></div>
     <div class="nav-icon">
       <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- roof -->
         <path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/>
       </svg>
     </div>
     <span>Главная</span>
-  </div>
+  </a>
 
   <!-- 2. Каталог — 2×2 grid -->
-  <div class="nav-item">
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
     <div class="nav-bar"></div>
     <div class="nav-icon">
       <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1414,52 +790,42 @@ body {
       </svg>
     </div>
     <span>Каталог</span>
-  </div>
+  </a>
 
   <!-- 3. Корзина — shopping bag -->
-  <div class="nav-item">
+  <a class="nav-item" href="cart.html" data-page="cart.html">
     <div class="nav-bar"></div>
     <div class="nav-icon">
       <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- bag body -->
         <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
-        <!-- handle detail -->
         <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
       </svg>
     </div>
     <div class="cart-pill">3</div>
     <span>Корзина</span>
-  </div>
+  </a>
 
   <!-- 4. Профиль — person -->
-  <div class="nav-item">
+  <a class="nav-item" href="profile.html" data-page="profile.html">
     <div class="nav-bar"></div>
     <div class="nav-icon">
       <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- head -->
         <circle class="ni" cx="13" cy="9" r="4.5"/>
-        <!-- body/shoulders -->
         <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
       </svg>
     </div>
     <span>Профиль</span>
-  </div>
+  </a>
 </nav>
 
 
+<script src="app.js"></script>
 <script>
 (function() {
   var toast = document.getElementById('cart-toast');
-  var toastText = toast.querySelector('.toast-text');
+  var toastText = toast ? toast.querySelector('.toast-text') : null;
   var cartPill = document.querySelector('.cart-pill');
   var cartCount = parseInt(cartPill ? cartPill.textContent : 3);
-  // Nav item active state click
-  document.querySelectorAll('.nav-item').forEach(function(item) {
-    item.addEventListener('click', function() {
-      document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
-      item.classList.add('active');
-    });
-  });
   var timer;
 
   function showToast(name) {
@@ -1566,280 +932,269 @@ body {
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
   };
   var ARROW = '<div class="addr-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>';
-  var TRASH = '<button class="addr-delete-btn" title="Удалить"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>';
 
-  // ── Render address list ──
-  function renderList(q) {
-    q = (q || '').toLowerCase().trim();
-    var filtered = addresses.filter(function(a) {
-      return !q || a.title.toLowerCase().includes(q) || a.sub.toLowerCase().includes(q);
+  // ════════════════════════════════════════════════
+  //  REELS MODULE
+  // ════════════════════════════════════════════════
+  var reelsScroll  = document.getElementById('reelsScroll');
+  var reelsPlayer  = document.getElementById('reelsPlayer');
+  var rpStage      = document.getElementById('rpStage');
+  var rpMedia      = document.getElementById('rpMedia');
+  var rpProgress   = document.getElementById('rpProgress');
+  var rpClose      = document.getElementById('rpClose');
+  var rpMute       = document.getElementById('rpMute');
+  var rpPrevBtn    = document.getElementById('rpPrev');
+  var rpNextBtn    = document.getElementById('rpNext');
+  var rpAvatar     = document.getElementById('rpAvatar');
+  var rpRestName   = document.getElementById('rpRestName');
+  var rpRestSub    = document.getElementById('rpRestSub');
+  var rpCaption    = document.getElementById('rpCaption');
+  var rpRestBlock  = document.getElementById('rpRest');
+  var rpLike       = document.getElementById('rpLike');
+  var rpLikeNum    = document.getElementById('rpLikeNum');
+  var rpShare      = document.getElementById('rpShare');
+  var rpSave       = document.getElementById('rpSave');
+  var rpCta        = document.getElementById('rpCta');
+
+  var reels = [
+    { id:1, rest:'Beshqozon Plov',    sub:'★ 4.9 · 20–30 мин', avatar:'./img/dish-01.jpg', poster:'./img/dish-01.jpg',
+      caption:'Готовим узбекский плов на дровах. Свежее мясо, рис лазер.', likes:128, seen:false },
+    { id:2, rest:'Khan Atlas',        sub:'★ 4.7 · 25–35 мин', avatar:'./img/dish-04.jpg', poster:'./img/dish-04.jpg',
+      caption:'Тающий во рту шашлык из ягнёнка — фирменный маринад.', likes:312, seen:false },
+    { id:3, rest:'Manti House',       sub:'★ 4.8 · 15–25 мин', avatar:'./img/dish-07.jpg', poster:'./img/dish-07.jpg',
+      caption:'Лепим манты вручную — заходи посмотреть процесс!', likes:97,  seen:false },
+    { id:4, rest:'Sushi Toshkent',    sub:'★ 4.6 · 30–40 мин', avatar:'./img/dish-10.jpg', poster:'./img/dish-10.jpg',
+      caption:'Сет «Дракон» — свежий лосось и хрустящий темпур.', likes:204, seen:true  },
+    { id:5, rest:'Sweet Lab',         sub:'★ 4.9 · 20–30 мин', avatar:'./img/dish-13.jpg', poster:'./img/dish-13.jpg',
+      caption:'Десерты ручной работы. Видео от шеф-кондитера.', likes:411, seen:false },
+    { id:6, rest:'Lepyoshka Master',  sub:'★ 4.7 · 10–20 мин', avatar:'./img/dish-16.jpg', poster:'./img/dish-16.jpg',
+      caption:'Горячая лепёшка прямо из тандыра!', likes:88,  seen:true  }
+  ];
+
+  function renderReelsCards() {
+    if (!reelsScroll) return;
+    var html = '';
+    reels.forEach(function(r) {
+      html += '<div class="reel-card ' + (r.seen ? '' : 'unseen') + '" data-id="' + r.id + '">'
+            +   '<img class="reel-poster" src="' + r.poster + '" alt="' + escNH(r.rest) + '">'
+            +   '<div class="reel-grad"></div>'
+            +   '<div class="reel-avatar"><img src="' + r.avatar + '" alt=""></div>'
+            +   '<div class="reel-views"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3" fill="#000"/></svg>'
+            +     formatViews(r.likes * 8) + '</div>'
+            +   '<div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>'
+            +   '<div class="reel-info">'
+            +     '<div class="reel-name">' + escNH(r.rest) + '</div>'
+            +     '<div class="reel-cap">' + escNH(r.caption.length > 32 ? r.caption.slice(0,30) + '…' : r.caption) + '</div>'
+            +   '</div>'
+            + '</div>';
     });
-    var html = '<div class="addr-divider">Моё местоположение</div>';
-    html += '<div class="addr-item" id="addrUseLocation">' +
-      '<div class="addr-item-icon loc">' + ICON.loc + '</div>' +
-      '<div class="addr-item-body"><div class="addr-item-title">Использовать геолокацию</div>' +
-      '<div class="addr-item-sub">Определить автоматически</div></div>' + ARROW + '</div>';
-    if (filtered.length) {
-      html += '<div class="addr-sep-line"></div><div class="addr-divider">Сохранённые адреса</div>';
-      filtered.forEach(function(a) {
-        html += '<div class="addr-sep-line"></div>';
-        html += '<div class="addr-item addr-saved" data-id="' + a.id + '" data-address="' + a.sub + '">' +
-          '<div class="addr-item-icon pin">' + ICON.pin + '</div>' +
-          '<div class="addr-item-body"><div class="addr-item-title">' + a.title + '</div>' +
-          '<div class="addr-item-sub">' + a.sub + '</div></div>' +
-          (a.preset ? ARROW : TRASH) + '</div>';
-      });
+    reelsScroll.innerHTML = html;
+  }
+
+  function formatViews(n) {
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return String(n);
+  }
+
+  // Player state
+  var rpIndex = 0;
+  var rpPaused = false;
+  var rpMuted  = true;
+  var rpTimer  = null;
+  var rpStartTs = 0;
+  var rpElapsed = 0;
+  var RP_DURATION = 6000;
+  var likedSet = {};
+
+  function buildProgress() {
+    var html = '';
+    for (var i = 0; i < reels.length; i++) {
+      html += '<div class="rp-seg"><div class="rp-seg-fill"></div></div>';
     }
-    html += '<div class="addr-sep-line"></div>';
-    html += '<div class="addr-add-row" id="addrAddRow"><div class="addr-add-icon">' + ICON.plus + '</div>' +
-      '<div class="addr-add-label">Добавить адрес</div></div>';
-    addrList.innerHTML = html;
-
-    // Wire events on fresh nodes
-    var geoRow = document.getElementById('addrUseLocation');
-    if (geoRow) geoRow.addEventListener('click', doGeolocate);
-
-    addrList.querySelectorAll('.addr-saved').forEach(function(item) {
-      item.addEventListener('click', function(e) {
-        if (e.target.closest('.addr-delete-btn')) return;
-        var addr = item.dataset.address;
-        moveMapTo(currentCoords[0], currentCoords[1]); // keep coords, just set text
-        setAddress(addr);
-      });
-    });
-    addrList.querySelectorAll('.addr-delete-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var id = parseInt(btn.closest('.addr-saved').dataset.id);
-        addresses = addresses.filter(function(a) { return a.id !== id; });
-        renderList(addrInput.value);
-      });
-    });
-    var addRow = document.getElementById('addrAddRow');
-    if (addRow) addRow.addEventListener('click', function() {
-      addrInput.value = ''; addrInput.focus(); addrSaveBtn.classList.remove('visible');
-    });
+    rpProgress.innerHTML = html;
   }
 
-  // ── Leaflet Map ──
-  function initMap() {
-    if (leafletMap) { leafletMap.invalidateSize(); return; }
-    var pinIcon = L.divIcon({
-      className: '', iconSize: [32, 42], iconAnchor: [16, 42],
-      html: '<div class="lf-pin-wrap"><div class="lf-pin-head"></div><div class="lf-pin-shadow"></div></div>',
+  function setActiveSeg(i) {
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    segs.forEach(function(s, idx) {
+      s.classList.remove('active', 'done', 'paused');
+      if (idx < i) s.classList.add('done');
     });
-    leafletMap = L.map('leafletMap', { center: currentCoords, zoom: 16, zoomControl: false, attributionControl: false });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(leafletMap);
-    L.control.zoom({ position: 'topright' }).addTo(leafletMap);
-    leafletMarker = L.marker(currentCoords, { icon: pinIcon, draggable: true }).addTo(leafletMap);
-    leafletMarker.on('dragend', function() {
-      var ll = leafletMarker.getLatLng();
-      currentCoords = [ll.lat, ll.lng];
-      reverseGeocode(ll.lat, ll.lng);
-    });
-    leafletMap.on('click', function(e) {
-      currentCoords = [e.latlng.lat, e.latlng.lng];
-      leafletMarker.setLatLng(e.latlng);
-      reverseGeocode(e.latlng.lat, e.latlng.lng);
-    });
-    reverseGeocode(currentCoords[0], currentCoords[1]);
-  }
-
-  function moveMapTo(lat, lng, zoom) {
-    currentCoords = [lat, lng];
-    if (leafletMap && leafletMarker) {
-      leafletMap.setView([lat, lng], zoom || leafletMap.getZoom());
-      leafletMarker.setLatLng([lat, lng]);
+    if (segs[i]) {
+      // force restart animation
+      var fill = segs[i].querySelector('.rp-seg-fill');
+      fill.style.animation = 'none';
+      // trigger reflow
+      void fill.offsetWidth;
+      fill.style.animation = '';
+      segs[i].classList.add('active');
     }
   }
 
-  // ── Nominatim Geocoding ──
-  function reverseGeocode(lat, lng) {
-    addrConfirmTxt.textContent = 'Определяем адрес…';
-    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&accept-language=ru', {
-      headers: { 'Accept-Language': 'ru' }
-    }).then(function(r) { return r.json(); })
-      .then(function(data) {
-        var addr = formatAddr(data);
-        currentAddressText = addr;
-        addrConfirmTxt.textContent = addr;
-      }).catch(function() { addrConfirmTxt.textContent = currentAddressText; });
+  function loadReel(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= reels.length) { closeReels(); return; }
+    rpIndex = idx;
+    var r = reels[idx];
+    r.seen = true;
+
+    rpMedia.innerHTML = '<img src="' + r.poster + '" alt="">';
+    rpMedia.classList.add('playing');
+    rpAvatar.src = r.avatar;
+    rpRestName.textContent = r.rest;
+    rpRestSub.textContent  = r.sub;
+    rpCaption.textContent  = r.caption;
+    var liked = !!likedSet[r.id];
+    rpLike.classList.toggle('liked', liked);
+    rpLikeNum.textContent = r.likes + (liked ? 1 : 0);
+
+    setActiveSeg(idx);
+    rpPaused = false;
+    rpStage.classList.remove('paused');
+    rpStartTs = Date.now();
+    rpElapsed = 0;
+    scheduleAdvance(RP_DURATION);
   }
 
-  function forwardGeocode(q, cb) {
-    var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent('Ташкент ' + q) +
-      '&format=json&limit=6&accept-language=ru&countrycodes=uz';
-    fetch(url).then(function(r) { return r.json(); }).then(cb).catch(function() { cb([]); });
+  function scheduleAdvance(ms) {
+    clearTimeout(rpTimer);
+    rpTimer = setTimeout(function() {
+      loadReel(rpIndex + 1);
+    }, ms);
   }
 
-  function formatAddr(data) {
-    var a = data.address || {};
-    var parts = [];
-    if (a.road || a.pedestrian || a.street) parts.push(a.road || a.pedestrian || a.street);
-    if (a.house_number) parts.push(a.house_number);
-    if (parts.length) return parts.join(', ');
-    return (data.display_name || '').split(',').slice(0, 2).join(',').trim();
+  function pauseReel() {
+    if (rpPaused) return;
+    rpPaused = true;
+    rpStage.classList.add('paused');
+    rpMedia.classList.remove('playing');
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    if (segs[rpIndex]) segs[rpIndex].classList.add('paused');
+    rpElapsed += Date.now() - rpStartTs;
+    clearTimeout(rpTimer);
   }
-
-  // ── Geolocation ──
-  function doGeolocate() {
-    if (!navigator.geolocation) { showInfoToast('Геолокация недоступна'); return; }
-    addrConfirmTxt.textContent = 'Определяем…';
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var lat = pos.coords.latitude, lng = pos.coords.longitude;
-      currentCoords = [lat, lng];
-      moveMapTo(lat, lng, 17);
-      reverseGeocode(lat, lng);
-    }, function() { showInfoToast('Нет доступа к геолокации'); });
+  function resumeReel() {
+    if (!rpPaused) return;
+    rpPaused = false;
+    rpStage.classList.remove('paused');
+    rpMedia.classList.add('playing');
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    if (segs[rpIndex]) segs[rpIndex].classList.remove('paused');
+    rpStartTs = Date.now();
+    var remaining = Math.max(800, RP_DURATION - rpElapsed);
+    scheduleAdvance(remaining);
   }
+  function togglePause() { rpPaused ? resumeReel() : pauseReel(); }
 
-  addrGeoBtn.addEventListener('click', doGeolocate);
-
-  // ── Real-time search ──
-  addrInput.addEventListener('input', function() {
-    var q = addrInput.value.trim();
-    renderList(q);
-    addrSaveBtn.classList.toggle('visible', q.length > 3);
-    clearTimeout(searchTimer);
-    if (q.length < 2) { addrSuggest.classList.remove('show'); addrSuggest.innerHTML = ''; return; }
-    searchTimer = setTimeout(function() {
-      forwardGeocode(q, function(results) {
-        if (!results.length) { addrSuggest.classList.remove('show'); return; }
-        addrSuggest.innerHTML = results.map(function(r) {
-          var name = r.display_name.split(',').slice(0, 2).join(',').trim();
-          return '<div class="addr-suggest-item" data-lat="' + r.lat + '" data-lon="' + r.lon + '" data-name="' + name.replace(/"/g, '') + '">' +
-            '<b>' + name + '</b><span>' + r.display_name + '</span></div>';
-        }).join('');
-        addrSuggest.classList.add('show');
-        addrSuggest.querySelectorAll('.addr-suggest-item').forEach(function(item) {
-          item.addEventListener('click', function() {
-            var lat = parseFloat(item.dataset.lat), lon = parseFloat(item.dataset.lon);
-            var name = item.dataset.name;
-            addrInput.value = name;
-            currentAddressText = name;
-            addrConfirmTxt.textContent = name;
-            moveMapTo(lat, lon, 17);
-            addrSuggest.classList.remove('show');
-            addrSaveBtn.classList.toggle('visible', name.length > 3);
-          });
-        });
-      });
-    }, 380);
-  });
-
-  // Close suggest on outside click
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.addr-input-wrap')) addrSuggest.classList.remove('show');
-  });
-
-  // ── Save new address ──
-  addrSaveBtn.addEventListener('click', function() {
-    var text = addrInput.value.trim();
-    if (!text) return;
-    var title = text.split(',')[0].trim() || text;
-    addresses.push({ id: nextId++, type: 'pin', title: title, sub: text, preset: false });
-    addrInput.value = ''; addrSaveBtn.classList.remove('visible');
-    addrSuggest.classList.remove('show');
-    renderList('');
-    showInfoToast('Адрес сохранён ✓');
-  });
-
-  // ── Confirm map pin ──
-  addrConfirm.addEventListener('click', function() { setAddress(currentAddressText); });
-
-  // ── Open / Close sheet ──
-  function openAddrSheet() {
-    addrOverlay.classList.add('show');
-    addrSheet.classList.add('show');
+  function openReels(startId) {
+    var idx = 0;
+    if (startId != null) {
+      var found = reels.findIndex(function(r) { return r.id === startId; });
+      if (found >= 0) idx = found;
+    }
+    reelsPlayer.classList.add('show');
     document.body.style.overflow = 'hidden';
-    renderList('');
-    addrInput.value = ''; addrSaveBtn.classList.remove('visible');
-    addrSuggest.classList.remove('show');
-    setTimeout(initMap, 80);
+    buildProgress();
+    loadReel(idx);
   }
-  function closeAddrSheet() {
-    addrOverlay.classList.remove('show');
-    addrSheet.classList.remove('show');
+  function closeReels() {
+    reelsPlayer.classList.remove('show');
     document.body.style.overflow = '';
-    addrInput.blur();
-    addrSuggest.classList.remove('show');
-  }
-  function setAddress(text) {
-    if (!text || text === 'Определяем адрес…') return;
-    currentAddressText = text;
-    if (addrMain) {
-      var arrow = addrMain.querySelector('svg');
-      Array.from(addrMain.childNodes).forEach(function(n) { if (n.nodeType === 3) n.remove(); });
-      addrMain.insertBefore(document.createTextNode(text + ' '), arrow || null);
-    }
-    addrConfirmTxt.textContent = text;
-    closeAddrSheet();
+    clearTimeout(rpTimer);
+    rpMedia.classList.remove('playing');
+    rpStage.classList.remove('paused');
+    renderReelsCards();
   }
 
-  document.querySelector('.address-left').addEventListener('click', openAddrSheet);
-  addrOverlay.addEventListener('click', closeAddrSheet);
-  addrClose.addEventListener('click', closeAddrSheet);
-
-  // ── Info toast ──
-  function showInfoToast(msg) {
-    toastText.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(timer);
-    timer = setTimeout(function() { toast.classList.remove('show'); }, 2200);
-  }
-
-  // ════════════════════════════════════════════════
-  //  WELCOME BAR — first-visit geolocation confirm
-  // ════════════════════════════════════════════════
-  function showWelcomeBar(addr) {
-    currentAddressText = addr;
-    if (awbAddr) awbAddr.textContent = addr;
-    if (awbBar) { awbBar.style.display = ''; setTimeout(function() { awbBar.classList.add('show'); }, 30); }
-  }
-  function hideWelcomeBar() {
-    if (awbBar) {
-      awbBar.classList.remove('show');
-      setTimeout(function() { awbBar.style.display = 'none'; }, 450);
-    }
-  }
-
-  awbYes.addEventListener('click', function() {
-    var label = awbNameInput ? awbNameInput.value.trim() : '';
-    if (label) addresses.push({ id: nextId++, type: 'pin', title: label, sub: currentAddressText, preset: false });
-    setAddress(currentAddressText);
-    hideWelcomeBar();
-  });
-  awbNo.addEventListener('click', function() {
-    hideWelcomeBar();
-    setTimeout(openAddrSheet, 460);
-  });
-
-  // On load: try geolocation → show welcome bar
-  setTimeout(function() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        var lat = pos.coords.latitude, lng = pos.coords.longitude;
-        currentCoords = [lat, lng];
-        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&accept-language=ru')
-          .then(function(r) { return r.json(); })
-          .then(function(data) { showWelcomeBar(formatAddr(data)); })
-          .catch(function() { showWelcomeBar('Ташкент, Мирзо Улугбек'); });
-      }, function() {
-        // Denied → open sheet directly
-        openAddrSheet();
-      }, { timeout: 5000 });
-    } else {
-      openAddrSheet();
-    }
-  }, 600);
-
-  // Category switch
-  document.querySelectorAll('.cat-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-      document.querySelectorAll('.cat-card').forEach(function(c) { c.classList.remove('active'); });
-      card.classList.add('active');
+  // Bind reel card clicks
+  if (reelsScroll) {
+    reelsScroll.addEventListener('click', function(e) {
+      var card = e.target.closest('.reel-card');
+      if (!card) return;
+      openReels(parseInt(card.dataset.id));
     });
+  }
+
+  // Player buttons
+  if (rpClose) rpClose.addEventListener('click', closeReels);
+  if (rpMute)  rpMute.addEventListener('click', function() {
+    rpMuted = !rpMuted;
+    rpMute.classList.toggle('muted', rpMuted);
   });
+  if (rpPrevBtn) rpPrevBtn.addEventListener('click', function() { loadReel(rpIndex - 1); });
+  if (rpNextBtn) rpNextBtn.addEventListener('click', function() { loadReel(rpIndex + 1); });
+
+  // Center area pause/play on tap
+  if (rpStage) {
+    var pressTimer = null, pressed = false;
+    rpStage.addEventListener('pointerdown', function(e) {
+      // Skip if target is on a button/zone
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      pressed = true;
+      pressTimer = setTimeout(function() {
+        if (pressed) pauseReel();
+      }, 200);
+    });
+    rpStage.addEventListener('pointerup', function(e) {
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      clearTimeout(pressTimer);
+      if (rpPaused) { resumeReel(); pressed = false; return; }
+      pressed = false;
+    });
+    rpStage.addEventListener('pointercancel', function() {
+      clearTimeout(pressTimer);
+      pressed = false;
+      if (rpPaused) resumeReel();
+    });
+  }
+
+  // Like
+  if (rpLike) rpLike.addEventListener('click', function() {
+    var r = reels[rpIndex];
+    if (!r) return;
+    likedSet[r.id] = !likedSet[r.id];
+    rpLike.classList.toggle('liked', !!likedSet[r.id]);
+    rpLikeNum.textContent = r.likes + (likedSet[r.id] ? 1 : 0);
+  });
+  if (rpShare) rpShare.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Ссылка скопирована');
+  });
+  if (rpSave) rpSave.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Сохранено');
+  });
+  if (rpCta) rpCta.addEventListener('click', closeReels);
+  if (rpRestBlock) rpRestBlock.addEventListener('click', closeReels);
+
+  // Swipe up/down for next/prev
+  if (rpStage) {
+    var swipeStartY = null;
+    rpStage.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+    rpStage.addEventListener('touchend', function(e) {
+      if (swipeStartY == null) return;
+      var endY = (e.changedTouches[0] || {}).clientY || swipeStartY;
+      var dy = endY - swipeStartY;
+      swipeStartY = null;
+      if (Math.abs(dy) < 50) return;
+      if (dy < 0) loadReel(rpIndex + 1);
+      else        loadReel(rpIndex - 1);
+    }, { passive: true });
+  }
+
+  // Esc closes reels
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && reelsPlayer.classList.contains('show')) closeReels();
+    if (!reelsPlayer.classList.contains('show')) return;
+    if (e.key === 'ArrowLeft')  loadReel(rpIndex - 1);
+    if (e.key === 'ArrowRight') loadReel(rpIndex + 1);
+    if (e.key === ' ') { e.preventDefault(); togglePause(); }
+  });
+
+  // initial render
+  renderReelsCards();
+
 })();
 </script>
 </body>

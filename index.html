@@ -74,7 +74,7 @@ body {
   max-width: 390px;
   margin: 0 auto;
   min-height: 100vh;
-  padding-bottom: 72px;
+  padding-bottom: 80px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -96,6 +96,7 @@ body {
   overflow: hidden;
 }
 
+
 /* ── HEADER ── */
 .header {
   background: var(--color-surface);
@@ -103,8 +104,9 @@ body {
 .search-sticky {
   position: sticky; top: 0; z-index: 200;
   background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  padding: 8px 16px 10px;
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  padding: 8px 16px 14px;
 }
 .header-logo-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -156,7 +158,7 @@ body {
 .search-bar {
   display: flex; align-items: center; gap: 10px;
   background: var(--color-bg); border-radius: var(--r-btn);
-  padding: 11px 14px; cursor: text;
+  padding: 0 14px; height: 54px; cursor: text;
 }
 .search-bar svg { width: 18px; height: 18px; fill: none; stroke: var(--color-muted); stroke-width: 2; flex-shrink: 0; }
 .search-bar span { font-size: 15px; color: var(--color-muted); }
@@ -191,18 +193,37 @@ body {
 .promo-badge .pb-sub { font-size: 8px; font-weight: 700; opacity: 0.9; }
 
 /* ── INFO CHIPS ── */
-.discount-section { background: var(--color-surface); padding: 14px 0 14px; }
-.discount-scroll { padding: 0 16px; gap: 8px; }
-.d-pill { flex-shrink: 0; border-radius: 16px; padding: 12px 14px; min-width: 130px; cursor: pointer; transition: transform .12s; }
+.discount-section { background: var(--color-surface); padding: 6px 0 18px; }
+.discount-scroll-x {
+  display: flex; overflow-x: auto; scrollbar-width: none; gap: 12px; padding: 0 16px 4px;
+}
+.discount-scroll-x::-webkit-scrollbar { display: none; }
+.d-pill {
+  flex-shrink: 0; width: 152px;
+  border-radius: 18px; padding: 14px 14px;
+  cursor: pointer; transition: transform .12s, box-shadow .12s;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
 .d-pill:active { transform: scale(0.97); }
 .d-pill.dp1 { background: #FFF3E0; }
 .d-pill.dp2 { background: #E8F5E9; }
 .d-pill.dp3 { background: #E8F0FE; }
 .d-pill.dp4 { background: #FBE9E7; }
-.d-icon { font-size: 22px; line-height: 1; margin-bottom: 6px; }
-.d-value { font-size: 16px; font-weight: 800; line-height: 1.1; }
-.d-label { font-size: 11px; color: var(--color-muted); margin-top: 2px; }
-.d-sub { font-size: 11px; color: var(--color-muted); }
+.d-icon {
+  flex-shrink: 0; width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 13px;
+}
+.d-icon svg { width: 22px; height: 22px; }
+.d-pill.dp1 .d-icon { background: rgba(255,152,0,0.18); }
+.d-pill.dp2 .d-icon { background: rgba(33,160,56,0.14); }
+.d-pill.dp3 .d-icon { background: rgba(59,130,246,0.13); }
+.d-pill.dp4 .d-icon { background: rgba(239,68,68,0.12); }
+.d-text { display: flex; flex-direction: column; gap: 2px; }
+.d-value { font-size: 15px; font-weight: 800; line-height: 1.15; color: var(--color-text); }
+.d-label { font-size: 11px; color: var(--color-muted); font-weight: 400; }
+.d-sub { display: none; }
 
 /* ── SECTION HEADER ── */
 .section-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 10px; }
@@ -211,18 +232,18 @@ body {
 
 
 /* ── CATEGORIES ── */
-.categories-section { background: var(--color-surface); padding-bottom: 20px; }
-.cat-scroll { padding: 0 16px; gap: 4px; }
+.categories-section { background: var(--color-surface); padding-bottom: 16px; }
+.cat-scroll { padding: 0 16px; gap: 6px; flex-wrap: nowrap; }
 .cat-card {
   flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
-  cursor: pointer; width: 110px;
-  background: none; border: none; padding: 0 4px;
+  cursor: pointer; width: 54px;
+  background: none; border: none; padding: 0;
   transition: opacity .15s;
 }
 .cat-img-wrap {
-  width: 106px; height: 90px;
+  width: 50px; height: 44px;
   background: var(--color-surface);
-  margin-bottom: 9px; position: relative;
+  margin-bottom: 6px; position: relative;
   display: flex; align-items: flex-end; justify-content: center;
   overflow: visible;
 }
@@ -231,24 +252,20 @@ body {
   object-fit: contain; object-position: bottom center;
   display: block;
   transition: transform .18s cubic-bezier(.34,1.56,.64,1);
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
+  filter: drop-shadow(0 3px 7px rgba(0,0,0,0.13));
 }
 .cat-card:active .cat-img-wrap img,
-.cat-card.active .cat-img-wrap img { transform: scale(1.06); }
-.cat-emoji-placeholder {
-  font-size: 52px; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  width: 100%; height: 100%;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.10));
-}
+.cat-card.active .cat-img-wrap img { transform: scale(1.08); }
 .cat-name {
-  font-size: 15px; font-weight: 400; white-space: nowrap;
+  font-size: 10px; font-weight: 400;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 54px;
   color: var(--color-text); text-align: center; line-height: 1;
 }
 .cat-card.active .cat-name { color: var(--color-text); font-weight: 700; }
 .cat-underline {
-  width: 24px; height: 2px; background: transparent;
-  border-radius: 2px; margin-top: 5px;
+  width: 18px; height: 2px; background: transparent;
+  border-radius: 2px; margin-top: 4px;
   transition: background .15s;
 }
 .cat-card.active .cat-underline { background: var(--color-orange); }
@@ -278,10 +295,6 @@ body {
 .rest-name-over small {
   display: block; font-family: var(--font-main); font-size: 11px;
   font-weight: 400; opacity: 0.82; margin-top: 1px; letter-spacing: 0;
-}
-.rest-meta-row {
-  display: flex; align-items: center; gap: 4px;
-  margin-top: 8px; font-size: 12px; color: var(--color-muted);
 }
 .rest-star-icon { fill: #FFB300; width: 12px; height: 12px; flex-shrink: 0; }
 .rest-rv { font-weight: 700; color: var(--color-text); font-size: 12px; }
@@ -319,19 +332,40 @@ body {
   display: flex; flex-direction: column; flex: 1;
 }
 .mini-price-row { margin-bottom: 4px; }
-.mini-price { font-size: 15px; font-weight: 800; }
+.mini-price { font-size: 15px; font-weight: 800; color: var(--color-plus); }
 .mini-name { font-size: 13px; font-weight: 700; color: var(--color-text); line-height: 1.3; }
 .mini-vendor { font-size: 11px; font-weight: 400; color: var(--color-muted); margin-top: 3px; }
 .add-btn-float {
   width: 34px; height: 34px; border-radius: 50%;
-  background: var(--color-orange); border: none;
+  background: var(--color-plus); border: none;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; position: absolute; bottom: 10px; right: 10px; z-index: 3;
-  box-shadow: 0 3px 12px rgba(252,63,29,0.48);
+  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
   transition: transform .12s, box-shadow .12s;
 }
-.add-btn-float:active { transform: scale(0.88); box-shadow: 0 1px 4px rgba(252,63,29,0.2); }
-.add-btn-float svg { width: 16px; height: 16px; stroke: #fff; stroke-width: 2.8; fill: none; }
+.add-btn-float:active { transform: scale(0.88); box-shadow: 0 1px 4px rgba(33,160,56,0.2); }
+
+/* ── QTY STEPPER ── */
+.qty-stepper {
+  position: absolute; bottom: 8px; right: 8px; z-index: 3;
+  display: flex; align-items: center;
+  background: var(--color-plus); border-radius: 20px;
+  box-shadow: 0 3px 12px rgba(33,160,56,0.45);
+  height: 34px; overflow: hidden;
+}
+.qty-stepper .qs-btn {
+  width: 32px; height: 34px; border: none; background: transparent;
+  color: #fff; font-size: 20px; font-weight: 400; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; padding: 0;
+  font-family: var(--font-main);
+}
+.qty-stepper .qs-count {
+  font-size: 14px; font-weight: 800; color: #fff;
+  min-width: 22px; text-align: center; line-height: 1;
+  font-family: var(--font-main);
+}
+.add-btn-float svg { width: 16px; height: 16px; stroke: #fff; stroke-width: 2.8; fill: none; stroke-linecap: round; }
 
 /* ── TOAST ── */
 .toast {
@@ -398,6 +432,7 @@ body {
   cursor: pointer; margin-top: 7px; font-family: var(--font-main);
 }
 
+
 /* ── SECTION RADIUS ── */
 .promo-section,
 .discount-section,
@@ -410,31 +445,56 @@ body {
 }
 
 /* ── BOTTOM NAV ── */
+/* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 390px; background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  width: 390px;
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 -4px 16px rgba(13,10,44,0.07);
   display: flex; z-index: 300;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .nav-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  padding: 10px 0 8px; cursor: pointer; position: relative;
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 14px 0 10px; cursor: pointer; position: relative;
+  transition: opacity .12s;
 }
-.nav-item svg { width: 24px; height: 24px; stroke: var(--color-muted); stroke-width: 1.8; fill: none; }
-.nav-item span { font-size: 10px; margin-top: 3px; color: var(--color-muted); font-weight: 500; }
-.nav-item.active svg { stroke: var(--color-orange); }
-.nav-item.active span { color: var(--color-orange); font-weight: 700; }
+.nav-item:active { opacity: .72; }
+.nav-bar {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 56px; height: 3px; border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg,#222222 0%,#222222 100%);
+  opacity: 0; transition: opacity .2s;
+}
+.nav-item.active .nav-bar { opacity: 1; }
+.nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 26px; height: 26px; }
+.ni { fill: #CFD6DC; transition: fill .18s; }
+.nav-item.active .ni { fill: url(#navGradient); }
+.nav-item span {
+  font-size: 11px; font-weight: 500; color: #ABB7C2;
+  background: transparent; -webkit-text-fill-color: #ABB7C2;
+  transition: color .15s;
+}
+.nav-item.active span {
+  font-weight: 600;
+  background: linear-gradient(to bottom, #222222, #222222);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .cart-pill {
-  position: absolute; top: 7px; right: calc(50% - 22px);
+  position: absolute; top: 10px; right: calc(50% - 18px);
   background: var(--color-orange); color: #fff;
   font-size: 9px; font-weight: 900; min-width: 16px; height: 16px;
   border-radius: 8px; padding: 0 4px;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid var(--color-surface);
+  border: 2px solid #fff;
 }
 </style>
 </head>
 <body>
+
 
 <!-- ═══ HEADER ═══ -->
 <header class="header">
@@ -466,6 +526,7 @@ body {
     <span>Блюда, рестораны...</span>
   </div>
 </div>
+<div class="sep"></div>
 
 <!-- ═══ PROMO BANNERS ═══ -->
 <section class="promo-section surface">
@@ -503,34 +564,64 @@ body {
 
 <!-- ═══ INFO CHIPS ═══ -->
 <section class="discount-section surface">
-  <div class="scroll-x discount-scroll">
+  <div class="discount-scroll-x">
 
+    <!-- 500+ ресторанов — storefront -->
     <div class="d-pill dp1">
-      <div class="d-icon">🏪</div>
-      <div class="d-value">500+</div>
-      <div class="d-label">ресторанов</div>
-      <div class="d-sub">в Ташкенте</div>
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18M3 10V19a1 1 0 001 1h16a1 1 0 001-1V10M3 10L6 4h12l3 6"/>
+          <path d="M9 21v-6h6v6"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">500+</div>
+        <div class="d-label">ресторанов</div>
+      </div>
     </div>
 
+    <!-- 0 сум — delivery scooter -->
     <div class="d-pill dp2">
-      <div class="d-icon">🚚</div>
-      <div class="d-value">0 сум</div>
-      <div class="d-label">бесплатно</div>
-      <div class="d-sub">от 150 000 сум</div>
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1B7A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="18" r="2"/>
+          <circle cx="18" cy="18" r="2"/>
+          <path d="M8 18h6M14 18V9h3l3 4v5h-2"/>
+          <path d="M6 18H3v-5l5-4h4v9"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">0 сум</div>
+        <div class="d-label">доставка</div>
+      </div>
     </div>
 
+    <!-- Предзаказ — clock -->
     <div class="d-pill dp3">
-      <div class="d-icon">🕐</div>
-      <div class="d-value">Предзаказ</div>
-      <div class="d-label">выберите</div>
-      <div class="d-sub">удобное время</div>
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3.5 3.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Предзаказ</div>
+        <div class="d-label">удобное время</div>
+      </div>
     </div>
 
+    <!-- Гарантия — shield + check -->
     <div class="d-pill dp4">
-      <div class="d-icon">🛡️</div>
-      <div class="d-value">Гарантия</div>
-      <div class="d-label">вернём деньги</div>
-      <div class="d-sub">если что-то не так</div>
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5.25-3.5 9.25-8 10.5C7.5 21.25 4 17.25 4 12V6l8-4z"/>
+          <path d="M8.5 12l2.5 2.5 4.5-4.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Гарантия</div>
+        <div class="d-label">вернём деньги</div>
+      </div>
     </div>
 
   </div>
@@ -595,10 +686,6 @@ body {
         <div class="rest-photo-overlay"></div>
         <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
       </div>
-      <div class="rest-meta-row">
-        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span class="rest-rv">4.8</span>
-      </div>
     </div>
 
     <div class="rest-item">
@@ -606,10 +693,6 @@ body {
         <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
         <div class="rest-photo-overlay"></div>
         <div class="rest-name-over">OSH<small>Markazi</small></div>
-      </div>
-      <div class="rest-meta-row">
-        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span class="rest-rv">4.7</span>
       </div>
     </div>
 
@@ -619,10 +702,6 @@ body {
         <div class="rest-photo-overlay"></div>
         <div class="rest-name-over">NORIN<small>House</small></div>
       </div>
-      <div class="rest-meta-row">
-        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span class="rest-rv">4.6</span>
-      </div>
     </div>
 
     <div class="rest-item">
@@ -631,10 +710,6 @@ body {
         <div class="rest-photo-overlay"></div>
         <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
       </div>
-      <div class="rest-meta-row">
-        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span class="rest-rv">4.9</span>
-      </div>
     </div>
 
     <div class="rest-item">
@@ -642,10 +717,6 @@ body {
         <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
         <div class="rest-photo-overlay"></div>
         <div class="rest-name-over">FERGANA<small>Palav</small></div>
-      </div>
-      <div class="rest-meta-row">
-        <svg class="rest-star-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <span class="rest-rv">4.5</span>
       </div>
     </div>
 
@@ -1019,23 +1090,71 @@ body {
   <span class="toast-text">Добавлено в корзину</span>
 </div>
 
+<!-- Gradient defs for active nav icons -->
+<svg style="width:0;height:0;position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="navGradient" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#222222"/>
+      <stop offset="100%" stop-color="#222222"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav">
+
+  <!-- 1. Главная — house icon -->
   <div class="nav-item active">
-    <svg viewBox="0 0 24 24" fill="var(--color-orange)" style="stroke:none;"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- roof -->
+        <path class="ni" d="M13 3L2.5 12H5V22H10V16.5H16V22H21V12H23.5L13 3Z"/>
+      </svg>
+    </div>
     <span>Главная</span>
   </div>
+
+  <!-- 2. Каталог — 2×2 grid -->
   <div class="nav-item">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni" x="3" y="3" width="9" height="9" rx="2"/>
+        <rect class="ni" x="14" y="3" width="9" height="9" rx="2"/>
+        <rect class="ni" x="3" y="14" width="9" height="9" rx="2"/>
+        <rect class="ni" x="14" y="14" width="9" height="9" rx="2"/>
+      </svg>
+    </div>
     <span>Каталог</span>
   </div>
+
+  <!-- 3. Корзина — shopping bag -->
   <div class="nav-item">
-    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- bag body -->
+        <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
+        <!-- handle detail -->
+        <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
+      </svg>
+    </div>
     <div class="cart-pill">3</div>
     <span>Корзина</span>
   </div>
+
+  <!-- 4. Профиль — person -->
   <div class="nav-item">
-    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="nav-bar"></div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- head -->
+        <circle class="ni" cx="13" cy="9" r="4.5"/>
+        <!-- body/shoulders -->
+        <path class="ni" d="M4 22C4 17.582 8.029 14 13 14C17.971 14 22 17.582 22 22H4Z"/>
+      </svg>
+    </div>
     <span>Профиль</span>
   </div>
 </nav>
@@ -1047,6 +1166,13 @@ body {
   var toastText = toast.querySelector('.toast-text');
   var cartPill = document.querySelector('.cart-pill');
   var cartCount = parseInt(cartPill ? cartPill.textContent : 3);
+  // Nav item active state click
+  document.querySelectorAll('.nav-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+      item.classList.add('active');
+    });
+  });
   var timer;
 
   function showToast(name) {
@@ -1057,16 +1183,63 @@ body {
   }
 
   document.addEventListener('click', function(e) {
+    // Handle + (add-btn-float) tap
     var btn = e.target.closest('.add-btn-float');
-    if (!btn) return;
-    e.stopPropagation();
-    var name = btn.dataset.name || btn.closest('.mini-card')?.querySelector('.mini-name')?.textContent || 'Блюдо';
-    cartCount++;
-    if (cartPill) cartPill.textContent = cartCount;
-    // pulse animation on button
-    btn.style.transform = 'scale(0.82)';
-    setTimeout(function() { btn.style.transform = ''; }, 130);
-    showToast(name);
+    if (btn) {
+      e.stopPropagation();
+      var card = btn.closest('.mini-img');
+      var name = btn.dataset.name || btn.closest('.mini-card')?.querySelector('.mini-name')?.textContent || 'Блюдо';
+      cartCount++;
+      if (cartPill) cartPill.textContent = cartCount;
+      // Replace + button with stepper
+      var stepper = document.createElement('div');
+      stepper.className = 'qty-stepper';
+      stepper.dataset.name = name;
+      stepper.innerHTML =
+        '<button class="qs-btn qs-minus">−</button>' +
+        '<span class="qs-count">1</span>' +
+        '<button class="qs-btn qs-plus">+</button>';
+      btn.replaceWith(stepper);
+      showToast(name);
+      return;
+    }
+
+    // Handle stepper minus
+    var minus = e.target.closest('.qs-minus');
+    if (minus) {
+      e.stopPropagation();
+      var stepper = minus.closest('.qty-stepper');
+      var countEl = stepper.querySelector('.qs-count');
+      var qty = parseInt(countEl.textContent) - 1;
+      cartCount = Math.max(0, cartCount - 1);
+      if (cartPill) cartPill.textContent = cartCount;
+      if (qty <= 0) {
+        // Restore the + button
+        var name = stepper.dataset.name || 'Блюдо';
+        var addBtn = document.createElement('button');
+        addBtn.className = 'add-btn-float';
+        addBtn.dataset.name = name;
+        addBtn.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        stepper.replaceWith(addBtn);
+      } else {
+        countEl.textContent = qty;
+      }
+      return;
+    }
+
+    // Handle stepper plus
+    var plus = e.target.closest('.qs-plus');
+    if (plus) {
+      e.stopPropagation();
+      var stepper = plus.closest('.qty-stepper');
+      var countEl = stepper.querySelector('.qs-count');
+      var qty = parseInt(countEl.textContent) + 1;
+      countEl.textContent = qty;
+      cartCount++;
+      if (cartPill) cartPill.textContent = cartCount;
+      showToast(stepper.dataset.name || 'Блюдо');
+      return;
+    }
   });
 
   // Category switch

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Профиль — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <a class="page-back" href="index.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Профиль</h1>
+  <button class="page-header-icon profile-header-logout" id="topLogoutBtn" type="button" aria-label="Выйти из аккаунта">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
+</header>
+
+<main class="profile-page">
+
+  <!-- ===== USER CARD ===== -->
+  <section class="profile-card">
+    <div class="profile-avatar" id="profileAvatar">А</div>
+    <div class="profile-info">
+      <div class="profile-name" id="profileName">Гость</div>
+      <div class="profile-phone" id="profilePhone">Войдите, чтобы получать заказы</div>
+    </div>
+    <button class="profile-edit" id="editProfileBtn" type="button" aria-label="Редактировать">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="profile-stats">
+    <div class="ps-item">
+      <div class="ps-value" id="statOrders">12</div>
+      <div class="ps-label">Заказов</div>
+    </div>
+    <div class="ps-item">
+      <div class="ps-value" id="statFavorites">8</div>
+      <div class="ps-label">Избранных</div>
+    </div>
+  </section>
+
+  <!-- ===== ORDERS / FAVORITES / ADDRESSES ===== -->
+  <section class="checkout-block">
+    <a class="checkout-row" href="orders.html">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-value">Мои заказы</div>
+      </div>
+      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+    <a class="checkout-row" href="favorites.html">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-value">Избранное</div>
+        <div class="checkout-row-label" id="favProfileCount" hidden></div>
+      </div>
+      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+  </section>
+
+  <!-- ===== NOTIFICATIONS TOGGLES ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Уведомления</div>
+    <div class="checkout-toggle-row">
+      <div class="checkout-toggle-label">Push-уведомления</div>
+      <div class="checkout-toggle on" id="togglePush" role="switch" aria-checked="true" tabindex="0"></div>
+    </div>
+    <div class="checkout-toggle-row" style="border-top:1px solid #EEEEF0; padding-top:14px; margin-top:8px">
+      <div class="checkout-toggle-label">Звук уведомлений</div>
+      <div class="checkout-toggle on" id="toggleSound" role="switch" aria-checked="true" tabindex="0"></div>
+    </div>
+  </section>
+
+  <!-- ===== SUPPORT / ABOUT ===== -->
+  <section class="checkout-block">
+    <a class="checkout-row" data-link="support">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-value">Поддержка</div>
+      </div>
+      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+    <a class="checkout-row" data-link="about">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-value">О приложении</div>
+      </div>
+      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+    <a class="checkout-row" data-link="lang">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-value">Язык</div>
+        <div class="checkout-row-label">Русский</div>
+      </div>
+      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+  </section>
+
+  <!-- ===== SOCIAL LINKS ===== -->
+  <section class="profile-socials">
+    <a class="profile-social profile-social--tg" href="https://t.me/togora" target="_blank" rel="noopener" aria-label="Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.94c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    </a>
+    <a class="profile-social profile-social--ig" href="https://instagram.com/togora" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+  </section>
+
+  <div class="profile-version">Togora · v1.0</div>
+</main>
+
+<!-- Edit profile bottom sheet -->
+<div class="filter-overlay" id="editOverlay"></div>
+<aside class="filter-sheet filter-sheet--blocks" id="editSheet" aria-modal="true">
+  <div class="fbs-head">
+    <div class="filter-sheet-title">Профиль</div>
+    <button class="fbs-close" id="editClose" type="button" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fbs-body">
+    <div class="checkout-field" style="margin-top:8px">
+      <label class="checkout-field-label" for="editName">Имя</label>
+      <input class="checkout-input" type="text" id="editName" placeholder="Как к вам обращаться">
+    </div>
+    <div class="checkout-field">
+      <label class="checkout-field-label" for="editPhone">Телефон</label>
+      <input class="checkout-input" type="tel" id="editPhone" placeholder="+998 __ ___-__-__" maxlength="19">
+    </div>
+  </div>
+  <div class="fbs-foot">
+    <button class="fbs-btn fbs-btn-reset" id="editCancel" type="button">Отмена</button>
+    <button class="fbs-btn fbs-btn-apply" id="editSave" type="button">Сохранить</button>
+  </div>
+</aside>
+
+<!-- Support bottom sheet -->
+<div class="filter-overlay" id="supportOverlay"></div>
+<aside class="filter-sheet filter-sheet--blocks" id="supportSheet" aria-modal="true" aria-label="Поддержка">
+  <div class="fbs-head">
+    <div class="filter-sheet-title">Поддержка</div>
+    <button class="fbs-close" id="supportClose" type="button" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fbs-body">
+    <a class="support-row" href="tel:+998712000000">
+      <div class="support-row-icon support-row-icon--green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg>
+      </div>
+      <div class="support-row-body">
+        <div class="support-row-title">Позвонить</div>
+        <div class="support-row-sub">+998 71 200-00-00 · ежедневно 9:00–23:00</div>
+      </div>
+      <div class="support-row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+    <a class="support-row" href="https://t.me/togora_support" target="_blank" rel="noopener">
+      <div class="support-row-icon support-row-icon--blue">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.94c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      </div>
+      <div class="support-row-body">
+        <div class="support-row-title">Чат с поддержкой</div>
+        <div class="support-row-sub">Telegram · отвечаем в течение 5 минут</div>
+      </div>
+      <div class="support-row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+  </div>
+</aside>
+
+<!-- Logout confirm modal -->
+<div class="cart-modal-overlay" id="logoutOverlay"></div>
+<div class="cart-modal" id="logoutModal" role="dialog" aria-modal="true">
+  <div class="cart-modal-icon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </div>
+  <h2 class="cart-modal-title">Выйти из аккаунта?</h2>
+  <p class="cart-modal-text">Профиль, корзина и сохранённые адреса будут очищены на этом устройстве.</p>
+  <div class="cart-modal-actions">
+    <button class="cart-modal-btn primary" id="logoutConfirm" type="button">Выйти</button>
+    <button class="cart-modal-btn ghost" id="logoutCancel" type="button">Отмена</button>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<div class="toast" id="cart-toast" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  // ---- Profile storage ----
+  var PROFILE_KEY = 'tg-profile';
+  var PROFILE_PREFS_KEY = 'tg-profile-prefs';
+  function loadProfile(){ try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}') || {}; } catch(e){ return {}; } }
+  function saveProfile(p){ try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch(e){} }
+  function loadPrefs(){
+    try { return JSON.parse(localStorage.getItem(PROFILE_PREFS_KEY) || '{}') || {}; } catch(e){ return {}; }
+  }
+  function savePrefs(p){ try { localStorage.setItem(PROFILE_PREFS_KEY, JSON.stringify(p)); } catch(e){} }
+
+  function toast(msg){
+    var t = document.getElementById('cart-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  function maskPhone(v){
+    var d = String(v||'').replace(/\D/g,'');
+    if (!d) return '';
+    if (d.indexOf('998') !== 0) d = '998' + d;
+    d = d.slice(0, 12);
+    var p = '+' + d.slice(0,3);
+    if (d.length > 3) p += ' ' + d.slice(3,5);
+    if (d.length > 5) p += ' ' + d.slice(5,8);
+    if (d.length > 8) p += '-' + d.slice(8,10);
+    if (d.length > 10) p += '-' + d.slice(10,12);
+    return p;
+  }
+  function isPhoneValid(s){ return /^\+998 \d\d \d\d\d-\d\d-\d\d$/.test(String(s||'').trim()); }
+
+  // ---- DOM refs ----
+  var $name   = document.getElementById('profileName');
+  var $phone  = document.getElementById('profilePhone');
+  var $avatar = document.getElementById('profileAvatar');
+  var $editBtn= document.getElementById('editProfileBtn');
+  var $editOv = document.getElementById('editOverlay');
+  var $editSh = document.getElementById('editSheet');
+  var $editClose = document.getElementById('editClose');
+  var $editName  = document.getElementById('editName');
+  var $editPhone = document.getElementById('editPhone');
+  var $editCancel= document.getElementById('editCancel');
+  var $editSave  = document.getElementById('editSave');
+
+  var $togglePush  = document.getElementById('togglePush');
+  var $toggleSound = document.getElementById('toggleSound');
+
+  var $logoutBtn   = document.getElementById('topLogoutBtn');
+  var $logoutOv    = document.getElementById('logoutOverlay');
+  var $logoutModal = document.getElementById('logoutModal');
+  var $logoutConfirm = document.getElementById('logoutConfirm');
+  var $logoutCancel  = document.getElementById('logoutCancel');
+
+  // Support sheet
+  var $supportOv     = document.getElementById('supportOverlay');
+  var $supportSheet  = document.getElementById('supportSheet');
+  var $supportClose  = document.getElementById('supportClose');
+
+  var $navPill = document.getElementById('navCartPill');
+
+  // ---- Render profile ----
+  function renderProfile(){
+    var p = loadProfile();
+    var isGuest = !(p.name && p.name.trim());
+    if (!isGuest) {
+      $name.textContent = p.name.trim();
+      $avatar.textContent = p.name.trim().charAt(0).toUpperCase();
+    } else {
+      $name.textContent = 'Гость';
+      $avatar.textContent = '?';
+    }
+    if (p.phone && p.phone.trim()) {
+      $phone.textContent = p.phone.trim();
+    } else {
+      $phone.textContent = 'Войдите, чтобы получать заказы';
+    }
+    // Guests have nothing to log out from — hide the header exit button.
+    if ($logoutBtn) $logoutBtn.hidden = isGuest;
+  }
+  renderProfile();
+
+  // ---- Cart pill ----
+  function updateCartPill(){
+    if (!$navPill) return;
+    try {
+      var items = JSON.parse(localStorage.getItem('tg-cart') || '[]') || [];
+      var n = items.reduce(function(s, i){ return s + (Number(i.qty)||0); }, 0);
+      if (n > 0) { $navPill.hidden = false; $navPill.textContent = n; }
+      else { $navPill.hidden = true; }
+    } catch(e){}
+  }
+  updateCartPill();
+
+  // ---- Edit profile sheet ----
+  function openEdit(){
+    var p = loadProfile();
+    $editName.value = p.name || '';
+    $editPhone.value = maskPhone(p.phone || '');
+    $editOv.classList.add('show');
+    $editSh.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ $editName.focus(); }, 50);
+  }
+  function closeEdit(){
+    $editOv.classList.remove('show');
+    $editSh.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  $editBtn.addEventListener('click', openEdit);
+  $editOv.addEventListener('click', closeEdit);
+  $editClose.addEventListener('click', closeEdit);
+  $editCancel.addEventListener('click', closeEdit);
+  $editPhone.addEventListener('input', function(){
+    var pos = $editPhone.selectionStart || 0;
+    var oldLen = $editPhone.value.length;
+    $editPhone.value = maskPhone($editPhone.value);
+    var newLen = $editPhone.value.length;
+    try { $editPhone.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(e){}
+    $editPhone.classList.toggle('invalid', $editPhone.value.length > 4 && !isPhoneValid($editPhone.value));
+  });
+  $editSave.addEventListener('click', function(){
+    var name = $editName.value.trim();
+    var phone = $editPhone.value.trim();
+    if (name.length < 2) { $editName.focus(); toast('Введите имя'); return; }
+    if (!isPhoneValid(phone)) { $editPhone.focus(); $editPhone.classList.add('invalid'); toast('Введите телефон'); return; }
+    var p = loadProfile();
+    p.name = name; p.phone = phone;
+    saveProfile(p);
+    renderProfile();
+    closeEdit();
+    toast('Профиль сохранён');
+  });
+
+  // ---- Toggles ----
+  var prefs = loadPrefs();
+  if (prefs.push  === false) $togglePush.classList.remove('on');
+  if (prefs.sound === false) $toggleSound.classList.remove('on');
+
+  function setupToggle(el, key){
+    function flip(){
+      var on = !el.classList.contains('on');
+      el.classList.toggle('on', on);
+      el.setAttribute('aria-checked', on ? 'true' : 'false');
+      var p = loadPrefs();
+      p[key] = on;
+      savePrefs(p);
+      toast(on ? 'Включено' : 'Выключено');
+    }
+    el.addEventListener('click', flip);
+    el.addEventListener('keydown', function(e){
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
+    });
+  }
+  setupToggle($togglePush,  'push');
+  setupToggle($toggleSound, 'sound');
+
+  // ---- Support bottom sheet ----
+  function openSupport(){
+    $supportOv.classList.add('show');
+    $supportSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSupport(){
+    $supportOv.classList.remove('show');
+    $supportSheet.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  $supportOv.addEventListener('click', closeSupport);
+  $supportClose.addEventListener('click', closeSupport);
+
+  // ---- Menu rows ----
+  document.querySelectorAll('.checkout-row[data-link]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var k = row.getAttribute('data-link');
+      if (k === 'support') { openSupport(); return; }
+      var msg = ({
+        orders:  'Мои заказы — в разработке',
+        about:   'Togora — доставка еды в Ташкенте, v1.0',
+        lang:    'Смена языка — в разработке'
+      })[k] || 'Раздел в разработке';
+      toast(msg);
+    });
+  });
+
+  // ---- Logout ----
+  $logoutBtn.addEventListener('click', function(){
+    $logoutOv.classList.add('open');
+    $logoutModal.classList.add('open');
+  });
+  function closeLogout(){
+    $logoutOv.classList.remove('open');
+    $logoutModal.classList.remove('open');
+  }
+  $logoutOv.addEventListener('click', closeLogout);
+  $logoutCancel.addEventListener('click', closeLogout);
+  $logoutConfirm.addEventListener('click', function(){
+    try {
+      localStorage.removeItem(PROFILE_KEY);
+      localStorage.removeItem('tg-cart');
+      localStorage.removeItem('tg-address');
+      localStorage.removeItem('tg-cart-active-vendor');
+    } catch(e){}
+    closeLogout();
+    renderProfile();
+    updateCartPill();
+    toast('Вы вышли из аккаунта');
+    setTimeout(function(){ location.href = 'index.html'; }, 800);
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if ($editSh.classList.contains('show')) closeEdit();
+    if ($supportSheet.classList.contains('show')) closeSupport();
+    if ($logoutModal.classList.contains('open')) closeLogout();
+  });
+
+  // ---- Stats (mock) ----
+  // Could be replaced with real data from order history later
+
+  // ---- Favorites count next to the row label ----
+  function pluralFav(n){
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return n + ' блюдо';
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return n + ' блюда';
+    return n + ' блюд';
+  }
+  function refreshFavCount(){
+    var $fc = document.getElementById('favProfileCount');
+    if (!$fc || !window.TG || !TG.favCount) return;
+    var n = TG.favCount();
+    if (n > 0) { $fc.hidden = false; $fc.textContent = pluralFav(n); }
+    else { $fc.hidden = true; }
+  }
+  refreshFavCount();
+  window.addEventListener('storage', function(e){ if (e.key === 'tg-favorites') refreshFavCount(); });
+  window.addEventListener('tg:fav-changed', refreshFavCount);
+})();
+</script>
+</body>
+</html>

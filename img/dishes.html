@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Все блюда — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="page-header">
+  <a class="page-back" href="index.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Все блюда</h1>
+  <a class="page-header-icon" href="search.html" aria-label="Поиск">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </a>
+</header>
+
+<main class="list-page">
+  <div class="cat-grid">
+    <a class="cat-tile" href="dish.html?cat=plov">
+      <img src="./img/dish-02.jpg" alt="Плов">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">5 блюд</div>
+      <div class="cat-tile-name">Плов</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=shashlik">
+      <img src="./img/dish-04.jpg" alt="Шашлык">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">4 блюда</div>
+      <div class="cat-tile-name">Шашлык</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=lepyoshka">
+      <img src="./img/ev-02.jpg" alt="Лепёшки">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">4 блюда</div>
+      <div class="cat-tile-name">Лепёшки</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=samsa">
+      <img src="./img/cat-samsa.png" alt="Самса">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">3 блюда</div>
+      <div class="cat-tile-name">Самса</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=norin">
+      <img src="./img/dish-13.jpg" alt="Норин">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">3 блюда</div>
+      <div class="cat-tile-name">Норин</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=manti">
+      <img src="./img/dish-09.jpg" alt="Манты">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">2 блюда</div>
+      <div class="cat-tile-name">Манты</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=sweets">
+      <img src="./img/dish-15.jpg" alt="Сладости">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">2 блюда</div>
+      <div class="cat-tile-name">Сладости</div>
+    </a>
+    <a class="cat-tile" href="dish.html?cat=sushi">
+      <img src="./img/dish-10.jpg" alt="Суши">
+      <div class="cat-tile-overlay"></div>
+      <div class="cat-tile-count">1 блюдо</div>
+      <div class="cat-tile-name">Суши</div>
+    </a>
+  </div>
+</main>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

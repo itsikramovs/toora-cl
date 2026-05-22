@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Избранное — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <a class="page-back" href="profile.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Избранное</h1>
+  <button class="page-header-icon cart-header-clear" id="favClearBtn" type="button" aria-label="Очистить избранное" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+  </button>
+</header>
+
+<main class="fav-page" id="favRoot">
+  <!-- rendered by JS -->
+</main>
+
+<!-- Confirmation modal (reuses cart-modal styles) -->
+<div class="cart-modal-overlay" id="favModalOv"></div>
+<div class="cart-modal" id="favModal" role="dialog" aria-modal="true" aria-labelledby="favModalTitle">
+  <div class="cart-modal-icon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+  </div>
+  <h2 class="cart-modal-title" id="favModalTitle">Очистить избранное?</h2>
+  <p class="cart-modal-text" id="favModalText">Все сохранённые блюда будут удалены из списка.</p>
+  <div class="cart-modal-actions">
+    <button class="cart-modal-btn primary" id="favModalPrimary" type="button">Очистить</button>
+    <button class="cart-modal-btn ghost"   id="favModalGhost"   type="button">Отмена</button>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<div class="toast" id="cart-toast" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var escH = (window.TG && TG.escHTML) || function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  };
+  function fmtMoney(n){
+    n = Math.round(Number(n) || 0);
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+  function toast(msg){
+    if (TG && TG.showToast) { TG.showToast(msg); return; }
+    var t = document.getElementById('cart-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  // ---- DOM refs ----
+  var $root    = document.getElementById('favRoot');
+  var $clear   = document.getElementById('favClearBtn');
+  var $modalOv = document.getElementById('favModalOv');
+  var $modal   = document.getElementById('favModal');
+  var $mPrim   = document.getElementById('favModalPrimary');
+  var $mGhost  = document.getElementById('favModalGhost');
+  var $navPill = document.getElementById('navCartPill');
+
+  // ---- Cart nav pill ----
+  function updateCartPill(){
+    if (!$navPill) return;
+    var n = (TG && TG.cartCount) ? TG.cartCount() : 0;
+    if (n > 0) { $navPill.hidden = false; $navPill.textContent = n; }
+    else { $navPill.hidden = true; }
+  }
+  updateCartPill();
+  window.addEventListener('tg:cart-changed', updateCartPill);
+
+  // ---- Render ----
+  function renderEmpty(){
+    $root.innerHTML = ''
+      + '<div class="fav-empty">'
+      +   '<div class="fav-empty-icon">'
+      +     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+      +   '</div>'
+      +   '<div class="fav-empty-title">Здесь пока пусто</div>'
+      +   '<div class="fav-empty-text">Нажмите на сердечко на странице блюда — оно появится в этом списке.</div>'
+      +   '<a class="fav-empty-cta" href="restaurants.html">Перейти в каталог</a>'
+      + '</div>';
+  }
+
+  function renderList(items){
+    $root.innerHTML = '<div class="fav-count">' + items.length + ' '
+      + (items.length === 1 ? 'блюдо'
+        : (items.length >= 2 && items.length <= 4 ? 'блюда' : 'блюд'))
+      + '</div>'
+      + '<div class="fav-list">'
+      + items.map(function(it){
+        var qs = 'name=' + encodeURIComponent(it.name) + (it.img ? '&img=' + encodeURIComponent(it.img) : '');
+        var bg = it.img ? "background-image: url('" + escH(it.img) + "');" : '';
+        return ''
+          + '<article class="fav-item" data-id="' + escH(it.id) + '">'
+          +   '<a class="fav-item-img" href="product.html?' + qs + '" style="' + bg + '" aria-label="' + escH(it.name) + '"></a>'
+          +   '<div class="fav-item-body">'
+          +     '<a class="fav-item-name" href="product.html?' + qs + '">' + escH(it.name) + '</a>'
+          +     (it.vendorName ? '<div class="fav-item-vendor">' + escH(it.vendorName) + '</div>' : '')
+          +     '<div class="fav-item-foot">'
+          +       '<div class="fav-item-price">' + fmtMoney(it.price) + '</div>'
+          +       '<button class="fav-item-add" type="button" data-act="add">'
+          +         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+          +         '<span>В корзину</span>'
+          +       '</button>'
+          +     '</div>'
+          +   '</div>'
+          +   '<button class="fav-item-remove" type="button" data-act="remove" aria-label="Убрать из избранного">'
+          +     '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+          +   '</button>'
+          + '</article>';
+      }).join('')
+      + '</div>';
+  }
+
+  function render(){
+    var items = (TG && TG.favLoad) ? TG.favLoad() : [];
+    if (!items.length) {
+      $clear.hidden = true;
+      renderEmpty();
+      return;
+    }
+    $clear.hidden = false;
+    renderList(items);
+  }
+  render();
+  window.addEventListener('tg:fav-changed', render);
+  window.addEventListener('storage', function(e){ if (e.key === 'tg-favorites') render(); });
+
+  // ---- List click delegation ----
+  $root.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    e.preventDefault();
+    var item = btn.closest('.fav-item');
+    if (!item) return;
+    var id = item.dataset.id;
+
+    if (btn.dataset.act === 'remove') {
+      TG.favRemove(id);
+      // small slide-out animation
+      item.classList.add('removing');
+      setTimeout(render, 180);
+      toast('Удалено из избранного');
+      return;
+    }
+
+    if (btn.dataset.act === 'add') {
+      var data = TG.favLoad().find(function(x){ return x.id === id; });
+      if (!data) return;
+      TG.cartAdd({
+        name: data.name, img: data.img, price: data.price, vendorName: data.vendorName
+      });
+      updateCartPill();
+      toast(data.name + ' — в корзине');
+    }
+  });
+
+  // ---- Clear all ----
+  function openModal(){
+    $modalOv.classList.add('open');
+    $modal.classList.add('open');
+  }
+  function closeModal(){
+    $modalOv.classList.remove('open');
+    $modal.classList.remove('open');
+  }
+  $clear.addEventListener('click', openModal);
+  $modalOv.addEventListener('click', closeModal);
+  $mGhost.addEventListener('click', closeModal);
+  $mPrim.addEventListener('click', function(){
+    closeModal();
+    TG.favSave([]);
+    render();
+    toast('Избранное очищено');
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if ($modal.classList.contains('open')) closeModal();
+  });
+})();
+</script>
+</body>
+</html>

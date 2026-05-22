@@ -1,0 +1,54 @@
+{
+  "name": "Togora — доставка еды",
+  "short_name": "Togora",
+  "description": "Доставка узбекской еды в Ташкенте — рестораны, рилсы, мероприятия.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FC3F1D",
+  "lang": "ru",
+  "dir": "ltr",
+  "categories": ["food", "lifestyle", "shopping"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Уведомления",
+      "short_name": "Уведомления",
+      "url": "./notifications.html",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Корзина",
+      "short_name": "Корзина",
+      "url": "./cart.html",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Поиск — Togora</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="search-page">
+
+  <!-- ═══ STICKY HEADER ═══ -->
+  <header class="search-page-header">
+    <a class="page-back" href="index.html" aria-label="Назад">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="search-input-wrap" id="searchInputWrap">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input class="search-input" id="searchInput" type="search" placeholder="Блюда, рестораны…" autocomplete="off" autofocus>
+      <button class="search-clear" id="searchClear" aria-label="Очистить">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ TABS (only with results) ═══ -->
+  <div class="page-tabs" id="searchTabs" style="display:none;">
+    <button class="page-tab active" data-tab="all">Все <span class="pt-count" id="cntAll">0</span></button>
+    <button class="page-tab"        data-tab="rest">Рестораны <span class="pt-count" id="cntRest">0</span></button>
+    <button class="page-tab"        data-tab="dish">Блюда <span class="pt-count" id="cntDish">0</span></button>
+  </div>
+
+  <!-- ═══ IDLE STATE: history + popular + categories ═══ -->
+  <div id="searchIdle">
+    <div class="sep"></div>
+
+    <section class="search-section" id="recentSection" style="display:none;">
+      <div class="search-section-head">
+        <div class="search-section-title">Недавние</div>
+        <button class="search-clear-history" id="clearHistoryBtn">Очистить</button>
+      </div>
+      <div class="search-chips" id="recentChips"></div>
+    </section>
+    <div class="sep" id="recentSep" style="display:none;"></div>
+
+    <section class="search-section">
+      <div class="search-section-head">
+        <div class="search-section-title">Популярные запросы</div>
+      </div>
+      <div class="search-chips" id="popularChips"></div>
+    </section>
+  </div>
+
+  <!-- ═══ NO-RESULTS STATE ═══ -->
+  <div id="searchEmpty" style="display:none;">
+    <div class="sep"></div>
+    <div class="search-empty-state show">
+      <div class="search-empty-ill">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/></svg>
+      </div>
+      <div class="search-empty-title">Ничего не нашлось</div>
+      <div class="search-empty-text">
+        По запросу <b id="emptyQuery">«…»</b> ничего не нашли.<br>
+        Проверьте написание или загляните в популярные запросы.
+      </div>
+      <div class="search-chips" id="emptyChips" style="justify-content:center;"></div>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS STATE ═══ -->
+  <div id="searchResults" style="display:none;">
+    <div class="sep"></div>
+
+    <section class="search-section" id="restSection">
+      <div class="search-section-head">
+        <div class="search-section-title">Рестораны</div>
+      </div>
+      <div class="search-rest-list" id="restList"></div>
+    </section>
+    <div class="sep" id="restSep"></div>
+
+    <section class="search-section" id="dishSection">
+      <div class="search-section-head">
+        <div class="search-section-title">Блюда</div>
+      </div>
+      <div class="related-grid" id="dishList"></div>
+    </section>
+  </div>
+
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<!-- Toast -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+
+  // ───── Data ─────
+  // Restaurants
+  var RESTAURANTS = [
+    { name: 'Rayhon Milliy',         img: './img/dish-04.jpg', rating: 4.8, eta: '20–30 мин', cuisine: 'Узбекская' },
+    { name: 'Osh Markazi',           img: './img/dish-02.jpg', rating: 4.7, eta: '25–35 мин', cuisine: 'Плов' },
+    { name: 'Norin House',           img: './img/dish-13.jpg', rating: 4.6, eta: '15–25 мин', cuisine: 'Норин' },
+    { name: 'Khan Atlas',            img: './img/dish-04.jpg', rating: 4.9, eta: '20–30 мин', cuisine: 'Шашлык' },
+    { name: 'Tandur Master',         img: './img/dish-08.jpg', rating: 4.7, eta: '15–25 мин', cuisine: 'Самса · Лепёшки' },
+    { name: 'Beshqozon Plov',        img: './img/dish-02.jpg', rating: 4.9, eta: '30–40 мин', cuisine: 'Плов' },
+    { name: 'Manti House',           img: './img/dish-07.jpg', rating: 4.8, eta: '15–25 мин', cuisine: 'Манты' },
+    { name: 'Sushi Toshkent',        img: './img/dish-10.jpg', rating: 4.6, eta: '30–40 мин', cuisine: 'Суши' },
+    { name: 'Lepyoshka Master',      img: './img/dish-16.jpg', rating: 4.7, eta: '10–20 мин', cuisine: 'Лепёшки' },
+    { name: 'Sweet Lab',             img: './img/dish-13.jpg', rating: 4.9, eta: '20–30 мин', cuisine: 'Десерты' }
+  ];
+
+  // Dishes (will navigate to product.html?name=...)
+  var DISHES = [
+    { name: "Qo'qon patir",       img: './img/ev-02.jpg',  price: 15000, vendor: 'Rayhon Milliy' },
+    { name: "Qazili norin",       img: './img/dish-13.jpg', price: 35000, vendor: 'Norin House' },
+    { name: "Osh Palav",          img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
+    { name: "Шашлык из ягнёнка",  img: './img/dish-04.jpg', price: 42000, vendor: 'Khan Atlas' },
+    { name: "Самса с мясом",      img: './img/dish-08.jpg', price: 12000, vendor: 'Tandur Master' },
+    { name: "Patir gulli",        img: './img/ev-01.jpg',   price: 17000, vendor: 'Rayhon Milliy' },
+    { name: "Тандыр-нон",         img: './img/dish-06.jpg', price: 12000, vendor: 'Tandur Master' },
+    { name: "Kulcha non",         img: './img/dish-07.jpg', price: 14000, vendor: 'Tandur Master' },
+    { name: "Свадебный плов",     img: './img/dish-03.jpg', price: 38000, vendor: 'Osh Markazi' },
+    { name: "Куриный плов",       img: './img/dish-04.jpg', price: 26000, vendor: 'Osh Markazi' },
+    { name: "Lula kabob",         img: './img/dish-01.jpg', price: 32000, vendor: 'Khan Atlas' },
+    { name: "Mayda norin",        img: './img/dish-12.jpg', price: 28000, vendor: 'Norin House' },
+    { name: "Manti с тыквой",     img: './img/dish-09.jpg', price: 22000, vendor: 'Manti House' },
+    { name: "Manti с мясом",      img: './img/dish-10.jpg', price: 25000, vendor: 'Manti House' },
+    { name: "Сладкая патыр",      img: './img/dish-14.jpg', price: 22000, vendor: 'Sweet Lab' },
+    { name: "Сет «Дракон»",       img: './img/dish-10.jpg', price: 95000, vendor: 'Sushi Toshkent' },
+    { name: "Лагман по-домашнему",img: './img/dish-11.jpg', price: 28000, vendor: 'Osh Markazi' }
+  ];
+
+  var POPULAR = ['Плов', 'Лагман', 'Шашлык', 'Самса', 'Лепёшки', 'Манты', 'Сладости', 'Суши', 'Норин'];
+  var CATEGORIES = [
+    { img: './img/cat-shashlik.png',  name: 'Шашлык',   q: 'шашлык' },
+    { img: './img/dish-11.jpg',       name: 'Лагман',   q: 'лагман' },
+    { img: './img/cat-manti.png',     name: 'Манты',    q: 'манты' },
+    { img: './img/cat-plov.png',      name: 'Плов',     q: 'плов' },
+    { img: './img/cat-lepyoshka.png', name: 'Лепёшки',  q: 'лепёшки' },
+    { img: './img/dish-08.jpg',       name: 'Самса',    q: 'самса' },
+    { img: './img/cat-sweets.png',    name: 'Сладости', q: 'сладости' },
+    { img: './img/cat-sushi.png',     name: 'Суши',     q: 'суши' },
+    { img: './img/dish-09.jpg',       name: 'Салаты',   q: 'салат' }
+  ];
+
+  // ───── DOM refs ─────
+  var inputWrap   = document.getElementById('searchInputWrap');
+  var input       = document.getElementById('searchInput');
+  var clearBtn    = document.getElementById('searchClear');
+  var tabs        = document.getElementById('searchTabs');
+  var cntAll      = document.getElementById('cntAll');
+  var cntRest     = document.getElementById('cntRest');
+  var cntDish     = document.getElementById('cntDish');
+
+  var idleEl      = document.getElementById('searchIdle');
+  var emptyEl     = document.getElementById('searchEmpty');
+  var resultsEl   = document.getElementById('searchResults');
+  var emptyQuery  = document.getElementById('emptyQuery');
+  var emptyChips  = document.getElementById('emptyChips');
+
+  var recentSec   = document.getElementById('recentSection');
+  var recentSep   = document.getElementById('recentSep');
+  var recentChips = document.getElementById('recentChips');
+  var clearHistBtn= document.getElementById('clearHistoryBtn');
+
+  var popularChips = document.getElementById('popularChips');
+  var catGrid      = document.getElementById('catGrid');
+
+  var restList = document.getElementById('restList');
+  var dishList = document.getElementById('dishList');
+  var restSection = document.getElementById('restSection');
+  var dishSection = document.getElementById('dishSection');
+  var restSep = document.getElementById('restSep');
+
+  // ───── Recent history (localStorage) ─────
+  var STORAGE_RECENT = 'tg_search_recent';
+  function loadRecent() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(STORAGE_RECENT) || '[]');
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function saveRecent(arr) {
+    try { localStorage.setItem(STORAGE_RECENT, JSON.stringify(arr)); } catch (e) {}
+  }
+  function pushRecent(q) {
+    q = (q || '').trim();
+    if (!q) return;
+    var arr = loadRecent().filter(function(x) { return x.toLowerCase() !== q.toLowerCase(); });
+    arr.unshift(q);
+    if (arr.length > 8) arr = arr.slice(0, 8);
+    saveRecent(arr);
+    renderRecent();
+  }
+  function removeRecent(q) {
+    var arr = loadRecent().filter(function(x) { return x !== q; });
+    saveRecent(arr);
+    renderRecent();
+  }
+  function clearRecent() {
+    saveRecent([]);
+    renderRecent();
+  }
+
+  // ───── Render idle blocks ─────
+  function renderRecent() {
+    var arr = loadRecent();
+    if (!arr.length) {
+      recentSec.style.display = 'none';
+      recentSep.style.display = 'none';
+      return;
+    }
+    recentSec.style.display = '';
+    recentSep.style.display = '';
+    recentChips.innerHTML = arr.map(function(q) {
+      return '<span class="search-chip" data-query="' + TG.escHTML(q).replace(/"/g, '&quot;') + '">' +
+               TG.escHTML(q) +
+               '<span class="sc-x" data-del="1"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>' +
+             '</span>';
+    }).join('');
+  }
+
+  function renderPopular() {
+    popularChips.innerHTML = POPULAR.map(function(q) {
+      return '<span class="search-chip trending" data-query="' + TG.escHTML(q) + '">' +
+               '<span class="sc-fire"><svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 5 5 10a5 5 0 11-10 0c0-3 2-3 2-7 1 2 3 0 3-3z"/></svg></span>' +
+               TG.escHTML(q) +
+             '</span>';
+    }).join('');
+    // Empty-state chips reuse popular
+    emptyChips.innerHTML = POPULAR.slice(0, 5).map(function(q) {
+      return '<span class="search-chip trending" data-query="' + TG.escHTML(q) + '">' +
+               TG.escHTML(q) +
+             '</span>';
+    }).join('');
+  }
+
+  function renderCategories() {
+    if (!catGrid) return;
+    catGrid.innerHTML = CATEGORIES.map(function(c) {
+      return '<div class="search-cat-card" data-query="' + TG.escHTML(c.q) + '">' +
+               '<img class="search-cat-img" src="' + c.img + '" alt="' + TG.escHTML(c.name) + '">' +
+               '<div class="search-cat-name">' + TG.escHTML(c.name) + '</div>' +
+             '</div>';
+    }).join('');
+  }
+
+  // ───── Highlight matched substring ─────
+  function highlight(text, q) {
+    if (!q) return TG.escHTML(text);
+    var safeQ = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var re = new RegExp('(' + safeQ + ')', 'ig');
+    return TG.escHTML(text).replace(re, '<mark class="search-hl">$1</mark>');
+  }
+
+  // ───── State switching ─────
+  function setMode(mode) {
+    idleEl.style.display    = mode === 'idle'    ? '' : 'none';
+    emptyEl.style.display   = mode === 'empty'   ? '' : 'none';
+    resultsEl.style.display = mode === 'results' ? '' : 'none';
+    tabs.style.display      = mode === 'results' ? '' : 'none';
+  }
+
+  // ───── Search execution ─────
+  var currentTab = 'all';
+  var currentQuery = '';
+
+  function runSearch(query) {
+    currentQuery = (query || '').trim();
+    inputWrap.classList.toggle('has-text', currentQuery.length > 0);
+
+    if (!currentQuery) {
+      setMode('idle');
+      return;
+    }
+    var ql = currentQuery.toLowerCase();
+    var rests = RESTAURANTS.filter(function(r) {
+      return r.name.toLowerCase().indexOf(ql) >= 0;
+    });
+    var dishes = DISHES.filter(function(d) {
+      return d.name.toLowerCase().indexOf(ql) >= 0;
+    });
+
+    if (!rests.length && !dishes.length) {
+      emptyQuery.textContent = '«' + currentQuery + '»';
+      setMode('empty');
+      return;
+    }
+
+    // Counts
+    cntAll.textContent  = rests.length + dishes.length;
+    cntRest.textContent = rests.length;
+    cntDish.textContent = dishes.length;
+
+    // Render restaurants
+    if (rests.length && (currentTab === 'all' || currentTab === 'rest')) {
+      restSection.style.display = '';
+      restSep.style.display = (dishes.length && currentTab === 'all') ? '' : 'none';
+      restList.innerHTML = rests.map(function(r) {
+        return '<div class="search-rest-card" data-rest="' + TG.escHTML(r.name) + '">' +
+                 '<div class="search-rest-photo"><img src="' + r.img + '" alt=""></div>' +
+                 '<div class="search-rest-body">' +
+                   '<div class="search-rest-name">' + highlight(r.name, currentQuery) + '</div>' +
+                   '<div class="search-rest-meta">' +
+                     '<span class="src-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>' + r.rating + '</span>' +
+                     '<span class="src-dot"></span>' +
+                     '<span>' + r.eta + '</span>' +
+                     '<span class="src-dot"></span>' +
+                     '<span>' + highlight(r.cuisine || '', currentQuery) + '</span>' +
+                   '</div>' +
+                 '</div>' +
+               '</div>';
+      }).join('');
+    } else {
+      restSection.style.display = 'none';
+      restSep.style.display = 'none';
+    }
+
+    // Render dishes (reuse .related-grid 3-col)
+    if (dishes.length && (currentTab === 'all' || currentTab === 'dish')) {
+      dishSection.style.display = '';
+      dishList.innerHTML = dishes.map(function(d) {
+        return '<div class="related-card" data-dish="' + TG.escHTML(d.name).replace(/"/g,'&quot;') +
+               '" data-img="' + TG.escHTML(d.img).replace(/"/g,'&quot;') + '">' +
+                 '<div class="related-img"><img src="' + d.img + '" alt=""></div>' +
+                 '<div class="related-body">' +
+                   '<div class="related-price">' + (d.price.toLocaleString('ru-RU').replace(/,/g,' ')) + ' сум</div>' +
+                   '<div class="related-name">' + highlight(d.name, currentQuery) + '</div>' +
+                 '</div>' +
+               '</div>';
+      }).join('');
+    } else {
+      dishSection.style.display = 'none';
+    }
+
+    setMode('results');
+  }
+
+  // ───── Input handling (debounced) ─────
+  var searchTimer = null;
+  input.addEventListener('input', function() {
+    clearTimeout(searchTimer);
+    var q = input.value;
+    searchTimer = setTimeout(function() { runSearch(q); }, 180);
+  });
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var q = input.value.trim();
+      if (q) { pushRecent(q); runSearch(q); input.blur(); }
+    }
+  });
+
+  clearBtn.addEventListener('click', function() {
+    input.value = '';
+    inputWrap.classList.remove('has-text');
+    runSearch('');
+    input.focus();
+  });
+
+
+  // ───── Tabs ─────
+  tabs.addEventListener('click', function(e) {
+    var btn = e.target.closest('.page-tab');
+    if (!btn) return;
+    currentTab = btn.dataset.tab;
+    tabs.querySelectorAll('.page-tab').forEach(function(b) {
+      b.classList.toggle('active', b === btn);
+    });
+    runSearch(currentQuery);
+  });
+
+  // ───── Chip / category / recent clicks ─────
+  function navigateToQuery(q) {
+    input.value = q;
+    inputWrap.classList.add('has-text');
+    pushRecent(q);
+    runSearch(q);
+  }
+
+  document.addEventListener('click', function(e) {
+    // Delete recent (× button on recent chip)
+    var del = e.target.closest('.sc-x[data-del]');
+    if (del) {
+      e.stopPropagation();
+      var chip = del.closest('.search-chip');
+      if (chip && chip.dataset.query) {
+        removeRecent(chip.dataset.query);
+      }
+      return;
+    }
+    // Tap chip → run search
+    var chip = e.target.closest('.search-chip[data-query]');
+    if (chip) {
+      navigateToQuery(chip.dataset.query);
+      return;
+    }
+    // Tap category → run search
+    var cat = e.target.closest('.search-cat-card[data-query]');
+    if (cat) {
+      navigateToQuery(cat.dataset.query);
+      return;
+    }
+    // Tap restaurant result → toast (page TBD)
+    var rest = e.target.closest('.search-rest-card[data-rest]');
+    if (rest) {
+      pushRecent(rest.dataset.rest);
+      TG.showToast('Страница ресторана — скоро');
+      return;
+    }
+    // Tap dish result → product page
+    var dish = e.target.closest('.related-card[data-dish]');
+    if (dish) {
+      pushRecent(dish.dataset.dish);
+      var qs = 'name=' + encodeURIComponent(dish.dataset.dish);
+      if (dish.dataset.img) qs += '&img=' + encodeURIComponent(dish.dataset.img);
+      location.href = 'product.html?' + qs;
+      return;
+    }
+  });
+
+  clearHistBtn.addEventListener('click', clearRecent);
+
+  // ───── Init ─────
+  renderRecent();
+  renderPopular();
+  renderCategories();
+  setMode('idle');
+
+  // If page opened with ?q= prefill
+  var params = new URLSearchParams(location.search);
+  var qParam = params.get('q');
+  if (qParam) {
+    input.value = qParam;
+    inputWrap.classList.add('has-text');
+    runSearch(qParam);
+  } else {
+    // Focus input on load (in most browsers requires user gesture, autofocus attribute handles)
+    setTimeout(function() { input.focus(); }, 100);
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Товар — Togora</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="product-page">
+
+  <!-- ═══ HERO ═══ -->
+  <div class="product-hero" id="productHero">
+    <img id="productImg" src="./img/dish-01.jpg" alt="">
+    <div class="product-hero-top">
+      <button class="ph-btn" id="ph-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ph-btn-group">
+        <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+        <button class="ph-btn fav" id="ph-fav" aria-label="В избранное">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="product-discount-badge" id="productDiscount" style="display:none">−15%</div>
+  </div>
+
+  <!-- ═══ MAIN INFO BLOCK ═══ -->
+  <section class="product-block product-block-main">
+
+    <div class="product-price-row">
+      <div class="product-price" id="productPrice">25 000 сум</div>
+      <div class="product-old-price" id="productOldPrice" style="display:none"></div>
+    </div>
+
+    <h1 class="product-title" id="productTitle">Qo'qon patir</h1>
+
+    <div class="product-vendor">
+      <span>от</span>
+      <a id="productVendor" href="#">Rayhon Milliy</a>
+      <span>·</span>
+      <span id="productVendorRating">★ 4.8</span>
+    </div>
+
+    <!-- Quick info chips: Halal / Spicy only -->
+    <div class="product-chips" id="productChips"></div>
+
+    <!-- Description (toggle "Развернуть" sits right under text) -->
+    <div class="product-desc collapsed" id="productDesc"></div>
+    <button class="product-desc-toggle" id="productDescToggle" style="display:none">Развернуть</button>
+
+  </section>
+  <div class="sep"></div>
+
+  <!-- ═══ RELATED PRODUCTS BLOCK ═══ -->
+  <section class="product-block">
+    <div class="related-section">
+      <div class="related-title" id="relatedTitle">Другие блюда от ресторана</div>
+      <div class="related-grid" id="relatedGrid"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══ STICKY BOTTOM ADD-TO-CART BAR ═══ -->
+<div class="product-bottom-bar">
+  <div class="product-qty" id="productQty">
+    <button id="qtyMinus" aria-label="Уменьшить">−</button>
+    <span id="qtyValue">1</span>
+    <button id="qtyPlus" aria-label="Увеличить">+</button>
+  </div>
+  <button class="product-add-btn" id="productAddBtn">
+    <span class="pa-label">Добавить</span>
+    <span class="pa-price" id="paPrice">25 000 сум</span>
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+
+  // ───── Product catalog ─────
+  // Each item: img, price, oldPrice?, vendor, vendorRating, chips (Halal/Spicy only),
+  // desc, reviewsRating, reviewsCount, related[]
+  var CATALOG = {
+    "Qo'qon patir": {
+      img: './img/ev-02.jpg',
+      price: 15000, oldPrice: 18000,
+      vendor: 'Rayhon Milliy', vendorRating: '★ 4.8',
+      chips: [{ text: 'Halal', cls: 'halal' }],
+      desc: 'Классическая узбекская лепёшка, выпекается в дровяном тандыре. Хрустящая корочка снаружи, мягкая и пышная внутри. Подаётся горячей. Идеально с пловом, шашлыком или просто с чаем. Один из любимых символов Кокандской долины.',
+      reviewsRating: '4.8', reviewsCount: 128,
+      related: [
+        { name: 'Patir gulli',    img: './img/ev-01.jpg',  price: 17000 },
+        { name: 'Тандыр-нон',     img: './img/dish-06.jpg', price: 12000 },
+        { name: 'Kulcha non',     img: './img/dish-07.jpg', price: 14000 },
+        { name: 'Сладкая патыр',  img: './img/dish-14.jpg', price: 22000 },
+        { name: 'Сlassic патыр',  img: './img/dish-09.jpg', price: 16000 },
+        { name: 'Patirlar мини',  img: './img/dish-11.jpg', price: 9000  }
+      ]
+    },
+    "Qazili norin": {
+      img: './img/dish-13.jpg',
+      price: 35000, oldPrice: null,
+      vendor: 'Norin House', vendorRating: '★ 4.6',
+      chips: [{ text: 'Halal', cls: 'halal' }],
+      desc: 'Норин с казы — традиционное узбекское блюдо из тонко нарезанного теста и сочного отварного мяса. Подаётся с лапшой и горячим бульоном. Сытно, ароматно, согревает в любую погоду.',
+      reviewsRating: '4.6', reviewsCount: 87,
+      related: [
+        { name: 'Mayda norin',    img: './img/dish-12.jpg', price: 28000 },
+        { name: 'Норин с конякой', img: './img/dish-15.jpg', price: 42000 },
+        { name: 'Куриный норин',  img: './img/dish-16.jpg', price: 32000 },
+        { name: 'Норин-семейный', img: './img/dish-17.jpg', price: 65000 },
+        { name: 'Норин-suyug',    img: './img/dish-18.jpg', price: 30000 },
+        { name: 'Норин с тук',    img: './img/dish-10.jpg', price: 38000 }
+      ]
+    },
+    "Osh Palav": {
+      img: './img/dish-02.jpg',
+      price: 28000, oldPrice: null,
+      vendor: 'Osh Markazi', vendorRating: '★ 4.7',
+      chips: [{ text: 'Halal', cls: 'halal' }],
+      desc: 'Тошкент палов на дровах — рис лазер, выдержанная баранина, морковь, нохат и айва. Готовится в чугунном казане. Подаётся с салатом «ачичук», чаем и лепёшкой.',
+      reviewsRating: '4.7', reviewsCount: 256,
+      related: [
+        { name: 'Свадебный плов', img: './img/dish-03.jpg', price: 38000 },
+        { name: 'Куриный плов',   img: './img/dish-04.jpg', price: 26000 },
+        { name: 'Фергана-палов',  img: './img/dish-05.jpg', price: 32000 },
+        { name: 'Махалля-палов',  img: './img/dish-08.jpg', price: 30000 },
+        { name: 'Сладкий палов',  img: './img/dish-11.jpg', price: 27000 },
+        { name: 'Бухара-палов',   img: './img/dish-14.jpg', price: 36000 }
+      ]
+    },
+    "Шашлык из ягнёнка": {
+      img: './img/dish-04.jpg',
+      price: 42000, oldPrice: 48000,
+      vendor: 'Khan Atlas', vendorRating: '★ 4.9',
+      chips: [{ text: 'Halal', cls: 'halal' }, { text: 'Острый', cls: 'spicy' }],
+      desc: 'Сочный шашлык из молодой баранины — мариновали в луке и специях 12 часов. Жарится на углях, подаётся с тонкой лепёшкой и сумаком.',
+      reviewsRating: '4.9', reviewsCount: 312,
+      related: [
+        { name: 'Lula kabob',     img: './img/dish-01.jpg', price: 32000 },
+        { name: 'Куриный шашлык', img: './img/dish-03.jpg', price: 28000 },
+        { name: 'Говяжий шашлык', img: './img/dish-05.jpg', price: 38000 },
+        { name: 'Печёночный',     img: './img/dish-08.jpg', price: 25000 },
+        { name: 'Шашлык-сет',     img: './img/dish-12.jpg', price: 75000 },
+        { name: 'Куриные крылья', img: './img/dish-15.jpg', price: 24000 }
+      ]
+    },
+    "Самса с мясом": {
+      img: './img/dish-08.jpg',
+      price: 12000, oldPrice: null,
+      vendor: 'Tandur Master', vendorRating: '★ 4.7',
+      chips: [{ text: 'Halal', cls: 'halal' }],
+      desc: 'Классическая самса из тандыра — слоёное тесто, рубленая баранина с луком, специи. Хрустящая корочка с кунжутом.',
+      reviewsRating: '4.7', reviewsCount: 94,
+      related: [
+        { name: 'Самса с тыквой',  img: './img/dish-09.jpg', price: 11000 },
+        { name: 'Самса с курицей', img: './img/dish-10.jpg', price: 13000 },
+        { name: 'Самса с сыром',   img: './img/dish-16.jpg', price: 14000 },
+        { name: 'Сет 5 самс',      img: './img/dish-17.jpg', price: 50000 },
+        { name: 'Самса джиз',      img: './img/dish-18.jpg', price: 15000 },
+        { name: 'Самса махалля',   img: './img/ev-01.jpg',   price: 10000 }
+      ]
+    }
+  };
+
+  function fallback(name, img) {
+    return {
+      img: img || './img/dish-01.jpg',
+      price: 15000, oldPrice: null,
+      vendor: 'Togora', vendorRating: '★ 4.5',
+      chips: [{ text: 'Halal', cls: 'halal' }],
+      desc: 'Свежее блюдо от лучших ресторанов Ташкента. Готовится по фирменному рецепту, доставляется горячим.',
+      reviewsRating: '4.5', reviewsCount: 24,
+      related: [
+        { name: 'Похожее блюдо 1', img: './img/dish-02.jpg', price: 14000 },
+        { name: 'Похожее блюдо 2', img: './img/dish-05.jpg', price: 16000 },
+        { name: 'Похожее блюдо 3', img: './img/dish-08.jpg', price: 18000 },
+        { name: 'Похожее блюдо 4', img: './img/dish-11.jpg', price: 12000 },
+        { name: 'Похожее блюдо 5', img: './img/dish-14.jpg', price: 20000 },
+        { name: 'Похожее блюдо 6', img: './img/dish-17.jpg', price: 17000 }
+      ]
+    };
+  }
+
+  // ───── Read product name + image from URL ─────
+  var params = new URLSearchParams(location.search);
+  var pname = params.get('name') || "Qo'qon patir";
+  var pimg = params.get('img');
+
+  var product = CATALOG[pname] || fallback(pname, pimg);
+  product._name = pname;
+
+  function formatPrice(n) {
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+
+  // ───── Render ─────
+  document.getElementById('productImg').src = product.img;
+  document.getElementById('productImg').alt = product._name;
+  document.getElementById('productTitle').textContent = product._name;
+  document.getElementById('productVendor').textContent = product.vendor;
+  document.getElementById('productVendorRating').textContent = product.vendorRating || '★ 4.5';
+
+  document.getElementById('productPrice').textContent = formatPrice(product.price);
+  if (product.oldPrice) {
+    var op = document.getElementById('productOldPrice');
+    op.textContent = formatPrice(product.oldPrice);
+    op.style.display = '';
+    var pct = Math.round((1 - product.price / product.oldPrice) * 100);
+    var disc = document.getElementById('productDiscount');
+    disc.textContent = '−' + pct + '%';
+    disc.style.display = '';
+  }
+
+  // Chips
+  var chipsHost = document.getElementById('productChips');
+  chipsHost.innerHTML = (product.chips || []).map(function(c) {
+    var cls = c.cls ? ' ' + c.cls : '';
+    return '<span class="product-chip' + cls + '">' + TG.escHTML(c.text) + '</span>';
+  }).join('');
+  if (!product.chips || !product.chips.length) chipsHost.style.display = 'none';
+
+  // Description with collapse
+  var descEl = document.getElementById('productDesc');
+  var toggleBtn = document.getElementById('productDescToggle');
+  descEl.textContent = product.desc;
+  if (product.desc.length > 120) {
+    toggleBtn.style.display = '';
+    toggleBtn.addEventListener('click', function() {
+      var collapsed = descEl.classList.toggle('collapsed');
+      toggleBtn.textContent = collapsed ? 'Развернуть' : 'Свернуть';
+    });
+  } else {
+    descEl.classList.remove('collapsed');
+  }
+
+  // Reviews
+
+  // ───── Related products grid (3 columns) ─────
+  var relatedHost = document.getElementById('relatedGrid');
+  var relatedTitle = document.getElementById('relatedTitle');
+  if (product.vendor) {
+    relatedTitle.textContent = 'Другие блюда от ' + product.vendor;
+  }
+  var related = (product.related || []).slice(0, 6);
+  if (related.length) {
+    relatedHost.innerHTML = related.map(function(r) {
+      return '<div class="related-card" data-name="' + TG.escHTML(r.name).replace(/"/g,'&quot;') +
+             '" data-img="' + TG.escHTML(r.img).replace(/"/g,'&quot;') + '">' +
+        '<div class="related-img"><img src="' + r.img + '" alt="' + TG.escHTML(r.name) + '"></div>' +
+        '<div class="related-body">' +
+          '<div class="related-price">' + formatPrice(r.price) + '</div>' +
+          '<div class="related-name">' + TG.escHTML(r.name) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    relatedHost.addEventListener('click', function(e) {
+      var card = e.target.closest('.related-card');
+      if (!card) return;
+      var qs = 'name=' + encodeURIComponent(card.dataset.name) +
+               '&img=' + encodeURIComponent(card.dataset.img);
+      location.href = 'product.html?' + qs;
+    });
+  } else {
+    document.querySelector('.related-section').style.display = 'none';
+  }
+
+  // ───── Quantity + total price (no modifiers) ─────
+  var qty = 1;
+  var qtyEl = document.getElementById('qtyValue');
+  var paPrice = document.getElementById('paPrice');
+
+  function updateTotal() {
+    paPrice.textContent = formatPrice(product.price * qty);
+  }
+  updateTotal();
+
+  document.getElementById('qtyPlus').addEventListener('click', function() {
+    qty = Math.min(20, qty + 1);
+    qtyEl.textContent = qty;
+    updateTotal();
+  });
+  document.getElementById('qtyMinus').addEventListener('click', function() {
+    qty = Math.max(1, qty - 1);
+    qtyEl.textContent = qty;
+    updateTotal();
+  });
+
+  // ───── Top buttons ─────
+  document.getElementById('ph-back').addEventListener('click', function() {
+    if (history.length > 1) history.back();
+    else location.href = 'index.html';
+  });
+  document.getElementById('ph-share').addEventListener('click', function() {
+    if (navigator.share) {
+      navigator.share({ title: product._name, text: product._name + ' — Togora', url: location.href }).catch(function() {});
+    } else {
+      TG.showToast('Ссылка скопирована');
+    }
+  });
+  // ───── Favorite (heart) ─────
+  var favBtn = document.getElementById('ph-fav');
+  var favItem = {
+    name:  product._name,
+    img:   product.img,
+    price: product.price,
+    vendorName: product.vendor
+  };
+  if (TG.favHas(favItem)) favBtn.classList.add('active');
+  favBtn.addEventListener('click', function() {
+    var nowFav = TG.favToggle(favItem);
+    favBtn.classList.toggle('active', nowFav);
+    TG.showToast(nowFav ? 'Добавлено в избранное' : 'Удалено из избранного');
+  });
+
+  // ───── Add to cart ─────
+  document.getElementById('productAddBtn').addEventListener('click', function() {
+    TG.cartAdd({
+      name: product._name,
+      img: product.img,
+      price: product.price,
+      vendorName: product.vendor,
+      qty: qty
+    });
+    TG.showToast(product._name + ' × ' + qty + ' — добавлено');
+    if (TG.playNotifSound) TG.playNotifSound();
+  });
+
+  document.getElementById('productVendor').addEventListener('click', function(e) {
+    e.preventDefault();
+    TG.showToast('Страница ресторана — скоро');
+  });
+
+})();
+</script>
+
+</body>
+</html>

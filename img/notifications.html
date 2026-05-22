@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Уведомления — Togora</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══ PAGE HEADER ═══ -->
+<header class="page-header">
+  <a class="page-back" href="index.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Уведомления</h1>
+  <button class="page-header-action" id="markAllBtn">Прочитать все</button>
+  <button class="page-header-icon" id="testBtn" aria-label="Тестовое уведомление" title="Тест: звук + push + новое уведомление">
+    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+  </button>
+  <button class="page-header-icon" id="settingsBtn" aria-label="Настройки уведомлений">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+  </button>
+</header>
+
+<!-- ═══ TABS ═══ -->
+<div class="page-tabs" id="notifTabs">
+  <button class="page-tab active" data-tab="all">Все <span class="pt-count" id="ntcAll">0</span></button>
+  <button class="page-tab"        data-tab="unread">Новые <span class="pt-count" id="ntcUnread">0</span></button>
+  <button class="page-tab"        data-tab="read">Прочитанные <span class="pt-count" id="ntcRead">0</span></button>
+</div>
+
+<!-- ═══ LIST ═══ -->
+<div class="notif-page-list" id="notifList"></div>
+
+<!-- Empty state — only on "unread" / "read" tabs -->
+<div class="notif-page-empty" id="notifEmpty">
+  <div class="notif-empty-ill">
+    <svg viewBox="0 0 24 24">
+      <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="notif-empty-title" id="notifEmptyTitle">Всё прочитано</div>
+  <div class="notif-empty-text"  id="notifEmptyText">
+    Новых уведомлений нет — здесь будут появляться непрочитанные.
+  </div>
+</div>
+
+<!-- ═══ NOTIFICATION DETAIL (bottom sheet) ═══ -->
+<div class="notif-detail-overlay" id="notifDetailOverlay"></div>
+<div class="notif-detail" id="notifDetail" role="dialog" aria-label="Уведомление">
+  <div class="nd-head">
+    <div class="nd-head-title">Уведомление</div>
+    <button class="nd-delete" id="ndDelete" aria-label="Удалить">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+    </button>
+    <button class="nd-back" id="ndBack" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="nd-body" id="ndBody"></div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<!-- Toast (shared) -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+
+  var notifList       = document.getElementById('notifList');
+  var notifEmpty      = document.getElementById('notifEmpty');
+  var notifEmptyTitle = document.getElementById('notifEmptyTitle');
+  var notifEmptyText  = document.getElementById('notifEmptyText');
+  var notifTabs       = document.getElementById('notifTabs');
+  var ntcAll          = document.getElementById('ntcAll');
+  var ntcUnread       = document.getElementById('ntcUnread');
+  var ntcRead         = document.getElementById('ntcRead');
+  var markAllBtn      = document.getElementById('markAllBtn');
+  var settingsBtn     = document.getElementById('settingsBtn');
+  var testBtn         = document.getElementById('testBtn');
+
+  var notifDetail        = document.getElementById('notifDetail');
+  var notifDetailOverlay = document.getElementById('notifDetailOverlay');
+  var ndBack             = document.getElementById('ndBack');
+  var ndDelete           = document.getElementById('ndDelete');
+  var ndBody             = document.getElementById('ndBody');
+
+  var notifications = TG.loadNotifications();
+  var currentTab = 'all';
+  var currentDetailId = null;
+
+  function persist() {
+    TG.saveNotifications(notifications);
+    TG.updateBellBadge();
+  }
+  function escH(s) { return TG.escHTML(s); }
+
+  function updateCounts() {
+    var total  = notifications.length;
+    var unread = notifications.filter(function(n) { return !n.read; }).length;
+    var read   = total - unread;
+    ntcAll.textContent    = total;
+    ntcUnread.textContent = unread;
+    ntcRead.textContent   = read;
+    markAllBtn.disabled = unread === 0;
+    markAllBtn.style.visibility = unread === 0 ? 'hidden' : 'visible';
+  }
+
+  function getFiltered() {
+    if (currentTab === 'unread') return notifications.filter(function(n) { return !n.read; });
+    if (currentTab === 'read')   return notifications.filter(function(n) { return n.read; });
+    return notifications.slice();
+  }
+
+  function render() {
+    var list = getFiltered();
+    if (!list.length) {
+      notifList.innerHTML = '';
+      if (currentTab === 'unread') {
+        notifEmpty.classList.add('show');
+        notifEmptyTitle.textContent = 'Всё прочитано';
+        notifEmptyText.innerHTML = 'Новых уведомлений нет — здесь будут появляться непрочитанные.';
+      } else if (currentTab === 'read') {
+        notifEmpty.classList.add('show');
+        notifEmptyTitle.textContent = 'Нет прочитанных';
+        notifEmptyText.innerHTML = 'Прочитанные уведомления будут отображаться здесь.';
+      } else {
+        notifEmpty.classList.remove('show');
+      }
+      return;
+    }
+    notifEmpty.classList.remove('show');
+
+    var html = '', lastDay = '';
+    list.forEach(function(n) {
+      if (n.day !== lastDay) {
+        html += '<div class="notif-day">' + escH(n.day) + '</div>';
+        lastDay = n.day;
+      }
+      var icon = TG.NICON[n.type] || '';
+      html += '<div class="notif-item ' + (n.read ? '' : 'unread') + '" data-id="' + n.id + '">'
+            +   '<div class="notif-icon ' + n.type + '">' + icon + '</div>'
+            +   '<div class="notif-body">'
+            +     '<div class="notif-row1">'
+            +       '<div class="notif-title">' + escH(n.title) + '</div>'
+            +       '<div class="notif-time">'  + escH(n.time)  + '</div>'
+            +     '</div>'
+            +     '<div class="notif-text">' + escH(n.preview) + '</div>'
+            +   '</div>'
+            + '</div>';
+    });
+    notifList.innerHTML = html;
+  }
+
+  function openDetail(id) {
+    var n = notifications.find(function(x) { return x.id === id; });
+    if (!n) return;
+    currentDetailId = id;
+    if (!n.read) {
+      n.read = true;
+      persist(); updateCounts(); render();
+    }
+    var icon = TG.NICON[n.type] || '';
+    var fullText = escH(n.full).replace(/\n/g, '<br>');
+    var ctaHtml = n.cta ? '<button class="nd-action" id="ndCta">' + escH(n.cta) + '</button>' : '';
+    ndBody.innerHTML =
+        '<div class="nd-icon-wrap ' + n.type + '">' + icon + '</div>'
+      + '<div class="nd-title">' + escH(n.title) + '</div>'
+      + '<div class="nd-meta"><span>' + escH(n.day) + '</span><span class="nd-dot"></span><span>' + escH(n.time) + '</span></div>'
+      + '<div class="nd-text">' + fullText + '</div>'
+      + ctaHtml
+      + '<button class="nd-action secondary" id="ndCloseBtn">Закрыть</button>';
+    notifDetailOverlay.classList.add('show');
+    notifDetail.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    var ndCta = document.getElementById('ndCta');
+    if (ndCta) ndCta.addEventListener('click', closeDetail);
+    document.getElementById('ndCloseBtn').addEventListener('click', closeDetail);
+  }
+  function closeDetail() {
+    notifDetail.classList.remove('show');
+    notifDetailOverlay.classList.remove('show');
+    currentDetailId = null;
+    document.body.style.overflow = '';
+  }
+  function deleteCurrent() {
+    if (currentDetailId == null) return;
+    notifications = notifications.filter(function(n) { return n.id !== currentDetailId; });
+    persist();
+    closeDetail();
+    updateCounts();
+    render();
+    TG.showToast('Уведомление удалено');
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+    notifTabs.querySelectorAll('.page-tab').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    render();
+  }
+
+  notifTabs.addEventListener('click', function(e) {
+    var btn = e.target.closest('.page-tab');
+    if (!btn) return;
+    setTab(btn.dataset.tab);
+  });
+
+  notifList.addEventListener('click', function(e) {
+    var item = e.target.closest('.notif-item');
+    if (!item) return;
+    openDetail(parseInt(item.dataset.id, 10));
+  });
+
+  markAllBtn.addEventListener('click', function() {
+    notifications.forEach(function(n) { n.read = true; });
+    persist();
+    updateCounts();
+    render();
+    TG.showToast('Все отмечено прочитанным');
+  });
+
+  settingsBtn.addEventListener('click', function() {
+    TG.showToast('Настройки уведомлений — скоро');
+  });
+
+  // ───── Test notification (sound + system push + new entry) ─────
+  testBtn.addEventListener('click', function() {
+    TG.playNotifSound();
+
+    var nextId = notifications.reduce(function(max, n) { return Math.max(max, n.id); }, 0) + 1;
+    var stamp = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    var item = {
+      id: nextId,
+      type: 'system',
+      title: 'Тестовое уведомление #' + nextId,
+      preview: 'Сработала кнопка теста · ' + stamp + '. Звук + системный пуш отправлены.',
+      full: 'Это тестовое уведомление, отправленное в ' + stamp + '.\n\nПроверка возможностей:\n• Звуковое оповещение (Web Audio "ding")\n• Системный push (Notification API)\n• Запись в общем хранилище (localStorage)\n\nСчётчик колокольчика на других страницах обновится автоматически.',
+      time: 'Только что',
+      day:  'Сегодня',
+      read: false,
+      cta:  null
+    };
+    notifications.unshift(item);
+    persist();
+    updateCounts();
+    render();
+
+    TG.requestNotificationPermission().then(function(state) {
+      if (state === 'granted') {
+        TG.sendSystemNotif({
+          title: item.title,
+          body:  item.preview,
+          tag:   'togora-test-' + item.id,
+          url:   './notifications.html',
+          id:    item.id
+        });
+        TG.showToast('Звук + системное уведомление отправлены');
+      } else if (state === 'denied') {
+        TG.showToast('Разрешите уведомления в браузере для системного пуша');
+      } else {
+        TG.showToast('Уведомления не поддерживаются');
+      }
+    });
+  });
+
+  ndBack.addEventListener('click', closeDetail);
+  ndDelete.addEventListener('click', deleteCurrent);
+  notifDetailOverlay.addEventListener('click', closeDetail);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (notifDetail.classList.contains('show')) closeDetail();
+  });
+
+  // Re-render when the shared store is updated from another module
+  // (e.g. the auto-notification fired by app.js after 30s)
+  window.addEventListener('tg:notifications-changed', function() {
+    notifications = TG.loadNotifications();
+    updateCounts();
+    render();
+  });
+
+  // Also react to storage events from other tabs
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'tg_notifications_v1') {
+      notifications = TG.loadNotifications();
+      updateCounts();
+      render();
+    }
+  });
+
+  updateCounts();
+  render();
+
+})();
+</script>
+
+</body>
+</html>

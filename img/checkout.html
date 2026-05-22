@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Оформление заказа — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="page-header">
+  <a class="page-back" href="cart.html" aria-label="Назад">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1 class="page-title">Оформление заказа</h1>
+</header>
+
+<main class="checkout-page" id="checkoutRoot">
+
+  <!-- ===== ADDRESS ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Адрес доставки</div>
+    <div class="checkout-row" id="addressRow">
+      <div class="checkout-row-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="checkout-row-body">
+        <div class="checkout-row-label">Куда доставить</div>
+        <div class="checkout-row-value" id="addressValue">ул. Амира Темура, 12, кв. 45</div>
+      </div>
+      <div class="checkout-row-chevron">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+    <div class="checkout-field" style="margin-top: 12px">
+      <input class="checkout-input" type="text" id="entranceInput" placeholder="Подъезд, этаж, квартира, домофон">
+    </div>
+  </section>
+
+  <!-- ===== RECIPIENT ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Получатель</div>
+    <div class="checkout-field">
+      <label class="checkout-field-label" for="nameInput">Имя</label>
+      <input class="checkout-input" type="text" id="nameInput" placeholder="Как к вам обращаться">
+    </div>
+    <div class="checkout-field">
+      <label class="checkout-field-label" for="phoneInput">Телефон</label>
+      <input class="checkout-input" type="tel" id="phoneInput" placeholder="+998 __ ___-__-__" maxlength="19">
+    </div>
+  </section>
+
+  <!-- ===== DELIVERY DAY + SLOT ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Когда доставить</div>
+    <div class="checkout-day-list" id="dayList"></div>
+    <div class="checkout-slot-list" id="slotList" style="margin-top: 12px"></div>
+  </section>
+
+  <!-- ===== PAYMENT (inline slider) ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Способ оплаты</div>
+    <div class="checkout-pay-slider" id="paySlider"></div>
+  </section>
+
+  <!-- ===== ORDER COMPOSITION ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title" id="composeTitle">Состав заказа</div>
+    <div class="checkout-order" id="orderItems"></div>
+  </section>
+
+  <!-- ===== COMMENT ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Комментарий</div>
+    <div class="checkout-field">
+      <textarea class="checkout-textarea" id="commentCourier" placeholder="Например: позвонить за 10 минут до приезда, без лука"></textarea>
+    </div>
+  </section>
+
+  <!-- ===== PROMO ===== -->
+  <section class="checkout-block">
+    <div class="checkout-block-title">Промокод</div>
+    <div class="checkout-promo">
+      <input class="checkout-input" type="text" id="promoInput" placeholder="TOGORA30" autocomplete="off">
+      <button class="checkout-promo-apply" id="promoApply" type="button" disabled>Применить</button>
+    </div>
+    <div id="promoMsg" style="margin-top:8px; font-size:12px; font-family:var(--font-main); display:none"></div>
+  </section>
+</main>
+
+<!-- Sticky place-order block: total + button -->
+<div class="checkout-place-wrap">
+  <div class="checkout-place-total-row">
+    <span class="cpt-label">Всего</span>
+    <span class="cpt-amount" id="cptAmount">0 сум</span>
+  </div>
+  <button class="checkout-place-btn" id="placeBtn" type="button" disabled style="justify-content:center">
+    <span class="cp-label">Оплатить</span>
+  </button>
+</div>
+
+<!-- ═══ ADDRESS SHEET (map + search + saved addresses) ═══ -->
+<div class="addr-overlay" id="addrOverlay"></div>
+<div class="addr-sheet" id="addrSheet" role="dialog" aria-label="Выбор адреса">
+
+  <div class="addr-handle"></div>
+
+  <div class="addr-sheet-head">
+    <div class="addr-sheet-title">Куда доставить?</div>
+    <button class="addr-close-btn" id="addrClose" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="addr-search-wrap">
+    <div class="addr-input-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="addr-search-input" type="text" placeholder="Улица, дом, район..." id="addrInput" autocomplete="off">
+      <div class="addr-suggest-list" id="addrSuggestList"></div>
+    </div>
+    <button class="addr-save-btn" id="addrSaveBtn">Сохранить как новый адрес</button>
+  </div>
+
+  <!-- Interactive Leaflet Map -->
+  <div class="addr-map">
+    <div id="leafletMap"></div>
+    <button class="addr-geo-btn" id="addrGeoBtn" title="Моё местоположение">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9"/></svg>
+    </button>
+    <button class="addr-map-confirm" id="addrConfirm">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="var(--color-orange)"/></svg>
+      <span id="addrConfirmText">Определяем адрес...</span>
+    </button>
+  </div>
+
+  <!-- Address list — rendered by JS -->
+  <div class="addr-list" id="addrList"></div>
+
+</div>
+
+<!-- Success modal -->
+<div class="cart-modal-overlay" id="successOverlay"></div>
+<div class="cart-modal" id="successModal" role="dialog" aria-modal="true">
+  <div class="cart-modal-icon" style="background:#E8F5E9; color:#1A7D2E">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="cart-modal-title">Заказ принят!</h2>
+  <p class="cart-modal-text" id="successText">Спасибо! Мы передали заказ ресторану. Скоро курьер свяжется с вами.</p>
+  <div class="cart-modal-actions">
+    <button class="cart-modal-btn primary" id="successPrimary" type="button">На главную</button>
+  </div>
+</div>
+
+<div class="toast" id="cart-toast" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var escH = (window.TG && TG.escHTML) || function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  };
+  function fmtMoney(n){
+    n = Math.round(Number(n) || 0);
+    return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум';
+  }
+  function toast(msg){
+    var t = document.getElementById('cart-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+
+  // ---- Vendor catalog ----
+  var VENDORS = {
+    'salom-non':     { name: 'Salom Non',      minOrder: 25000, status: 'open' },
+    'besh-qozon':    { name: 'Besh Qozon',     minOrder: 40000, status: 'open' },
+    'shashlik-house':{ name: 'Shashlik House', minOrder: 30000, status: 'open' },
+    'samsa-fan':     { name: 'Samsa Fan',      minOrder: 20000, status: 'closed' },
+    'norin-mahalla': { name: 'Norin Mahalla',  minOrder: 35000, status: 'open' },
+    'sweet-tashkent':{ name: 'Sweet Tashkent', minOrder: 15000, status: 'open' }
+  };
+  function vendor(id){ return VENDORS[id] || { name: id, minOrder: 0, status: 'open' }; }
+
+  function loadCart(){
+    try {
+      var s = localStorage.getItem('tg-cart');
+      if (!s) return [];
+      var arr = JSON.parse(s);
+      return Array.isArray(arr) ? arr : [];
+    } catch(e){ return []; }
+  }
+  function saveCart(items){ try { localStorage.setItem('tg-cart', JSON.stringify(items)); } catch(e){} }
+  function activeVendor(){
+    var items = loadCart();
+    if (!items.length) return null;
+    var vendorIds = [];
+    items.forEach(function(it){ var v = it.vendorId || 'unknown'; if (vendorIds.indexOf(v) < 0) vendorIds.push(v); });
+    var saved = null;
+    try { saved = localStorage.getItem('tg-cart-active-vendor'); } catch(e){}
+    if (saved && vendorIds.indexOf(saved) >= 0) return saved;
+    return vendorIds[0];
+  }
+
+  var items = loadCart();
+  var vId = activeVendor();
+  if (!items.length || !vId) { location.href = 'cart.html'; return; }
+  var vendorItems = items.filter(function(it){ return (it.vendorId || 'unknown') === vId; });
+  var v = vendor(vId);
+
+  // ---- Profile ----
+  var PROFILE_KEY = 'tg-profile';
+  function loadProfile(){ try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}') || {}; } catch(e){ return {}; } }
+  function saveProfile(p){ try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch(e){} }
+  var profile = loadProfile();
+
+  // ---- Address ----
+  function loadAddress(){
+    try { var a = JSON.parse(localStorage.getItem('tg-address') || 'null'); if (a && typeof a === 'object') return a; } catch(e){}
+    return { street: 'ул. Амира Темура, 12', apt: 'кв. 45' };
+  }
+  function saveAddress(a){ try { localStorage.setItem('tg-address', JSON.stringify(a)); } catch(e){} }
+  var address = loadAddress();
+
+  // ---- DOM refs ----
+  var $addressValue = document.getElementById('addressValue');
+  var $entranceInput = document.getElementById('entranceInput');
+  var $nameInput = document.getElementById('nameInput');
+  var $phoneInput = document.getElementById('phoneInput');
+  var $dayList = document.getElementById('dayList');
+  var $slotList = document.getElementById('slotList');
+  var $paySlider = document.getElementById('paySlider');
+  var $orderItems = document.getElementById('orderItems');
+  var $composeTitle = document.getElementById('composeTitle');
+  var $commentCourier = document.getElementById('commentCourier');
+  var $promoInput = document.getElementById('promoInput');
+  var $promoApply = document.getElementById('promoApply');
+  var $promoMsg = document.getElementById('promoMsg');
+  var $cptAmount = document.getElementById('cptAmount');
+  var $placeBtn = document.getElementById('placeBtn');
+  var $addressRow = document.getElementById('addressRow');
+  var $successOv = document.getElementById('successOverlay');
+  var $successModal = document.getElementById('successModal');
+  var $successText = document.getElementById('successText');
+  var $successPrim = document.getElementById('successPrimary');
+
+  // ---- State ----
+  var state = {
+    selectedDay: 0,        // 0..6 (offset from today)
+    selectedSlot: null,
+    payment: 'card-9957',
+    promoCode: '',
+    promoApplied: false,
+    promoDiscount: 0
+  };
+
+  // ====================================================
+  //  ADDRESS MODULE — Leaflet + Nominatim + saved CRUD
+  //  (mirrors the home page sheet so the experience is the same)
+  // ====================================================
+  var addrOverlay    = document.getElementById('addrOverlay');
+  var addrSheet      = document.getElementById('addrSheet');
+  var addrClose      = document.getElementById('addrClose');
+  var addrInput      = document.getElementById('addrInput');
+  var addrSaveBtn    = document.getElementById('addrSaveBtn');
+  var addrList       = document.getElementById('addrList');
+  var addrConfirm    = document.getElementById('addrConfirm');
+  var addrConfirmTxt = document.getElementById('addrConfirmText');
+  var addrSuggest    = document.getElementById('addrSuggestList');
+  var addrGeoBtn     = document.getElementById('addrGeoBtn');
+
+  var currentAddressText = address.street + (address.apt ? ', ' + address.apt : '');
+  var currentCoords = [41.299496, 69.279737]; // Tashkent center
+  var leafletMap = null, leafletMarker = null;
+  var searchTimer = null;
+
+  var savedAddresses = [];
+  var nextAddrId = 1;
+  try {
+    var raw = JSON.parse(localStorage.getItem('tg_addresses') || 'null');
+    if (Array.isArray(raw) && raw.length) {
+      savedAddresses = raw;
+      nextAddrId = savedAddresses.reduce(function(m, a){ return Math.max(m, a.id||0); }, 0) + 1;
+    }
+  } catch(e){}
+  function persistAddresses(){
+    try { localStorage.setItem('tg_addresses', JSON.stringify(savedAddresses)); } catch(e){}
+  }
+
+  var ADDR_ICONS = {
+    pin:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    loc:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M5 10v10h14V10"/></svg>',
+    work: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>'
+  };
+  var ADDR_ARROW = '<div class="addr-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>';
+  var ADDR_TRASH = '<button class="addr-delete-btn" title="Удалить"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>';
+
+  function renderAddress(){
+    $addressValue.textContent = currentAddressText;
+  }
+  function setMainAddress(text){
+    currentAddressText = text;
+    address = { street: text, apt: '' };
+    saveAddress(address);
+    renderAddress();
+  }
+  renderAddress();
+
+  function formatAddr(data){
+    if (!data) return 'Адрес не найден';
+    var a = data.address || {};
+    var street = a.road || a.pedestrian || a.path || a.neighbourhood || '';
+    var house  = a.house_number || '';
+    var district = a.suburb || a.city_district || a.city || '';
+    if (street && house) return street + ' ' + house + (district ? ', ' + district : '');
+    if (street) return street + (district ? ', ' + district : '');
+    return (data.display_name || 'Адрес найден').split(',').slice(0, 2).join(',');
+  }
+
+  function reverseGeocode(lat, lon){
+    if (addrConfirmTxt) addrConfirmTxt.textContent = 'Определяем адрес...';
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json&accept-language=ru&zoom=18')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var txt = formatAddr(data);
+        if (addrConfirmTxt) addrConfirmTxt.textContent = txt;
+        addrConfirm.dataset.address = txt;
+        addrConfirm.dataset.lat = lat;
+        addrConfirm.dataset.lon = lon;
+      })
+      .catch(function(){
+        if (addrConfirmTxt) addrConfirmTxt.textContent = 'Адрес здесь';
+      });
+  }
+
+  function ensureMap(){
+    if (leafletMap || typeof L === 'undefined') {
+      if (leafletMap) leafletMap.invalidateSize();
+      return;
+    }
+    leafletMap = L.map('leafletMap', {
+      center: currentCoords,
+      zoom: 16,
+      zoomControl: false,
+      attributionControl: false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletMap);
+    var pinIcon = L.divIcon({
+      className: 'lf-pin-wrap',
+      html: '<div class="lf-pin-head"></div><div class="lf-pin-shadow"></div>',
+      iconSize: [32, 42],
+      iconAnchor: [16, 38]
+    });
+    leafletMarker = L.marker(currentCoords, { icon: pinIcon }).addTo(leafletMap);
+    leafletMap.on('move', function(){
+      var c = leafletMap.getCenter();
+      leafletMarker.setLatLng(c);
+    });
+    leafletMap.on('moveend', function(){
+      var c = leafletMap.getCenter();
+      currentCoords = [c.lat, c.lng];
+      reverseGeocode(c.lat, c.lng);
+    });
+    setTimeout(function(){
+      leafletMap.invalidateSize();
+      reverseGeocode(currentCoords[0], currentCoords[1]);
+    }, 250);
+  }
+
+  function renderAddrList(){
+    if (!addrList) return;
+    var html = '<div class="addr-item" data-loc="1">' +
+      '<div class="addr-item-icon loc">' + ADDR_ICONS.loc + '</div>' +
+      '<div class="addr-item-body">' +
+        '<div class="addr-item-title">Моё местоположение</div>' +
+        '<div class="addr-item-sub">Использовать геолокацию</div>' +
+      '</div>' + ADDR_ARROW + '</div>';
+    if (savedAddresses.length) {
+      html += '<div class="addr-sep-line"></div>';
+      html += '<div class="addr-divider">Сохранённые адреса</div>';
+      savedAddresses.forEach(function(a){
+        var key = ADDR_ICONS[a.type] ? a.type : 'pin';
+        html += '<div class="addr-item" data-id="' + a.id + '">' +
+          '<div class="addr-item-icon ' + key + '">' + ADDR_ICONS[key] + '</div>' +
+          '<div class="addr-item-body">' +
+            '<div class="addr-item-title">' + escH(a.title) + '</div>' +
+            '<div class="addr-item-sub">' + escH(a.sub || '') + '</div>' +
+          '</div>' + ADDR_TRASH + '</div>';
+      });
+    }
+    addrList.innerHTML = html;
+  }
+
+  function openAddrSheet(){
+    addrOverlay.classList.add('show');
+    addrSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderAddrList();
+    setTimeout(ensureMap, 300);
+  }
+  function closeAddrSheet(){
+    addrOverlay.classList.remove('show');
+    addrSheet.classList.remove('show');
+    document.body.style.overflow = '';
+    if (addrSuggest) addrSuggest.classList.remove('show');
+  }
+
+  $addressRow.addEventListener('click', openAddrSheet);
+  if (addrClose)   addrClose.addEventListener('click', closeAddrSheet);
+  if (addrOverlay) addrOverlay.addEventListener('click', closeAddrSheet);
+
+  // Debounced Nominatim search
+  if (addrInput) addrInput.addEventListener('input', function(){
+    var q = addrInput.value.trim();
+    clearTimeout(searchTimer);
+    if (q.length < 2) {
+      if (addrSuggest) { addrSuggest.classList.remove('show'); addrSuggest.innerHTML = ''; }
+      return;
+    }
+    searchTimer = setTimeout(function(){
+      fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q + ', Tashkent') +
+            '&format=json&accept-language=ru&limit=5')
+        .then(function(r){ return r.json(); })
+        .then(function(results){
+          if (!results.length || !addrSuggest) {
+            if (addrSuggest) addrSuggest.classList.remove('show');
+            return;
+          }
+          addrSuggest.innerHTML = results.map(function(r){
+            var name = r.display_name || '';
+            var parts = name.split(',');
+            var head = (parts[0] || name).trim();
+            var rest = parts.slice(1, 3).join(',').trim();
+            return '<div class="addr-suggest-item" data-lat="' + r.lat + '" data-lon="' + r.lon +
+                   '" data-name="' + escH(head).replace(/"/g, '&quot;') + '">' +
+                   '<b>' + escH(head) + '</b><span>' + escH(rest) + '</span></div>';
+          }).join('');
+          addrSuggest.classList.add('show');
+          addrSuggest.querySelectorAll('.addr-suggest-item').forEach(function(item){
+            item.addEventListener('click', function(){
+              var lat = parseFloat(item.dataset.lat);
+              var lon = parseFloat(item.dataset.lon);
+              currentCoords = [lat, lon];
+              if (leafletMap) leafletMap.setView([lat, lon], 17);
+              addrInput.value = item.dataset.name;
+              addrSuggest.classList.remove('show');
+            });
+          });
+        })
+        .catch(function(){
+          if (addrSuggest) addrSuggest.classList.remove('show');
+        });
+    }, 350);
+  });
+
+  document.addEventListener('click', function(e){
+    if (!addrSuggest) return;
+    if (!e.target.closest('.addr-input-wrap')) addrSuggest.classList.remove('show');
+  });
+
+  if (addrGeoBtn) addrGeoBtn.addEventListener('click', function(){
+    if (!navigator.geolocation || !leafletMap) return;
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var lat = pos.coords.latitude, lon = pos.coords.longitude;
+      leafletMap.setView([lat, lon], 17);
+    });
+  });
+
+  if (addrConfirm) addrConfirm.addEventListener('click', function(){
+    var txt = addrConfirm.dataset.address || (addrConfirmTxt ? addrConfirmTxt.textContent : '');
+    if (txt && txt !== 'Определяем адрес...') setMainAddress(txt);
+    closeAddrSheet();
+  });
+
+  if (addrSaveBtn) addrSaveBtn.addEventListener('click', function(){
+    var addrText = (addrConfirm && addrConfirm.dataset.address) || (addrConfirmTxt && addrConfirmTxt.textContent) || 'Новый адрес';
+    if (addrText === 'Определяем адрес...') addrText = 'Новый адрес';
+    savedAddresses.push({
+      id: nextAddrId++, type: 'pin',
+      title: addrText,
+      sub: 'Ташкент',
+      lat: currentCoords[0], lon: currentCoords[1]
+    });
+    persistAddresses();
+    renderAddrList();
+    toast('Адрес сохранён');
+  });
+
+  if (addrList) addrList.addEventListener('click', function(e){
+    var del = e.target.closest('.addr-delete-btn');
+    if (del) {
+      e.stopPropagation();
+      var pItem = del.closest('.addr-item');
+      var pid = parseInt(pItem.dataset.id);
+      savedAddresses = savedAddresses.filter(function(a){ return a.id !== pid; });
+      persistAddresses();
+      renderAddrList();
+      return;
+    }
+    var item = e.target.closest('.addr-item');
+    if (!item) return;
+    if (item.dataset.loc) {
+      if (addrGeoBtn) addrGeoBtn.click();
+      return;
+    }
+    var id = parseInt(item.dataset.id);
+    var a = savedAddresses.find(function(x){ return x.id === id; });
+    if (a) {
+      setMainAddress(a.title);
+      if (a.lat && leafletMap) leafletMap.setView([a.lat, a.lon], 17);
+      closeAddrSheet();
+    }
+  });
+
+  // ---- Recipient prefill + mask ----
+  if (profile.name)  $nameInput.value  = profile.name;
+  if (profile.phone) $phoneInput.value = profile.phone;
+  if (profile.entrance) $entranceInput.value = profile.entrance;
+
+  function maskPhone(v){
+    var d = v.replace(/\D/g,'');
+    if (d.indexOf('998') !== 0) d = '998' + d;
+    d = d.slice(0, 12);
+    var p = '+' + d.slice(0,3);
+    if (d.length > 3) p += ' ' + d.slice(3,5);
+    if (d.length > 5) p += ' ' + d.slice(5,8);
+    if (d.length > 8) p += '-' + d.slice(8,10);
+    if (d.length > 10) p += '-' + d.slice(10,12);
+    return p;
+  }
+  $phoneInput.addEventListener('input', function(){
+    var pos = $phoneInput.selectionStart || 0;
+    var oldLen = $phoneInput.value.length;
+    $phoneInput.value = maskPhone($phoneInput.value);
+    var newLen = $phoneInput.value.length;
+    try { $phoneInput.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(e){}
+    validate();
+  });
+  $phoneInput.addEventListener('blur', function(){ $phoneInput.value = maskPhone($phoneInput.value); });
+  $nameInput.addEventListener('input', validate);
+
+  // ---- Day list (7 days) ----
+  function renderDayList(){
+    var weekdays = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+    var months   = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+    var html = '';
+    for (var i = 0; i < 7; i++) {
+      var d = new Date();
+      d.setDate(d.getDate() + i);
+      var top, sub;
+      if (i === 0) { top = 'Сегодня'; sub = d.getDate() + ' ' + months[d.getMonth()]; }
+      else if (i === 1) { top = 'Завтра'; sub = d.getDate() + ' ' + months[d.getMonth()]; }
+      else { top = weekdays[d.getDay()]; sub = d.getDate() + ' ' + months[d.getMonth()]; }
+      var cls = (i === state.selectedDay) ? ' active' : '';
+      html += '<button class="checkout-day-chip' + cls + '" type="button" data-day="' + i + '">'
+        + '<span>' + top + '</span>'
+        + '<span class="cdc-day">' + sub + '</span>'
+        + '</button>';
+    }
+    $dayList.innerHTML = html;
+  }
+  $dayList.addEventListener('click', function(e){
+    var chip = e.target.closest('.checkout-day-chip');
+    if (!chip) return;
+    state.selectedDay = parseInt(chip.dataset.day, 10);
+    state.selectedSlot = null;
+    renderDayList();
+    renderSlots();
+    validate();
+  });
+  renderDayList();
+
+  // ---- Slots ----
+  function renderSlots(){
+    var html = '';
+    var now = new Date();
+    var startHour;
+    if (state.selectedDay === 0) {
+      startHour = now.getHours() + 1;
+    } else {
+      startHour = 9;
+    }
+    for (var h = Math.max(9, startHour); h <= 22; h++) {
+      var slot = h + '-' + (h+1);
+      var label = pad2(h) + ':00 – ' + pad2(h+1) + ':00';
+      var sel = (state.selectedSlot === slot) ? ' selected' : '';
+      html += '<button class="checkout-slot-chip' + sel + '" type="button" data-slot="' + slot + '">' + label + '</button>';
+    }
+    $slotList.innerHTML = html;
+    if (!state.selectedSlot) {
+      var firstChip = $slotList.querySelector('.checkout-slot-chip');
+      if (firstChip) {
+        state.selectedSlot = firstChip.dataset.slot;
+        firstChip.classList.add('selected');
+      }
+    }
+  }
+  $slotList.addEventListener('click', function(e){
+    var chip = e.target.closest('.checkout-slot-chip');
+    if (!chip) return;
+    state.selectedSlot = chip.dataset.slot;
+    $slotList.querySelectorAll('.checkout-slot-chip').forEach(function(c){
+      c.classList.toggle('selected', c === chip);
+    });
+    validate();
+  });
+  renderSlots();
+
+  // ---- Payment slider (inline cards) ----
+  var PAY_OPTIONS = [
+    { id: 'card-9957', name: '•• 9957', sub: 'VISA',     icon: '<rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/>' },
+    { id: 'card-9123', name: '•• 9123', sub: 'Humo',     icon: '<rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/>' },
+    { id: 'click',     name: 'Click',   sub: 'Кошелёк',  icon: '<path d="M12 2v20M2 12h20"/>' },
+    { id: 'payme',     name: 'Payme',   sub: 'Кошелёк',  icon: '<polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>' },
+    { id: 'cash',      name: 'Наличные',sub: 'Курьеру',  icon: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>' },
+    { id: 'card-courier', name: 'Терминал', sub: 'Курьеру', icon: '<rect x="2" y="6" width="20" height="14" rx="2"/><line x1="2" y1="11" x2="22" y2="11"/><circle cx="18" cy="16" r="1" fill="currentColor"/>' }
+  ];
+  function renderPaySlider(){
+    var html = PAY_OPTIONS.map(function(o){
+      var cls = (o.id === state.payment) ? ' selected' : '';
+      return '<button class="checkout-pay-card' + cls + '" type="button" data-pay="' + escH(o.id) + '">'
+        + '<div class="cpc-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' + o.icon + '</svg></div>'
+        + '<div>'
+        +   '<div class="cpc-name">' + escH(o.name) + '</div>'
+        +   '<div class="cpc-sub">' + escH(o.sub) + '</div>'
+        + '</div>'
+        + '</button>';
+    }).join('');
+    // Add "Добавить карту" tile at the end
+    html += '<button class="checkout-pay-card add" type="button" data-pay="add">'
+      + '<div class="cpc-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
+      + '<div class="cpc-name">Добавить карту</div>'
+      + '</button>';
+    $paySlider.innerHTML = html;
+  }
+  $paySlider.addEventListener('click', function(e){
+    var card = e.target.closest('.checkout-pay-card');
+    if (!card) return;
+    var pid = card.dataset.pay;
+    if (pid === 'add') { toast('Привязка карт пока недоступна'); return; }
+    state.payment = pid;
+    $paySlider.querySelectorAll('.checkout-pay-card').forEach(function(c){
+      c.classList.toggle('selected', c === card);
+    });
+  });
+  renderPaySlider();
+
+  // ---- Order composition ----
+  function renderOrder(){
+    $composeTitle.textContent = 'Состав заказа · ' + v.name;
+    $orderItems.innerHTML = vendorItems.map(function(it){
+      var img = it.img ? "background-image: url('" + escH(it.img) + "');" : '';
+      return ''
+        + '<div class="checkout-order-item">'
+        +   '<div class="checkout-order-img" style="' + img + '"></div>'
+        +   '<div class="checkout-order-body">'
+        +     '<div class="checkout-order-name">' + escH(it.name) + '</div>'
+        +     '<div class="checkout-order-qty">' + (Number(it.qty)||0) + ' шт · ' + fmtMoney(it.price) + '</div>'
+        +   '</div>'
+        +   '<div class="checkout-order-price">' + fmtMoney((Number(it.price)||0) * (Number(it.qty)||0)) + '</div>'
+        + '</div>';
+    }).join('');
+  }
+  renderOrder();
+
+  // ---- Promo ----
+  var PROMOS = {
+    'TOGORA30': { pct: 30, label: 'TOGORA30' },
+    'WELCOME':  { pct: 15, label: 'WELCOME' },
+    'FRIEND':   { amount: 5000, label: 'FRIEND' }
+  };
+  $promoInput.addEventListener('input', function(){
+    var code = $promoInput.value.trim().toUpperCase();
+    $promoApply.disabled = code.length < 3;
+    if (state.promoApplied && code !== state.promoCode) {
+      state.promoApplied = false;
+      state.promoDiscount = 0;
+      state.promoCode = '';
+      $promoMsg.style.display = 'none';
+      renderTotals();
+    }
+  });
+  $promoApply.addEventListener('click', function(){
+    var code = $promoInput.value.trim().toUpperCase();
+    var p = PROMOS[code];
+    if (!p) {
+      $promoMsg.style.display = 'block';
+      $promoMsg.style.color = '#E03A1A';
+      $promoMsg.textContent = 'Промокод не найден';
+      state.promoApplied = false;
+      renderTotals();
+      return;
+    }
+    var sub = subtotal();
+    state.promoDiscount = p.amount != null ? p.amount : Math.round(sub * p.pct / 100);
+    state.promoCode = code;
+    state.promoApplied = true;
+    $promoMsg.style.display = 'block';
+    $promoMsg.style.color = 'var(--color-plus)';
+    $promoMsg.textContent = 'Скидка ' + fmtMoney(state.promoDiscount) + ' применена';
+    renderTotals();
+  });
+
+  // ---- Totals ----
+  function subtotal(){
+    return vendorItems.reduce(function(s,i){ return s + (Number(i.price)||0)*(Number(i.qty)||0); }, 0);
+  }
+  function renderTotals(){
+    var sub = subtotal();
+    var discount = state.promoApplied ? state.promoDiscount : 0;
+    var total = Math.max(0, sub - discount);
+    $cptAmount.textContent = fmtMoney(total);
+  }
+  renderTotals();
+
+  // ---- Validation ----
+  function isPhoneValid(s){ return /^\+998 \d\d \d\d\d-\d\d-\d\d$/.test(s); }
+  function validate(){
+    var nameOk  = $nameInput.value.trim().length >= 2;
+    var phoneOk = isPhoneValid($phoneInput.value.trim());
+    var slotOk  = !!state.selectedSlot;
+    $phoneInput.classList.toggle('invalid', $phoneInput.value.length > 4 && !phoneOk);
+    var minOk = subtotal() >= (v.minOrder || 0);
+    $placeBtn.disabled = !(nameOk && phoneOk && slotOk && minOk);
+  }
+  validate();
+
+  // ---- Place order ----
+  $placeBtn.addEventListener('click', function(){
+    if ($placeBtn.disabled) return;
+    saveProfile({
+      name:  $nameInput.value.trim(),
+      phone: $phoneInput.value.trim(),
+      entrance: $entranceInput.value.trim()
+    });
+    var rest = items.filter(function(it){ return (it.vendorId || 'unknown') !== vId; });
+    saveCart(rest);
+    var dayLabel;
+    if (state.selectedDay === 0) dayLabel = 'сегодня';
+    else if (state.selectedDay === 1) dayLabel = 'завтра';
+    else {
+      var d = new Date(); d.setDate(d.getDate() + state.selectedDay);
+      var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+      dayLabel = d.getDate() + ' ' + months[d.getMonth()];
+    }
+    var slotText = 'в окне ' + state.selectedSlot.replace('-', ':00 – ') + ':00';
+    $successText.textContent = 'Заказ из «' + v.name + '» оформлен на ' + dayLabel + ' ' + slotText + '. Скоро курьер свяжется с вами.';
+    $successOv.classList.add('open');
+    $successModal.classList.add('open');
+  });
+  $successPrim.addEventListener('click', function(){
+    var rest = loadCart();
+    location.href = rest.length > 0 ? 'cart.html' : 'index.html';
+  });
+  $successOv.addEventListener('click', function(){
+    $successOv.classList.remove('open');
+    $successModal.classList.remove('open');
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if (addrSheet.classList.contains('show')) closeAddrSheet();
+  });
+})();
+</script>
+</body>
+</html>

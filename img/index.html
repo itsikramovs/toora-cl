@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="uz" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Togora — Toshkent</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="application-name" content="Togora">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-logo-row">
+    <div class="logotype">togora<span>.</span></div>
+    <div class="header-icons">
+      <a class="icon-btn" href="notifications.html" aria-label="Уведомления">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-badge hidden" id="notifBadge"></div>
+      </a>
+    </div>
+  </div>
+  <div class="address-row">
+    <div class="address-left">
+      <div class="pin-icon"></div>
+      <div>
+        <div class="address-hint">Ташкент, доставка</div>
+        <div class="address-main">
+          Амир Темур, Бобур 23
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="search-sticky">
+  <a class="search-bar" href="search.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Блюда, рестораны...</span>
+  </a>
+</div>
+<div class="sep"></div>
+
+<!-- ═══ PROMO BANNERS — мероприятия ═══ -->
+<section class="promo-section surface">
+  <div class="scroll-x promo-scroll">
+
+    <a class="promo-card pc-event" href="event.html?type=kuda" style="background-image:url('./img/ev-01.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">💍 Куда чакирик</div>
+        <div class="promo-title">Праздничный<br>стол сватам</div>
+        <div class="promo-sub">Меню под торжество · от 800 000 сум</div>
+      </div>
+    </a>
+
+    <a class="promo-card pc-event" href="event.html?type=engagement" style="background-image:url('./img/ev-04.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">🌸 Помолвка</div>
+        <div class="promo-title">Помолвка<br>под ключ</div>
+        <div class="promo-sub">Закажите праздничное меню заранее</div>
+      </div>
+    </a>
+
+    <a class="promo-card pc-event" href="event.html?type=beshik" style="background-image:url('./img/ev-05.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">👶 Бешик туй</div>
+        <div class="promo-title">Стол для<br>бешик туй</div>
+        <div class="promo-sub">Доставим горячим к началу торжества</div>
+      </div>
+    </a>
+
+    <a class="promo-card pc-event" href="event.html?type=kavurdak" style="background-image:url('./img/ev-02.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">🍖 Кавурдак</div>
+        <div class="promo-title">Кавурдак<br>для гостей</div>
+        <div class="promo-sub">Настоящий вкус узбекского очага</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ INFO CHIPS ═══ -->
+<section class="discount-section surface">
+  <div class="discount-scroll-x">
+
+    <!-- 500+ ресторанов — storefront -->
+    <div class="d-pill dp1">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18M3 10V19a1 1 0 001 1h16a1 1 0 001-1V10M3 10L6 4h12l3 6"/>
+          <path d="M9 21v-6h6v6"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">500+</div>
+        <div class="d-label">ресторанов</div>
+      </div>
+    </div>
+
+    <!-- 0 сум — delivery scooter -->
+    <div class="d-pill dp2">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1B7A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="18" r="2"/>
+          <circle cx="18" cy="18" r="2"/>
+          <path d="M8 18h6M14 18V9h3l3 4v5h-2"/>
+          <path d="M6 18H3v-5l5-4h4v9"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">0 сум</div>
+        <div class="d-label">доставка</div>
+      </div>
+    </div>
+
+    <!-- Предзаказ — clock -->
+    <div class="d-pill dp3">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3.5 3.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Предзаказ</div>
+        <div class="d-label">удобное время</div>
+      </div>
+    </div>
+
+    <!-- Гарантия — shield + check -->
+    <div class="d-pill dp4">
+      <div class="d-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5.25-3.5 9.25-8 10.5C7.5 21.25 4 17.25 4 12V6l8-4z"/>
+          <path d="M8.5 12l2.5 2.5 4.5-4.5"/>
+        </svg>
+      </div>
+      <div class="d-text">
+        <div class="d-value">Гарантия</div>
+        <div class="d-label">вернём деньги</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ CATEGORIES ═══ -->
+<section class="categories-section surface">
+  <div class="section-head">
+    <div class="section-title">Что заказать</div>
+    <a class="section-all" href="dishes.html">Все →</a>
+  </div>
+  <div class="scroll-x cat-scroll">
+
+    <a class="cat-card" href="dish.html?cat=lepyoshka">
+      <div class="cat-img-wrap"><img src="./img/cat-lepyoshka.png" alt="Лепёшки"></div>
+      <div class="cat-name">Лепёшки</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=manti">
+      <div class="cat-img-wrap"><img src="./img/cat-manti.png" alt="Манты"></div>
+      <div class="cat-name">Манты</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=plov">
+      <div class="cat-img-wrap"><img src="./img/cat-plov.png" alt="Плов"></div>
+      <div class="cat-name">Плов</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=shashlik">
+      <div class="cat-img-wrap"><img src="./img/cat-shashlik.png" alt="Шашлык"></div>
+      <div class="cat-name">Шашлык</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=samsa">
+      <div class="cat-img-wrap"><img src="./img/cat-samsa.png" alt="Самса"></div>
+      <div class="cat-name">Самса</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=sweets">
+      <div class="cat-img-wrap"><img src="./img/cat-sweets.png" alt="Сладости"></div>
+      <div class="cat-name">Сладости</div>
+      <div class="cat-underline"></div>
+    </a>
+
+    <a class="cat-card" href="dish.html?cat=sushi">
+      <div class="cat-img-wrap"><img src="./img/cat-sushi.png" alt="Суши"></div>
+      <div class="cat-name">Суши</div>
+      <div class="cat-underline"></div>
+    </a>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ RESTAURANTS ═══ -->
+<section class="rests-section surface">
+  <div class="section-head"><div class="section-title">Рестораны</div><a class="section-all" href="restaurants.html">Все →</a></div>
+  <div class="scroll-x rests-scroll">
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-04.jpg" alt="Rayhon">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">RAYHON<small>Milliy Taomlar</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-02.jpg" alt="Osh Markazi">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">OSH<small>Markazi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-12.jpg" alt="Norin House">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">NORIN<small>House</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-16.jpg" alt="Samarqand">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">SAMARQAND<small>Taomi</small></div>
+      </div>
+    </div>
+
+    <div class="rest-item">
+      <div class="rest-card">
+        <img class="rest-photo" src="./img/dish-09.jpg" alt="Fergana Palav">
+        <div class="rest-photo-overlay"></div>
+        <div class="rest-name-over">FERGANA<small>Palav</small></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ORDER HISTORY ═══ -->
+<section class="history-section surface">
+  <div class="section-head"><div class="section-title">Вы заказывали</div><a class="section-all" href="dishes.html">Все →</a></div>
+  <div class="scroll-x history-scroll">
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <div class="hist-disc">−15%</div>
+        <img src="./img/ev-02.jpg" alt="patir">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qo'qon patir</div>
+        <div class="hist-vendor">Rayhon Milliy</div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-13.jpg" alt="norin">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Qazili norin</div>
+        <div class="hist-vendor">Norin House</div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+    <div class="hist-card">
+      <div class="hist-img">
+        <img src="./img/dish-02.jpg" alt="plov">
+      </div>
+      <div class="hist-body">
+        <div class="hist-name">Osh Palav</div>
+        <div class="hist-vendor">Osh Markazi</div>
+        <button class="repeat-btn">Повторить</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ЛЕПЁШКИ — mini grid ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Лепёшки</div><a class="section-all" href="dish.html?cat=lepyoshka">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-02.jpg" alt="patir">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'qon patir"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">15 000 сум</div>
+        <div class="mini-name">Qo'qon patir</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-03.jpg" alt="patirlar">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qirmizi patirlar"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Qirmizi patirlar</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="tandyr">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Non tandirdan"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">18 000 сум</div>
+        <div class="mini-name">Non tandirdan</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="kulcha">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kulcha non"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">9 000 сум</div>
+        <div class="mini-name">Kulcha non</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ НОРИН ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Норин</div><a class="section-all" href="dish.html?cat=norin">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-12.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-13.jpg" alt="norin 2">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda to'g'ralgan norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 3"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">21500 сум</div>
+        <div class="mini-name">Qazili norin #3</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-06.jpg" alt="norin 2">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 4"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">26000 сум</div>
+        <div class="mini-name">Mayda to'g'ralgan norin #4</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ШАШЛЫК ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Шашлык</div><a class="section-all" href="dish.html?cat=shashlik">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-01.jpg" alt="shashlik">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qo'y shashlik"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">45 000 сум</div>
+        <div class="mini-name">Qo'y shashlik</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-17.jpg" alt="lula">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Lula kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">38 000 сум</div>
+        <div class="mini-name">Lula kabob</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-18.jpg" alt="chicken-kebab">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Tovuq kabob"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">32 000 сум</div>
+        <div class="mini-name">Tovuq kabob</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-09.jpg" alt="mix-grill">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kabob assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">55 000 сум</div>
+        <div class="mini-name">Kabob assorted</div>
+        <div class="mini-vendor">Fergana Palav</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ САМСА ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Самса</div><a class="section-all" href="dish.html?cat=samsa">Все →</a></div>
+  <div class="mini-grid">
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-round">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Dumaloq samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">12 000 сум</div>
+        <div class="mini-name">Dumaloq samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-15.jpg" alt="samsa-tri">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Uchburchak samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">10 000 сум</div>
+        <div class="mini-name">Uchburchak samsa</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="samsa-mix">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Samsa assorted"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">22 000 сум</div>
+        <div class="mini-name">Samsa assorted</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-14.jpg" alt="samsa-small">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kichkina samsa"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">8 000 сум</div>
+        <div class="mini-name">Kichkina samsa</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ REELS (restaurant videos) ═══ -->
+<section class="reels-section surface">
+  <div class="section-head">
+    <div class="section-title">Рилсы ресторанов</div>
+    <a class="section-all">Все →</a>
+  </div>
+  <div class="scroll-x reels-scroll" id="reelsScroll">
+    <!-- rendered by JS -->
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ REELS FULLSCREEN PLAYER ═══ -->
+<div class="reels-player" id="reelsPlayer" role="dialog" aria-label="Видео ресторана">
+  <div class="rp-stage" id="rpStage">
+    <div class="rp-media" id="rpMedia"></div>
+
+    <!-- Tap zones -->
+    <div class="rp-zone prev" id="rpPrev"></div>
+    <div class="rp-zone next" id="rpNext"></div>
+
+    <!-- Progress bar -->
+    <div class="rp-progress" id="rpProgress"></div>
+
+    <!-- Top bar -->
+    <div class="rp-top">
+      <div class="rp-rest" id="rpRest">
+        <div class="rp-rest-avatar"><img id="rpAvatar" alt=""></div>
+        <div class="rp-rest-meta">
+          <div class="rp-rest-name" id="rpRestName">Ресторан</div>
+          <div class="rp-rest-sub"  id="rpRestSub">★ 4.8 · 25–35 мин</div>
+        </div>
+      </div>
+      <div class="rp-top-actions">
+        <button class="rp-icon-btn" id="rpMute" aria-label="Звук">
+          <svg viewBox="0 0 24 24">
+            <g class="vol-on"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></g>
+            <g class="vol-off"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></g>
+          </svg>
+        </button>
+        <button class="rp-icon-btn" id="rpClose" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pause indicator -->
+    <div class="rp-pause-ind">
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </div>
+
+    <!-- Side actions -->
+    <div class="rp-side">
+      <button class="rp-action" id="rpLike">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="rp-action-num" id="rpLikeNum">128</div>
+      </button>
+      <button class="rp-action" id="rpComment">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="rp-action-num">42</div>
+      </button>
+      <button class="rp-action" id="rpShare">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="rp-action-num">Поделиться</div>
+      </button>
+      <button class="rp-action" id="rpSave">
+        <div class="rp-action-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="rp-action-num">Сохр.</div>
+      </button>
+    </div>
+
+    <!-- Bottom info -->
+    <div class="rp-bottom">
+      <div class="rp-caption" id="rpCaption">Подпись</div>
+      <button class="rp-cta" id="rpCta">
+        <svg viewBox="0 0 24 24"><path d="M3 10h18M3 10V19a1 1 0 001 1h16a1 1 0 001-1V10M3 10L6 4h12l3 6"/></svg>
+        <span>Перейти в ресторан</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVENTS ═══ -->
+<section class="events-section surface">
+  <div class="section-head"><div class="section-title">Мероприятия</div><a class="section-all" href="events.html">Все →</a></div>
+  <div class="scroll-x events-scroll">
+
+    <a class="ev-card" href="event.html?type=kavurdak">
+      <img src="./img/ev-02.jpg" alt="Кавурдак">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-label">Кавурдак</div></div>
+    </a>
+
+    <a class="ev-card" href="event.html?type=kuda">
+      <img src="./img/ev-01.jpg" alt="Куда чакирик">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-label">Куда чакирик</div></div>
+    </a>
+
+    <a class="ev-card" href="event.html?type=engagement">
+      <img src="./img/ev-04.jpg" alt="Помолвка">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-label">Помолвка</div></div>
+    </a>
+
+    <a class="ev-card" href="event.html?type=beshik">
+      <img src="./img/ev-05.jpg" alt="Бешик туй">
+      <div class="ev-overlay"></div>
+      <div class="ev-content"><div class="ev-label">Бешик туй</div></div>
+    </a>
+
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ДЛЯ ПОМОЛВКИ ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Для помолвки</div><a class="section-all" href="event.html?type=engagement">Все →</a></div>
+  <div class="mini-grid">
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-04.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Qazili norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">115 000 сум</div>
+        <div class="mini-name">Qazili norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/ev-01.jpg" alt="plov">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Mayda norin"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">94 000 сум</div>
+        <div class="mini-name">Mayda norin</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="norin">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 3"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">21500 сум</div>
+        <div class="mini-name">Qazili norin #3</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-06.jpg" alt="plov">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 4"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">26000 сум</div>
+        <div class="mini-name">Mayda norin #4</div>
+        <div class="mini-vendor">Rayhon Milliy</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ДЛЯ БЕШИК ТУЙ ═══ -->
+<section class="mini-section surface">
+  <div class="section-head"><div class="section-title">Для бешик туй</div><a class="section-all" href="event.html?type=beshik">Все →</a></div>
+  <div class="mini-grid">
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-02.jpg" alt="palav">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Osh palav festiv."><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">120 000 сум</div>
+        <div class="mini-name">Osh palav festiv.</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-03.jpg" alt="kavurdak">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Kavurdak bayrami"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">85 000 сум</div>
+        <div class="mini-name">Kavurdak bayrami</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-16.jpg" alt="palav">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 3"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">21500 сум</div>
+        <div class="mini-name">Osh palav festiv. #3</div>
+        <div class="mini-vendor">Osh Markazi</div>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mini-img">
+        <img src="./img/dish-06.jpg" alt="kavurdak">
+        <div class="mini-img-overlay"></div>
+      <button class="add-btn-float" data-name="Блюдо 4"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="mini-body">
+        <div class="mini-price">26000 сум</div>
+        <div class="mini-name">Kavurdak bayrami #4</div>
+        <div class="mini-vendor">Samarqand</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="sep"></div>
+
+<!-- ═══ ADDRESS SHEET ═══ -->
+<div class="addr-overlay" id="addrOverlay"></div>
+<div class="addr-sheet" id="addrSheet" role="dialog" aria-label="Выбор адреса">
+
+  <div class="addr-handle"></div>
+
+  <div class="addr-sheet-head">
+    <div class="addr-sheet-title">Куда доставить?</div>
+    <button class="addr-close-btn" id="addrClose" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="addr-search-wrap">
+    <div class="addr-input-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="addr-search-input" type="text" placeholder="Улица, дом, район..." id="addrInput" autocomplete="off">
+      <div class="addr-suggest-list" id="addrSuggestList"></div>
+    </div>
+    <button class="addr-save-btn" id="addrSaveBtn">Сохранить как новый адрес</button>
+  </div>
+
+  <!-- Interactive Leaflet Map -->
+  <div class="addr-map">
+    <div id="leafletMap"></div>
+    <button class="addr-geo-btn" id="addrGeoBtn" title="Моё местоположение">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9"/></svg>
+    </button>
+    <button class="addr-map-confirm" id="addrConfirm">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="var(--color-orange)"/></svg>
+      <span id="addrConfirmText">Определяем адрес...</span>
+    </button>
+  </div>
+
+  <!-- Address list — rendered by JS -->
+  <div class="addr-list" id="addrList"></div>
+
+</div>
+
+<!-- ═══ WELCOME BAR (first-visit geolocation confirm) ═══ -->
+<div class="addr-welcome-bar" id="addrWelcomeBar">
+  <div class="awb-head">
+    <div class="awb-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    </div>
+    <div>
+      <div class="awb-title">Доставить сюда?</div>
+      <div class="awb-addr" id="awbAddr">Определяем ваш адрес…</div>
+    </div>
+  </div>
+  <input class="awb-name-input" id="awbNameInput" placeholder="Название адреса (Дом, Работа…)" maxlength="30">
+  <div class="awb-btns">
+    <button class="awb-btn awb-no"  id="awbNo">Нет, изменить</button>
+    <button class="awb-btn awb-yes" id="awbYes">Да, верно</button>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text">Добавлено в корзину</span>
+</div>
+
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<script src="app.js"></script>
+<script>
+(function() {
+  console.log('[Togora BUILD] index.html version 2026-05-21T14:30 — disk file is CLEAN');
+  // Helpers from shared module
+  var escNH = (window.TG && TG.escHTML) || function(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];}); };
+
+  // Cart wiring — uses shared TG.cartAdd (writes to localStorage 'tg-cart'
+  // with vendor info so cart.html groups items by vendor correctly).
+  TG.wireMiniCardCart(document);
+
+  // Tap on mini-card body → open product page
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
+    var miniCard = e.target.closest('.mini-card');
+    if (!miniCard) return;
+    var nameEl = miniCard.querySelector('.mini-name');
+    var imgEl  = miniCard.querySelector('.mini-img img');
+    var name = nameEl ? nameEl.textContent.trim() : '';
+    var img  = imgEl  ? imgEl.getAttribute('src')  : '';
+    if (name) {
+      var qs = 'name=' + encodeURIComponent(name) + (img ? '&img=' + encodeURIComponent(img) : '');
+      location.href = 'product.html?' + qs;
+    }
+  });
+
+  // ════════════════════════════════════════════════
+  //  ADDRESS MODULE — Leaflet + Nominatim + CRUD
+  // ════════════════════════════════════════════════
+  var addrOverlay    = document.getElementById('addrOverlay');
+  var addrSheet      = document.getElementById('addrSheet');
+  var addrClose      = document.getElementById('addrClose');
+  var addrInput      = document.getElementById('addrInput');
+  var addrSaveBtn    = document.getElementById('addrSaveBtn');
+  var addrList       = document.getElementById('addrList');
+  var addrConfirm    = document.getElementById('addrConfirm');
+  var addrConfirmTxt = document.getElementById('addrConfirmText');
+  var addrSuggest    = document.getElementById('addrSuggestList');
+  var addrGeoBtn     = document.getElementById('addrGeoBtn');
+  var addrMain       = document.querySelector('.address-main');
+  var awbBar         = document.getElementById('addrWelcomeBar');
+  var awbAddr        = document.getElementById('awbAddr');
+  var awbNameInput   = document.getElementById('awbNameInput');
+  var awbYes         = document.getElementById('awbYes');
+  var awbNo          = document.getElementById('awbNo');
+
+  // ── State ──
+  var currentAddressText = 'Амир Темур, Бобур 23';
+  var currentCoords = [41.299496, 69.279737]; // Tashkent center
+  var leafletMap = null, leafletMarker = null;
+  var searchTimer = null;
+  var addresses = [
+    { id: 1, type: 'pin', title: 'Катартал', sub: 'Чиланзар, ул. Катартал 56', preset: false },
+  ];
+  var nextId = 2;
+
+  // ── SVG icons ──
+  var ICON = {
+    pin:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    loc:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  };
+  var ARROW = '<div class="addr-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>;'
+
+  var TRASH = '<button class="addr-delete-btn" title="Удалить"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>';
+  var addressLeft = document.querySelector('.address-left');
+
+  // Persistent storage of saved addresses
+  try {
+    var savedAddresses = JSON.parse(localStorage.getItem('tg_addresses') || 'null');
+    if (Array.isArray(savedAddresses) && savedAddresses.length) {
+      addresses = savedAddresses;
+      nextId = addresses.reduce(function(m, a) { return Math.max(m, a.id); }, 0) + 1;
+    }
+  } catch (e) {}
+  function persistAddresses() {
+    try { localStorage.setItem('tg_addresses', JSON.stringify(addresses)); } catch (e) {}
+  }
+
+  function setMainAddress(text) {
+    currentAddressText = text;
+    if (addrMain) {
+      var chev = addrMain.querySelector('svg');
+      var chevHtml = chev ? chev.outerHTML : '';
+      addrMain.innerHTML = escNH(text) + ' ' + chevHtml;
+    }
+  }
+
+  function formatAddr(data) {
+    if (!data) return 'Адрес не найден';
+    var a = data.address || {};
+    var street = a.road || a.pedestrian || a.path || a.neighbourhood || '';
+    var house  = a.house_number || '';
+    var district = a.suburb || a.city_district || a.city || '';
+    if (street && house) return street + ' ' + house + (district ? ', ' + district : '');
+    if (street) return street + (district ? ', ' + district : '');
+    return (data.display_name || 'Адрес найден').split(',').slice(0, 2).join(',');
+  }
+
+  function reverseGeocode(lat, lon) {
+    if (addrConfirmTxt) addrConfirmTxt.textContent = 'Определяем адрес...';
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json&accept-language=ru&zoom=18')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var txt = formatAddr(data);
+        if (addrConfirmTxt) addrConfirmTxt.textContent = txt;
+        addrConfirm.dataset.address = txt;
+        addrConfirm.dataset.lat = lat;
+        addrConfirm.dataset.lon = lon;
+      })
+      .catch(function() {
+        if (addrConfirmTxt) addrConfirmTxt.textContent = 'Адрес здесь';
+      });
+  }
+
+  function ensureMap() {
+    if (leafletMap || typeof L === 'undefined') {
+      if (leafletMap) leafletMap.invalidateSize();
+      return;
+    }
+    leafletMap = L.map('leafletMap', {
+      center: currentCoords,
+      zoom: 16,
+      zoomControl: false,
+      attributionControl: false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletMap);
+    var pinIcon = L.divIcon({
+      className: 'lf-pin-wrap',
+      html: '<div class="lf-pin-head"></div><div class="lf-pin-shadow"></div>',
+      iconSize: [32, 42],
+      iconAnchor: [16, 38]
+    });
+    leafletMarker = L.marker(currentCoords, { icon: pinIcon }).addTo(leafletMap);
+    leafletMap.on('move', function() {
+      var c = leafletMap.getCenter();
+      leafletMarker.setLatLng(c);
+    });
+    leafletMap.on('moveend', function() {
+      var c = leafletMap.getCenter();
+      currentCoords = [c.lat, c.lng];
+      reverseGeocode(c.lat, c.lng);
+    });
+    setTimeout(function() {
+      leafletMap.invalidateSize();
+      reverseGeocode(currentCoords[0], currentCoords[1]);
+    }, 250);
+  }
+
+  function renderAddrList() {
+    if (!addrList) return;
+    var html = '<div class="addr-item" data-loc="1">' +
+      '<div class="addr-item-icon loc">' + ICON.loc + '</div>' +
+      '<div class="addr-item-body">' +
+        '<div class="addr-item-title">Моё местоположение</div>' +
+        '<div class="addr-item-sub">Использовать геолокацию</div>' +
+      '</div>' + ARROW + '</div>';
+    if (addresses.length) {
+      html += '<div class="addr-sep-line"></div>';
+      html += '<div class="addr-divider">Сохранённые адреса</div>';
+      addresses.forEach(function(a) {
+        var iconKey = ICON[a.type] ? a.type : 'pin';
+        html += '<div class="addr-item" data-id="' + a.id + '">' +
+          '<div class="addr-item-icon ' + iconKey + '">' + ICON[iconKey] + '</div>' +
+          '<div class="addr-item-body">' +
+            '<div class="addr-item-title">' + escNH(a.title) + '</div>' +
+            '<div class="addr-item-sub">' + escNH(a.sub || '') + '</div>' +
+          '</div>' + TRASH + '</div>';
+      });
+    }
+    addrList.innerHTML = html;
+  }
+
+  function openAddrSheet() {
+    addrOverlay.classList.add('show');
+    addrSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderAddrList();
+    setTimeout(ensureMap, 300);
+  }
+  function closeAddrSheet() {
+    addrOverlay.classList.remove('show');
+    addrSheet.classList.remove('show');
+    document.body.style.overflow = '';
+    if (addrSuggest) addrSuggest.classList.remove('show');
+  }
+
+  if (addressLeft) addressLeft.addEventListener('click', openAddrSheet);
+  if (addrClose)   addrClose.addEventListener('click', closeAddrSheet);
+  if (addrOverlay) addrOverlay.addEventListener('click', closeAddrSheet);
+
+  // Search input with debounced Nominatim
+  if (addrInput) addrInput.addEventListener('input', function() {
+    var q = addrInput.value.trim();
+    clearTimeout(searchTimer);
+    if (q.length < 2) {
+      if (addrSuggest) { addrSuggest.classList.remove('show'); addrSuggest.innerHTML = ''; }
+      return;
+    }
+    searchTimer = setTimeout(function() {
+      fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q + ', Tashkent') +
+            '&format=json&accept-language=ru&limit=5')
+        .then(function(r) { return r.json(); })
+        .then(function(results) {
+          if (!results.length || !addrSuggest) {
+            if (addrSuggest) addrSuggest.classList.remove('show');
+            return;
+          }
+          addrSuggest.innerHTML = results.map(function(r) {
+            var name = r.display_name || '';
+            var parts = name.split(',');
+            var head = (parts[0] || name).trim();
+            var rest = parts.slice(1, 3).join(',').trim();
+            return '<div class="addr-suggest-item" data-lat="' + r.lat + '" data-lon="' + r.lon +
+                   '" data-name="' + escNH(head).replace(/"/g, '&quot;') + '">' +
+                   '<b>' + escNH(head) + '</b><span>' + escNH(rest) + '</span></div>';
+          }).join('');
+          addrSuggest.classList.add('show');
+          addrSuggest.querySelectorAll('.addr-suggest-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+              var lat = parseFloat(item.dataset.lat);
+              var lon = parseFloat(item.dataset.lon);
+              currentCoords = [lat, lon];
+              if (leafletMap) leafletMap.setView([lat, lon], 17);
+              addrInput.value = item.dataset.name;
+              addrSuggest.classList.remove('show');
+            });
+          });
+        })
+        .catch(function() {
+          if (addrSuggest) addrSuggest.classList.remove('show');
+        });
+    }, 350);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!addrSuggest) return;
+    if (!e.target.closest('.addr-input-wrap')) addrSuggest.classList.remove('show');
+  });
+
+  if (addrGeoBtn) addrGeoBtn.addEventListener('click', function() {
+    if (!navigator.geolocation || !leafletMap) return;
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      var lat = pos.coords.latitude, lon = pos.coords.longitude;
+      leafletMap.setView([lat, lon], 17);
+    });
+  });
+
+  if (addrConfirm) addrConfirm.addEventListener('click', function() {
+    var txt = addrConfirm.dataset.address || (addrConfirmTxt ? addrConfirmTxt.textContent : '');
+    if (txt && txt !== 'Определяем адрес...') setMainAddress(txt);
+    closeAddrSheet();
+  });
+
+  if (addrSaveBtn) addrSaveBtn.addEventListener('click', function() {
+    var addrText = (addrConfirm && addrConfirm.dataset.address) || (addrConfirmTxt && addrConfirmTxt.textContent) || 'Новый адрес';
+    if (addrText === 'Определяем адрес...') addrText = 'Новый адрес';
+    addresses.push({
+      id: nextId++, type: 'pin',
+      title: addrText,
+      sub: 'Ташкент',
+      lat: currentCoords[0], lon: currentCoords[1]
+    });
+    persistAddresses();
+    renderAddrList();
+    if (typeof showToast === 'function') showToast('Адрес сохранён');
+  });
+
+  if (addrList) addrList.addEventListener('click', function(e) {
+    var del = e.target.closest('.addr-delete-btn');
+    if (del) {
+      e.stopPropagation();
+      var pItem = del.closest('.addr-item');
+      var pid = parseInt(pItem.dataset.id);
+      addresses = addresses.filter(function(a) { return a.id !== pid; });
+      persistAddresses();
+      renderAddrList();
+      return;
+    }
+    var item = e.target.closest('.addr-item');
+    if (!item) return;
+    if (item.dataset.loc) {
+      if (addrGeoBtn) addrGeoBtn.click();
+      return;
+    }
+    var id = parseInt(item.dataset.id);
+    var a = addresses.find(function(x) { return x.id === id; });
+    if (a) {
+      setMainAddress(a.title);
+      if (a.lat && leafletMap) leafletMap.setView([a.lat, a.lon], 17);
+      closeAddrSheet();
+    }
+  });
+
+  // ── Welcome bar ──
+  function showWelcomeBar(addr) {
+    if (!awbBar) return;
+    if (awbAddr) awbAddr.textContent = addr;
+    awbBar.classList.add('show');
+  }
+  function hideWelcomeBar() { if (awbBar) awbBar.classList.remove('show'); }
+  if (awbYes) awbYes.addEventListener('click', function() {
+    setMainAddress(awbAddr ? awbAddr.textContent : currentAddressText);
+    if (awbNameInput && awbNameInput.value.trim()) {
+      addresses.push({
+        id: nextId++, type: 'home',
+        title: awbNameInput.value.trim(),
+        sub: awbAddr ? awbAddr.textContent : '',
+        lat: currentCoords[0], lon: currentCoords[1]
+      });
+      persistAddresses();
+    }
+    hideWelcomeBar();
+  });
+  if (awbNo) awbNo.addEventListener('click', function() {
+    hideWelcomeBar();
+    setTimeout(openAddrSheet, 460);
+  });
+
+  // First-load geolocation → welcome bar
+  setTimeout(function() {
+    if (localStorage.getItem('tg_welcomed')) return;
+    localStorage.setItem('tg_welcomed', '1');
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        var lat = pos.coords.latitude, lon = pos.coords.longitude;
+        currentCoords = [lat, lon];
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json&accept-language=ru')
+          .then(function(r) { return r.json(); })
+          .then(function(data) { showWelcomeBar(formatAddr(data)); })
+          .catch(function() { showWelcomeBar('Ташкент'); });
+      }, function() {}, { timeout: 5000 });
+    }
+  }, 600);
+
+
+  // ════════════════════════════════════════════════
+  //  REELS MODULE
+  // ════════════════════════════════════════════════
+  var reelsScroll  = document.getElementById('reelsScroll');
+  var reelsPlayer  = document.getElementById('reelsPlayer');
+  var rpStage      = document.getElementById('rpStage');
+  var rpMedia      = document.getElementById('rpMedia');
+  var rpProgress   = document.getElementById('rpProgress');
+  var rpClose      = document.getElementById('rpClose');
+  var rpMute       = document.getElementById('rpMute');
+  var rpPrevBtn    = document.getElementById('rpPrev');
+  var rpNextBtn    = document.getElementById('rpNext');
+  var rpAvatar     = document.getElementById('rpAvatar');
+  var rpRestName   = document.getElementById('rpRestName');
+  var rpRestSub    = document.getElementById('rpRestSub');
+  var rpCaption    = document.getElementById('rpCaption');
+  var rpRestBlock  = document.getElementById('rpRest');
+  var rpLike       = document.getElementById('rpLike');
+  var rpLikeNum    = document.getElementById('rpLikeNum');
+  var rpShare      = document.getElementById('rpShare');
+  var rpSave       = document.getElementById('rpSave');
+  var rpCta        = document.getElementById('rpCta');
+
+  var reels = [
+    { id:1, rest:'Beshqozon Plov',    sub:'★ 4.9 · 20–30 мин', avatar:'./img/dish-01.jpg', poster:'./img/dish-01.jpg',
+      caption:'Готовим узбекский плов на дровах. Свежее мясо, рис лазер.', likes:128, seen:false },
+    { id:2, rest:'Khan Atlas',        sub:'★ 4.7 · 25–35 мин', avatar:'./img/dish-04.jpg', poster:'./img/dish-04.jpg',
+      caption:'Тающий во рту шашлык из ягнёнка — фирменный маринад.', likes:312, seen:false },
+    { id:3, rest:'Manti House',       sub:'★ 4.8 · 15–25 мин', avatar:'./img/dish-07.jpg', poster:'./img/dish-07.jpg',
+      caption:'Лепим манты вручную — заходи посмотреть процесс!', likes:97,  seen:false },
+    { id:4, rest:'Sushi Toshkent',    sub:'★ 4.6 · 30–40 мин', avatar:'./img/dish-10.jpg', poster:'./img/dish-10.jpg',
+      caption:'Сет «Дракон» — свежий лосось и хрустящий темпур.', likes:204, seen:true  },
+    { id:5, rest:'Sweet Lab',         sub:'★ 4.9 · 20–30 мин', avatar:'./img/dish-13.jpg', poster:'./img/dish-13.jpg',
+      caption:'Десерты ручной работы. Видео от шеф-кондитера.', likes:411, seen:false },
+    { id:6, rest:'Lepyoshka Master',  sub:'★ 4.7 · 10–20 мин', avatar:'./img/dish-16.jpg', poster:'./img/dish-16.jpg',
+      caption:'Горячая лепёшка прямо из тандыра!', likes:88,  seen:true  }
+  ];
+
+  function renderReelsCards() {
+    if (!reelsScroll) return;
+    var html = '';
+    reels.forEach(function(r) {
+      html += '<div class="reel-card ' + (r.seen ? '' : 'unseen') + '" data-id="' + r.id + '">'
+            +   '<img class="reel-poster" src="' + r.poster + '" alt="' + escNH(r.rest) + '">'
+            +   '<div class="reel-grad"></div>'
+            +   '<div class="reel-avatar"><img src="' + r.avatar + '" alt=""></div>'
+            +   '<div class="reel-views"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3" fill="#000"/></svg>'
+            +     formatViews(r.likes * 8) + '</div>'
+            +   '<div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>'
+            +   '<div class="reel-info">'
+            +     '<div class="reel-name">' + escNH(r.rest) + '</div>'
+            +     '<div class="reel-cap">' + escNH(r.caption.length > 32 ? r.caption.slice(0,30) + '…' : r.caption) + '</div>'
+            +   '</div>'
+            + '</div>';
+    });
+    reelsScroll.innerHTML = html;
+  }
+
+  function formatViews(n) {
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return String(n);
+  }
+
+  // Player state
+  var rpIndex = 0;
+  var rpPaused = false;
+  var rpMuted  = true;
+  var rpTimer  = null;
+  var rpStartTs = 0;
+  var rpElapsed = 0;
+  var RP_DURATION = 6000;
+  var likedSet = {};
+
+  function buildProgress() {
+    var html = '';
+    for (var i = 0; i < reels.length; i++) {
+      html += '<div class="rp-seg"><div class="rp-seg-fill"></div></div>';
+    }
+    rpProgress.innerHTML = html;
+  }
+
+  function setActiveSeg(i) {
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    segs.forEach(function(s, idx) {
+      s.classList.remove('active', 'done', 'paused');
+      if (idx < i) s.classList.add('done');
+    });
+    if (segs[i]) {
+      // force restart animation
+      var fill = segs[i].querySelector('.rp-seg-fill');
+      fill.style.animation = 'none';
+      // trigger reflow
+      void fill.offsetWidth;
+      fill.style.animation = '';
+      segs[i].classList.add('active');
+    }
+  }
+
+  function loadReel(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= reels.length) { closeReels(); return; }
+    rpIndex = idx;
+    var r = reels[idx];
+    r.seen = true;
+
+    rpMedia.innerHTML = '<img src="' + r.poster + '" alt="">';
+    rpMedia.classList.add('playing');
+    rpAvatar.src = r.avatar;
+    rpRestName.textContent = r.rest;
+    rpRestSub.textContent  = r.sub;
+    rpCaption.textContent  = r.caption;
+    var liked = !!likedSet[r.id];
+    rpLike.classList.toggle('liked', liked);
+    rpLikeNum.textContent = r.likes + (liked ? 1 : 0);
+
+    setActiveSeg(idx);
+    rpPaused = false;
+    rpStage.classList.remove('paused');
+    rpStartTs = Date.now();
+    rpElapsed = 0;
+    scheduleAdvance(RP_DURATION);
+  }
+
+  function scheduleAdvance(ms) {
+    clearTimeout(rpTimer);
+    rpTimer = setTimeout(function() {
+      loadReel(rpIndex + 1);
+    }, ms);
+  }
+
+  function pauseReel() {
+    if (rpPaused) return;
+    rpPaused = true;
+    rpStage.classList.add('paused');
+    rpMedia.classList.remove('playing');
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    if (segs[rpIndex]) segs[rpIndex].classList.add('paused');
+    rpElapsed += Date.now() - rpStartTs;
+    clearTimeout(rpTimer);
+  }
+  function resumeReel() {
+    if (!rpPaused) return;
+    rpPaused = false;
+    rpStage.classList.remove('paused');
+    rpMedia.classList.add('playing');
+    var segs = rpProgress.querySelectorAll('.rp-seg');
+    if (segs[rpIndex]) segs[rpIndex].classList.remove('paused');
+    rpStartTs = Date.now();
+    var remaining = Math.max(800, RP_DURATION - rpElapsed);
+    scheduleAdvance(remaining);
+  }
+  function togglePause() { rpPaused ? resumeReel() : pauseReel(); }
+
+  function openReels(startId) {
+    var idx = 0;
+    if (startId != null) {
+      var found = reels.findIndex(function(r) { return r.id === startId; });
+      if (found >= 0) idx = found;
+    }
+    reelsPlayer.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    buildProgress();
+    loadReel(idx);
+  }
+  function closeReels() {
+    reelsPlayer.classList.remove('show');
+    document.body.style.overflow = '';
+    clearTimeout(rpTimer);
+    rpMedia.classList.remove('playing');
+    rpStage.classList.remove('paused');
+    renderReelsCards();
+  }
+
+  // Bind reel card clicks
+  if (reelsScroll) {
+    reelsScroll.addEventListener('click', function(e) {
+      var card = e.target.closest('.reel-card');
+      if (!card) return;
+      openReels(parseInt(card.dataset.id));
+    });
+  }
+
+  // Player buttons
+  if (rpClose) rpClose.addEventListener('click', closeReels);
+  if (rpMute)  rpMute.addEventListener('click', function() {
+    rpMuted = !rpMuted;
+    rpMute.classList.toggle('muted', rpMuted);
+  });
+  if (rpPrevBtn) rpPrevBtn.addEventListener('click', function() { loadReel(rpIndex - 1); });
+  if (rpNextBtn) rpNextBtn.addEventListener('click', function() { loadReel(rpIndex + 1); });
+
+  // Center area pause/play on tap
+  if (rpStage) {
+    var pressTimer = null, pressed = false;
+    rpStage.addEventListener('pointerdown', function(e) {
+      // Skip if target is on a button/zone
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      pressed = true;
+      pressTimer = setTimeout(function() {
+        if (pressed) pauseReel();
+      }, 200);
+    });
+    rpStage.addEventListener('pointerup', function(e) {
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      clearTimeout(pressTimer);
+      if (rpPaused) { resumeReel(); pressed = false; return; }
+      pressed = false;
+    });
+    rpStage.addEventListener('pointercancel', function() {
+      clearTimeout(pressTimer);
+      pressed = false;
+      if (rpPaused) resumeReel();
+    });
+  }
+
+  // Like
+  if (rpLike) rpLike.addEventListener('click', function() {
+    var r = reels[rpIndex];
+    if (!r) return;
+    likedSet[r.id] = !likedSet[r.id];
+    rpLike.classList.toggle('liked', !!likedSet[r.id]);
+    rpLikeNum.textContent = r.likes + (likedSet[r.id] ? 1 : 0);
+  });
+  if (rpShare) rpShare.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Ссылка скопирована');
+  });
+  if (rpSave) rpSave.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Сохранено');
+  });
+  if (rpCta) rpCta.addEventListener('click', closeReels);
+  if (rpRestBlock) rpRestBlock.addEventListener('click', closeReels);
+
+  // Swipe up/down for next/prev
+  if (rpStage) {
+    var swipeStartY = null;
+    rpStage.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+    rpStage.addEventListener('touchend', function(e) {
+      if (swipeStartY == null) return;
+      var endY = (e.changedTouches[0] || {}).clientY || swipeStartY;
+      var dy = endY - swipeStartY;
+      swipeStartY = null;
+      if (Math.abs(dy) < 50) return;
+      if (dy < 0) loadReel(rpIndex + 1);
+      else        loadReel(rpIndex - 1);
+    }, { passive: true });
+  }
+
+  // Esc closes reels
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && reelsPlayer.classList.contains('show')) closeReels();
+    if (!reelsPlayer.classList.contains('show')) return;
+    if (e.key === 'ArrowLeft')  loadReel(rpIndex - 1);
+    if (e.key === 'ArrowRight') loadReel(rpIndex + 1);
+    if (e.key === ' ') { e.preventDefault(); togglePause(); }
+  });
+
+  // initial render
+  renderReelsCards();
+
+  // ════════════════════════════════════════════════
+  //  TABBED SECTIONS — switch panes inside .tabbed-section
+  // ════════════════════════════════════════
+  document.querySelectorAll('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.pane === target); });
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<title>Мероприятие — Togora</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FC3F1D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Togora">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="product-page event-landing">
+
+  <!-- Hero with title overlay -->
+  <div class="event-hero">
+    <img id="eventImg" src="./img/ev-04.jpg" alt="">
+    <div class="event-hero-gradient"></div>
+    <div class="product-hero-top">
+      <button class="ph-btn" id="ph-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+    <div class="event-hero-meta">
+      <span class="event-hero-kicker" id="eventKicker">Национальное торжество</span>
+      <h1 class="event-hero-title" id="eventTitle">Свадьба</h1>
+    </div>
+  </div>
+
+  <!-- Intro card: rich event description (collapsed by default) -->
+  <section class="product-block event-intro">
+    <p class="event-intro-text collapsed" id="eventDesc"></p>
+    <button class="event-intro-toggle" id="eventDescToggle" type="button" hidden>Читать полностью</button>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- Reels (horizontal scroll) -->
+  <section class="event-scroll-section" id="reelsSection">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Атмосфера торжества</h2>
+      <span class="event-section-sub">Рилсы</span>
+    </div>
+    <div class="scroll-x event-reels-scroll" id="eventReelsScroll"></div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- Photo gallery (horizontal scroll) -->
+  <section class="event-scroll-section" id="gallerySection">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Как это выглядит</h2>
+      <span class="event-section-sub">Фото со столов</span>
+    </div>
+    <div class="scroll-x event-gallery-scroll" id="eventGalleryScroll"></div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- Suitable dishes — curated, no filter UI -->
+  <section class="product-block event-dishes">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Блюда для торжества</h2>
+      <span class="event-section-sub" id="dishCount"></span>
+    </div>
+    <div class="mini-grid-2col" id="dishGrid"></div>
+  </section>
+
+</div>
+
+<!-- Lightbox for reel / gallery taps -->
+<div class="event-lb-overlay" id="lbOverlay"></div>
+<div class="event-lb" id="lb" role="dialog" aria-modal="true">
+  <button class="event-lb-close" id="lbClose" type="button" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="event-lb-counter" id="lbCounter" hidden></div>
+  <button class="event-lb-nav prev" id="lbPrev" type="button" aria-label="Предыдущее фото" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="event-lb-nav next" id="lbNext" type="button" aria-label="Следующее фото" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <img class="event-lb-img" id="lbImg" src="" alt="">
+  <div class="event-lb-play" id="lbPlay" hidden>
+    <svg viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 22 12 6 20 6 4"/></svg>
+  </div>
+  <div class="event-lb-caption" id="lbCaption"></div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+
+  <a class="nav-item" href="index.html" data-page="index.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M3 11.5L12 3l9 8.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-8.5z"/>
+      </svg>
+    </div>
+    <span>Главная</span>
+  </a>
+
+  <a class="nav-item" href="restaurants.html" data-page="restaurants.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ni-body" x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/>
+        <rect class="ni-body" x="13" y="13" width="7.5" height="7.5" rx="1.8"/>
+      </svg>
+    </div>
+    <span>Каталог</span>
+  </a>
+
+  <a class="nav-item" href="cart.html" data-page="cart.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="ni-body" d="M5 8h14v12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V8z"/>
+        <path class="ni-line" d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+      </svg>
+    </div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
+    <span>Корзина</span>
+  </a>
+
+  <a class="nav-item" href="profile.html" data-page="profile.html">
+    <div class="nav-dot"></div>
+    <div class="nav-icon">
+      <svg class="nav-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ni-body" cx="12" cy="8" r="4"/>
+        <path class="ni-body" d="M4 21a8 8 0 0 1 16 0v.5H4z"/>
+      </svg>
+    </div>
+    <span>Профиль</span>
+  </a>
+
+</nav>
+
+
+<div class="toast" id="cart-toast" aria-live="polite">
+  <div class="toast-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span class="toast-text"></span>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // Per-event metadata + dishes. Each entry is a small landing's worth of content.
+  var EVENT_CATALOG = {
+    wedding: {
+      title: 'Свадьба',
+      kicker: 'Узбекское торжество',
+      img: './img/ev-04.jpg',
+      desc: 'Туй — главное событие в жизни узбекской семьи. С раннего утра гости собираются на «нахор оши» — утренний свадебный плов из казана, который символизирует начало новой жизни. К полудню на дастархан выходят шашлык из ягнёнка, манты, самса из тандыра и горячие лепёшки. Завершают торжество восточные сладости, чак-чак и крепкий чай. Обычно собирается 30–100 гостей, и каждый должен встать из-за стола сытым.',
+      reels: [
+        { poster: './img/dish-03.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi',  caption: 'Нахор оши с 5 утра — 300 порций',     views: 4200 },
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',   caption: 'Шашлык-банкет на свадьбу',           views: 6800 },
+        { poster: './img/dish-09.jpg', avatar: './img/dish-09.jpg', vendor: 'Manti House',  caption: 'Лепим манты на 50 гостей',           views: 2900 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: '100 самс прямо из тандыра',          views: 3500 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Свадебные лепёшки и патыры',         views: 1800 }
+      ],
+      gallery: [ './img/ev-04.jpg', './img/dish-03.jpg', './img/dish-04.jpg', './img/dish-09.jpg', './img/dish-08.jpg', './img/ev-02.jpg', './img/dish-14.jpg' ],
+      bundles: [
+        { name: 'Свадебный палов-сет',  img: './img/ev-04.jpg',   desc: 'Палов, манты, лепёшки, чай — на 30 гостей', price: 1200000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-банкет',         img: './img/dish-04.jpg', desc: '50 шампуров, 5 видов мяса, гарниры',       price: 2100000, vendor: 'Khan Atlas' }
+      ],
+      items: [
+        { name: 'Свадебный плов',      img: './img/dish-03.jpg', price: 380000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-сет 50 шамп.', img: './img/dish-04.jpg', price: 850000, vendor: 'Khan Atlas' },
+        { name: 'Манты на 30 персон',  img: './img/dish-09.jpg', price: 320000, vendor: 'Manti House' },
+        { name: 'Самса 50 шт',         img: './img/dish-08.jpg', price: 220000, vendor: 'Tandur Master' },
+        { name: 'Лепёшки 30 шт',       img: './img/ev-02.jpg',   price: 180000, vendor: 'Rayhon Milliy' },
+        { name: 'Десертный набор',     img: './img/dish-14.jpg', price: 250000, vendor: 'Sweet Lab' }
+      ]
+    },
+    beshik: {
+      title: 'Бешик туй',
+      kicker: 'Праздник рождения малыша',
+      img: './img/ev-05.jpg',
+      desc: 'Бешик туй — тёплый семейный праздник в честь укладывания ребёнка в традиционную колыбель «бешик». Собираются ближайшие родственники и соседи — 10–20 человек. На стол подают палов в небольшом казане, норин, горячую самсу и свежие лепёшки. Обязательная часть — сладости: чак-чак, парварда и сладкие патыры. Это символ счастливой и сладкой жизни нового члена семьи.',
+      reels: [
+        { poster: './img/ev-05.jpg',   avatar: './img/dish-02.jpg', vendor: 'Beshqozon Plov',caption: 'Палов на 10 персон для бешик туй',  views: 1400 },
+        { poster: './img/dish-17.jpg', avatar: './img/dish-13.jpg', vendor: 'Norin House',   caption: 'Норин-семейный — нарезаем лапшу',   views: 960  },
+        { poster: './img/dish-15.jpg', avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',     caption: 'Чак-чак к колыбельному торжеству',  views: 2100 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master', caption: '20 самс из тандыра',                 views: 1200 }
+      ],
+      gallery: [ './img/ev-05.jpg', './img/dish-02.jpg', './img/dish-17.jpg', './img/dish-08.jpg', './img/dish-15.jpg', './img/dish-14.jpg' ],
+      bundles: [
+        { name: 'Семейный набор',  img: './img/ev-05.jpg',   desc: 'Палов, норин, самса, сладости — на 12 гостей', price: 320000, vendor: 'Beshqozon Plov' }
+      ],
+      items: [
+        { name: 'Палов на 10 персон', img: './img/dish-02.jpg', price: 180000, vendor: 'Beshqozon Plov' },
+        { name: 'Норин-семейный',     img: './img/dish-17.jpg', price: 65000,  vendor: 'Norin House' },
+        { name: 'Самса 20 шт',        img: './img/dish-08.jpg', price: 95000,  vendor: 'Tandur Master' },
+        { name: 'Чак-чак',            img: './img/dish-15.jpg', price: 18000,  vendor: 'Sweet Lab' },
+        { name: 'Сладкая патыр',      img: './img/dish-14.jpg', price: 22000,  vendor: 'Rayhon Milliy' }
+      ]
+    },
+    engagement: {
+      title: 'Помолвка',
+      kicker: 'Встреча двух семей',
+      img: './img/ev-04.jpg',
+      desc: 'Фотиха-туй — торжество, на котором две семьи официально объявляют о помолвке. Это камерный приём для 15–25 близких. На столе обязательно палов, шашлык из ягнёнка, разнообразные закуски, фрукты и восточные десерты. Угощение должно быть достойным — это первая большая встреча будущих сватов, и принимающая сторона старается удивить.',
+      reels: [
+        { poster: './img/dish-03.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Свадебный плов для фотихи',    views: 2200 },
+        { poster: './img/dish-12.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',  caption: 'Шашлык-сет на 15 персон',      views: 3100 },
+        { poster: './img/dish-14.jpg', avatar: './img/dish-14.jpg', vendor: 'Sweet Lab',   caption: 'Десертная тарелка для гостей', views: 1700 }
+      ],
+      gallery: [ './img/ev-04.jpg', './img/dish-03.jpg', './img/dish-12.jpg', './img/dish-14.jpg', './img/dish-15.jpg' ],
+      bundles: [
+        { name: 'Помолвочный набор', img: './img/ev-04.jpg', desc: 'Палов, шашлык, лепёшки, сладости — на 15 гостей', price: 450000, vendor: 'Osh Markazi' }
+      ],
+      items: [
+        { name: 'Свадебный плов',  img: './img/dish-03.jpg', price: 280000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-сет',      img: './img/dish-12.jpg', price: 75000,  vendor: 'Khan Atlas' },
+        { name: 'Десертный набор', img: './img/dish-14.jpg', price: 150000, vendor: 'Sweet Lab' }
+      ]
+    },
+    kuda: {
+      title: 'Куда чакирик',
+      kicker: 'Сбор родственников',
+      img: './img/ev-01.jpg',
+      desc: 'Куда чакирик — традиционное приглашение сватов и близких родственников. Стол скромнее свадебного, но всё важное на месте: горячий палов, шашлык из ягнёнка, лепёшки прямо из тандыра, ачичук-салат и зелёный чай в чайнике. Обычно собираются 10–15 человек ближнего круга — за разговорами засиживаются до позднего вечера.',
+      reels: [
+        { poster: './img/dish-02.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi',  caption: 'Плов из казана для гостей',  views: 1900 },
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',   caption: 'Шашлык из ягнёнка',          views: 2800 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Лепёшки Qo\'qon patir',      views: 1400 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: 'Самса прямо из печи',        views: 1100 }
+      ],
+      gallery: [ './img/ev-01.jpg', './img/dish-02.jpg', './img/dish-04.jpg', './img/ev-02.jpg', './img/dish-08.jpg' ],
+      bundles: [
+        { name: 'Семейный стол', img: './img/ev-01.jpg', desc: 'Палов, шашлык, лепёшки, чай — на 12 гостей', price: 380000, vendor: 'Osh Markazi' }
+      ],
+      items: [
+        { name: 'Osh Palav',         img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык из ягнёнка', img: './img/dish-04.jpg', price: 42000, vendor: 'Khan Atlas' },
+        { name: "Qo'qon patir",      img: './img/ev-02.jpg',   price: 15000, vendor: 'Rayhon Milliy' },
+        { name: 'Самса с мясом',     img: './img/dish-08.jpg', price: 12000, vendor: 'Tandur Master' }
+      ]
+    },
+    kavurdak: {
+      title: 'Кавурдак',
+      kicker: 'Блюдо из казана',
+      img: './img/ev-02.jpg',
+      desc: 'Кавурдак — крестьянское блюдо из казана, которое готовят на больших семейных встречах и пастушеских праздниках. Мясо ягнёнка или говядины долго тушится с картофелем, помидорами, перцем и луком на углях из карагача — 4 часа неспешного огня. Подаётся горячим на большом лягане в центр стола: к нему лепёшки, ачичук-салат и зелёный чай. Хватает на 6–12 человек большой компании.',
+      reels: [
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',  caption: 'Кавурдак готовится 4 часа на углях', views: 5400 },
+        { poster: './img/dish-05.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Кавурдак с молодой картошкой',       views: 2300 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Лепёшки к кавурдаку',              views: 800  }
+      ],
+      gallery: [ './img/ev-02.jpg', './img/dish-04.jpg', './img/dish-05.jpg', './img/dish-06.jpg', './img/dish-08.jpg' ],
+      bundles: [
+        { name: 'Кавурдак-сет на 8 персон', img: './img/dish-04.jpg', desc: 'Кавурдак, лепёшки, ачичук, чай', price: 320000, vendor: 'Khan Atlas' }
+      ],
+      items: [
+        { name: 'Кавурдак из ягнёнка',   img: './img/dish-04.jpg', price: 65000, vendor: 'Khan Atlas' },
+        { name: 'Кавурдак с картофелем', img: './img/dish-05.jpg', price: 55000, vendor: 'Osh Markazi' }
+      ]
+    },
+    navruz: {
+      title: 'Навруз',
+      kicker: 'Праздник весны',
+      img: './img/ev-03.jpg',
+      desc: 'Навруз — праздник весны и Нового года по солнечному календарю, отмечается 21 марта. На дастархан обязательно ставят сумаляк, нишолду и проросшую пшеницу — символы плодородия и достатка. Главное горячее блюдо — сладкий палов с сухофруктами и чесноком, к нему — самса с зеленью, патыры и восточные сладости. На махаллинский Навруз приходят 10–30 соседей и друзей.',
+      reels: [
+        { poster: './img/dish-11.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Сладкий палов с сухофруктами',   views: 3300 },
+        { poster: './img/ev-03.jpg',   avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',   caption: 'Сумаляк — варим всю ночь',       views: 4100 },
+        { poster: './img/dish-15.jpg', avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',   caption: 'Чак-чак к весеннему столу',      views: 1900 },
+        { poster: './img/dish-14.jpg', avatar: './img/dish-14.jpg', vendor: 'Sweet Lab',   caption: 'Сладкая патыр для Навруза',      views: 1200 }
+      ],
+      gallery: [ './img/ev-03.jpg', './img/dish-11.jpg', './img/dish-15.jpg', './img/dish-14.jpg', './img/ev-02.jpg' ],
+      bundles: [
+        { name: 'Сумаляк-сет', img: './img/ev-03.jpg', desc: 'Сумаляк, плов с сухофруктами, патыр, чак-чак', price: 280000, vendor: 'Osh Markazi' }
+      ],
+      items: [
+        { name: 'Сладкий палов', img: './img/dish-11.jpg', price: 27000, vendor: 'Osh Markazi' },
+        { name: 'Чак-чак',       img: './img/dish-15.jpg', price: 18000, vendor: 'Sweet Lab' },
+        { name: 'Сладкая патыр', img: './img/dish-14.jpg', price: 22000, vendor: 'Sweet Lab' }
+      ]
+    },
+    iftar: {
+      title: 'Ифтар',
+      kicker: 'Разговение в Рамадан',
+      img: './img/ev-02.jpg',
+      desc: 'Ифтар — вечернее разговение в священный месяц Рамадан. Начинают традиционно: финик и глоток воды, затем горячий бульон-шурпа. Основное — плов или норин с тандыр-нон, а в завершение обязательно сладкое: щербет, чак-чак, восточные сухофрукты. Готовые наборы привозим точно к закату, чтобы стол был накрыт к азану. Обычно собираются 4–10 близких людей.',
+      reels: [
+        { poster: './img/dish-02.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Плов к ифтару — точно к закату', views: 2700 },
+        { poster: './img/dish-12.jpg', avatar: './img/dish-13.jpg', vendor: 'Norin House', caption: 'Mayda norin для разговения',     views: 1500 },
+        { poster: './img/dish-06.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: 'Тандыр-нон — горячий из печи',  views: 1100 }
+      ],
+      gallery: [ './img/ev-02.jpg', './img/dish-02.jpg', './img/dish-12.jpg', './img/dish-06.jpg', './img/dish-15.jpg' ],
+      bundles: [
+        { name: 'Семейный ифтар', img: './img/ev-02.jpg', desc: 'Финики, бульон, плов, лепёшки, чай — на 6 гостей', price: 220000, vendor: 'Osh Markazi' }
+      ],
+      items: [
+        { name: 'Osh Palav',  img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
+        { name: 'Mayda norin', img: './img/dish-12.jpg', price: 28000, vendor: 'Norin House' },
+        { name: 'Тандыр-нон', img: './img/dish-06.jpg', price: 12000, vendor: 'Tandur Master' }
+      ]
+    }
+  };
+
+  var params = new URLSearchParams(location.search);
+  var type = params.get('type') || 'wedding';
+  var ev = EVENT_CATALOG[type] || EVENT_CATALOG['wedding'];
+
+  document.title = ev.title + ' — Togora';
+  document.getElementById('eventImg').src = ev.img;
+  document.getElementById('eventTitle').textContent = ev.title;
+  document.getElementById('eventKicker').textContent = ev.kicker || 'Национальное торжество';
+  var $desc = document.getElementById('eventDesc');
+  var $descToggle = document.getElementById('eventDescToggle');
+  $desc.textContent = ev.desc;
+  // Show the toggle only when the description is long enough that clamping kicks in
+  requestAnimationFrame(function(){
+    // If the element is actually being clipped, scrollHeight > clientHeight.
+    if ($desc.scrollHeight > $desc.clientHeight + 1) {
+      $descToggle.hidden = false;
+    }
+  });
+  $descToggle.addEventListener('click', function(){
+    var nowCollapsed = $desc.classList.toggle('collapsed');
+    $descToggle.textContent = nowCollapsed ? 'Читать полностью' : 'Свернуть';
+  });
+
+  function esc(s) { return (window.TG && TG.escHTML) ? TG.escHTML(s) : String(s||''); }
+  function escAttr(s) { return esc(s).replace(/"/g,'&quot;'); }
+  function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
+  function pluralDish(n){
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return n + ' блюдо';
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return n + ' блюда';
+    return n + ' блюд';
+  }
+
+  // ---- Reels (horizontal scroll) ----
+  var $reelsScroll = document.getElementById('eventReelsScroll');
+  var $reelsSection = document.getElementById('reelsSection');
+  function formatViews(n) {
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return String(n);
+  }
+  if (ev.reels && ev.reels.length) {
+    $reelsScroll.innerHTML = ev.reels.map(function(r, i) {
+      return '<div class="reel-card" data-i="' + i + '">'
+        +   '<img class="reel-poster" src="' + escAttr(r.poster) + '" alt="' + escAttr(r.vendor) + '">'
+        +   '<div class="reel-grad"></div>'
+        +   '<div class="reel-avatar"><img src="' + escAttr(r.avatar || r.poster) + '" alt=""></div>'
+        +   '<div class="reel-views">'
+        +     '<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3" fill="#000"/></svg>'
+        +     formatViews(r.views || 0)
+        +   '</div>'
+        +   '<div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>'
+        +   '<div class="reel-info">'
+        +     '<div class="reel-name">' + esc(r.vendor) + '</div>'
+        +     '<div class="reel-cap">' + esc(r.caption.length > 32 ? r.caption.slice(0,30) + '…' : r.caption) + '</div>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+    $reelsScroll.addEventListener('click', function(e){
+      var card = e.target.closest('.reel-card');
+      if (!card) return;
+      var r = ev.reels[parseInt(card.dataset.i, 10)];
+      if (r) openLightbox(r.poster, r.vendor + ' · ' + r.caption, true);
+    });
+  } else {
+    $reelsSection.style.display = 'none';
+  }
+
+  // ---- Photo gallery (horizontal scroll) ----
+  var $galleryScroll = document.getElementById('eventGalleryScroll');
+  var $gallerySection = document.getElementById('gallerySection');
+  if (ev.gallery && ev.gallery.length) {
+    var total = ev.gallery.length;
+    // Per-card stack badge: descending counter = photos remaining starting
+    // from this card (incl.), thumbs = next 3 photos (wrap-around). Last
+    // card (remaining = 1) gets no badge — nothing further to preview.
+    function buildBadge(i) {
+      var remaining = total - i;
+      if (total < 2 || remaining < 2) return '';
+      var nThumbs = Math.min(3, remaining - 1);
+      var thumbsHtml = '';
+      for (var j = 1; j <= nThumbs; j++) {
+        var src2 = ev.gallery[(i + j) % total];
+        thumbsHtml += '<div class="gb-thumb" style="background-image:url(\''
+                    + escAttr(src2) + '\')"></div>';
+      }
+      var countText = remaining > 9 ? (remaining - 1) + '+' : String(remaining);
+      return '<div class="gallery-badge-stack" aria-hidden="true">'
+           + '<div class="gb-thumbs">' + thumbsHtml + '</div>'
+           + '<div class="gb-count">' + countText + '</div>'
+           + '</div>';
+    }
+    $galleryScroll.innerHTML = ev.gallery.map(function(src, i) {
+      return '<div class="event-gallery-card" data-i="' + i + '" '
+           + 'style="background-image:url(\'' + escAttr(src) + '\')" '
+           + 'role="button" aria-label="Открыть фото ' + (i+1) + ' из ' + total + '">'
+           + buildBadge(i)
+           + '</div>';
+    }).join('');
+    $galleryScroll.addEventListener('click', function(e){
+      var card = e.target.closest('.event-gallery-card');
+      if (!card) return;
+      var idx = parseInt(card.dataset.i, 10) || 0;
+      openLightbox(ev.gallery[idx], '', false, { gallery: ev.gallery, index: idx });
+    });
+  } else {
+    $gallerySection.style.display = 'none';
+  }
+
+  // ---- Lightbox (single image or gallery with swipe/arrows) ----
+  var $lb        = document.getElementById('lb');
+  var $lbOverlay = document.getElementById('lbOverlay');
+  var $lbImg     = document.getElementById('lbImg');
+  var $lbCaption = document.getElementById('lbCaption');
+  var $lbClose   = document.getElementById('lbClose');
+  var $lbPlay    = document.getElementById('lbPlay');
+  var $lbPrev    = document.getElementById('lbPrev');
+  var $lbNext    = document.getElementById('lbNext');
+  var $lbCounter = document.getElementById('lbCounter');
+
+  // Gallery state — null if single-image mode
+  var lbGallery = null;
+  var lbIndex   = 0;
+
+  function lbUpdateCounter(){
+    if (lbGallery && lbGallery.length > 1) {
+      $lbCounter.hidden = false;
+      $lbCounter.textContent = (lbIndex + 1) + ' / ' + lbGallery.length;
+    } else {
+      $lbCounter.hidden = true;
+    }
+  }
+  function lbGo(delta){
+    if (!lbGallery || lbGallery.length < 2) return;
+    lbIndex = (lbIndex + delta + lbGallery.length) % lbGallery.length;
+    $lbImg.src = lbGallery[lbIndex];
+    lbUpdateCounter();
+  }
+
+  function openLightbox(src, caption, isVideo, opts){
+    opts = opts || {};
+    lbGallery = (opts.gallery && opts.gallery.length) ? opts.gallery.slice() : null;
+    lbIndex   = (opts.index | 0) || 0;
+    $lbImg.src = src;
+    $lbCaption.textContent = caption || '';
+    $lbCaption.style.display = caption ? '' : 'none';
+    $lbPlay.hidden = !isVideo;
+    var hasGallery = !!(lbGallery && lbGallery.length > 1) && !isVideo;
+    $lbPrev.hidden = !hasGallery;
+    $lbNext.hidden = !hasGallery;
+    lbUpdateCounter();
+    $lb.classList.add('open');
+    $lbOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    $lb.classList.remove('open');
+    $lbOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    $lbImg.src = '';
+    lbGallery = null;
+    lbIndex = 0;
+    $lbPrev.hidden = true;
+    $lbNext.hidden = true;
+    $lbCounter.hidden = true;
+  }
+  $lbClose.addEventListener('click', closeLightbox);
+  $lbOverlay.addEventListener('click', closeLightbox);
+  $lbPrev.addEventListener('click', function(e){ e.stopPropagation(); lbGo(-1); });
+  $lbNext.addEventListener('click', function(e){ e.stopPropagation(); lbGo(1); });
+
+  // Touch swipe on the image — left/right swipes navigate the gallery
+  var _touchStartX = 0, _touchStartY = 0, _touching = false;
+  $lbImg.addEventListener('touchstart', function(e){
+    if (e.touches.length !== 1) return;
+    _touchStartX = e.touches[0].screenX;
+    _touchStartY = e.touches[0].screenY;
+    _touching = true;
+  }, { passive: true });
+  $lbImg.addEventListener('touchend', function(e){
+    if (!_touching) return;
+    _touching = false;
+    var t = e.changedTouches[0];
+    var dx = t.screenX - _touchStartX;
+    var dy = t.screenY - _touchStartY;
+    // Only horizontal swipes (ignore vertical scroll-like gestures)
+    if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
+    lbGo(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e){
+    if (!$lb.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    else if (e.key === 'ArrowLeft')  lbGo(-1);
+    else if (e.key === 'ArrowRight') lbGo(1);
+  });
+
+  // ---- Dishes grid ----
+  var grid = document.getElementById('dishGrid');
+  document.getElementById('dishCount').textContent = pluralDish((ev.items || []).length);
+
+  grid.innerHTML = (ev.items || []).map(function(d) {
+    return '<div class="mini-card" data-name="' + escAttr(d.name) +
+           '" data-img="' + escAttr(d.img) + '">' +
+      '<div class="mini-img">' +
+        '<img src="' + d.img + '" alt="">' +
+        '<div class="mini-img-overlay"></div>' +
+        '<button class="add-btn-float" type="button" data-name="' + escAttr(d.name) + '" aria-label="Добавить">' +
+          '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="mini-body">' +
+        '<div class="mini-price">' + fmt(d.price) + '</div>' +
+        '<div class="mini-name">' + esc(d.name) + '</div>' +
+        '<div class="mini-vendor">' + esc(d.vendor) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Card body → product page (skip when tapping +/− or stepper)
+  grid.addEventListener('click', function(e) {
+    if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
+    var card = e.target.closest('.mini-card');
+    if (!card) return;
+    var qs = 'name=' + encodeURIComponent(card.dataset.name) + '&img=' + encodeURIComponent(card.dataset.img);
+    location.href = 'product.html?' + qs;
+  });
+
+  // Shared cart wiring for the mini-card "+ / qty stepper"
+  if (TG.wireMiniCardCart) TG.wireMiniCardCart(grid);
+
+  // ---- Nav cart pill ----
+  function updateCartPill(){
+    var pill = document.getElementById('navCartPill');
+    if (!pill) return;
+    var n = (TG && TG.cartCount) ? TG.cartCount() : 0;
+    if (n > 0) { pill.hidden = false; pill.textContent = n; }
+    else       { pill.hidden = true; }
+  }
+  updateCartPill();
+  window.addEventListener('tg:cart-changed', updateCartPill);
+
+  // ---- Top buttons ----
+  document.getElementById('ph-back').addEventListener('click', function() {
+    if (history.length > 1) history.back();
+    else location.href = 'events.html';
+  });
+  document.getElementById('ph-share').addEventListener('click', function() {
+    if (navigator.share) navigator.share({ title: ev.title, url: location.href }).catch(function() {});
+    else if (window.TG && TG.showToast) TG.showToast('Ссылка скопирована');
+  });
+})();
+</script>
+
+</body>
+</html>

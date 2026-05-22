@@ -69,12 +69,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-html, body { overflow-x: hidden; }
 body {
   font-family: var(--font-main);
   background: var(--color-bg);
   color: var(--color-text);
-  width: 100%;
   max-width: 390px;
   margin: 0 auto;
   min-height: 100vh;

@@ -13,8 +13,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Togora">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-startup-image" href="./splash-ios.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 
@@ -25,106 +23,6 @@
 </head>
 <body>
 
-<!-- ═══ SPLASH (auto-closes after ~2.8s) ═══ -->
-<div id="tg-splash" class="tg-splash" aria-hidden="true">
-  <div class="tg-ring r1"></div>
-  <div class="tg-ring r2"></div>
-  <div class="tg-ring r3"></div>
-
-  <svg class="tg-star s1" viewBox="0 0 30 30" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="6" fill="#8B2E1F" opacity="0.3"/>
-    <circle cx="15" cy="15" r="2" fill="#E8A838"/>
-    <path d="M15,3 L17,11 L15,15 L13,11 Z M15,27 L17,19 L15,15 L13,19 Z M3,15 L11,17 L15,15 L11,13 Z M27,15 L19,17 L15,15 L19,13 Z" fill="#8B2E1F" opacity="0.3"/>
-  </svg>
-  <svg class="tg-star s2" viewBox="0 0 30 30" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="5" fill="#E8A838" opacity="0.4"/>
-  </svg>
-  <svg class="tg-star s3" viewBox="0 0 30 30" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="6" fill="#8B2E1F" opacity="0.25"/>
-    <path d="M15,3 L17,11 L15,15 L13,11 Z M15,27 L17,19 L15,15 L13,19 Z M3,15 L11,17 L15,15 L11,13 Z M27,15 L19,17 L15,15 L19,13 Z" fill="#8B2E1F" opacity="0.25"/>
-  </svg>
-  <svg class="tg-star s4" viewBox="0 0 30 30" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="5" fill="#E8A838" opacity="0.35"/>
-  </svg>
-  <svg class="tg-star s5" viewBox="0 0 30 30" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="4" fill="#8B2E1F" opacity="0.3"/>
-  </svg>
-  <svg class="tg-star s6" viewBox="0 0 30 30" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="15" cy="15" r="4" fill="#8B2E1F" opacity="0.3"/>
-  </svg>
-
-  <div class="tg-logo-wrap">
-    <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="tgSplashBowl" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#F5D547"/>
-          <stop offset="50%" stop-color="#E8A838"/>
-          <stop offset="100%" stop-color="#A86820"/>
-        </radialGradient>
-        <radialGradient id="tgSplashPlov" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stop-color="#F5D547"/>
-          <stop offset="50%" stop-color="#E8A838"/>
-          <stop offset="100%" stop-color="#C44A2C"/>
-        </radialGradient>
-      </defs>
-      <path class="tg-steam-path" d="M 110 85 Q 105 60, 118 35" stroke="#8B2E1F" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
-      <path class="tg-steam-path d2" d="M 150 80 Q 145 50, 160 20" stroke="#8B2E1F" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
-      <path class="tg-steam-path d3" d="M 190 85 Q 185 60, 198 35" stroke="#8B2E1F" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
-      <ellipse cx="150" cy="220" rx="115" ry="8" fill="#1A0F08" opacity="0.15"/>
-      <ellipse cx="150" cy="105" rx="105" ry="20" fill="#FAF6EF" stroke="#A86820" stroke-width="1.5"/>
-      <ellipse cx="150" cy="108" rx="97" ry="15" fill="#5C4033"/>
-      <path d="M 55 105 Q 80 88, 110 95 Q 140 80, 175 92 Q 205 80, 235 95 Q 250 110, 235 115 Q 200 122, 150 122 Q 100 122, 65 115 Q 50 110, 55 105 Z" fill="url(#tgSplashPlov)" opacity="0.95"/>
-      <ellipse cx="125" cy="95" rx="10" ry="5" fill="#6B1E0F" transform="rotate(-15 125 95)"/>
-      <ellipse cx="175" cy="92" rx="10" ry="5" fill="#6B1E0F" transform="rotate(10 175 92)"/>
-      <ellipse cx="205" cy="100" rx="8" ry="4" fill="#6B1E0F"/>
-      <g fill="#FAF6EF" opacity="0.5">
-        <ellipse cx="100" cy="105" rx="2.5" ry="1.3"/>
-        <ellipse cx="130" cy="100" rx="2.5" ry="1.3"/>
-        <ellipse cx="160" cy="100" rx="2.5" ry="1.3"/>
-        <ellipse cx="190" cy="100" rx="2.5" ry="1.3"/>
-        <ellipse cx="220" cy="105" rx="2.5" ry="1.3"/>
-      </g>
-      <path d="M 50 108 Q 50 185, 150 215 Q 250 185, 250 108 Z" fill="url(#tgSplashBowl)" stroke="#6B1E0F" stroke-width="2"/>
-      <path d="M 56 145 Q 62 170, 150 195 Q 238 170, 244 145" fill="none" stroke="#8B2E1F" stroke-width="16"/>
-      <g transform="translate(90, 158)">
-        <circle r="6" fill="#FAF6EF"/>
-        <circle r="2.5" fill="#8B2E1F"/>
-      </g>
-      <g transform="translate(150, 175)">
-        <circle r="8" fill="#FAF6EF"/>
-        <circle r="3.5" fill="#8B2E1F"/>
-        <circle r="1.5" fill="#F5D547"/>
-      </g>
-      <g transform="translate(210, 158)">
-        <circle r="6" fill="#FAF6EF"/>
-        <circle r="2.5" fill="#8B2E1F"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="tg-brand-name">Tog'ora.uz</div>
-  <div class="tg-brand-sub">Традиционные блюда<br>к вашему мероприятию</div>
-</div>
-<script>
-  (function () {
-    var splash = document.getElementById('tg-splash');
-    if (!splash) return;
-    var SHOWN_KEY = 'tg-splash-shown';
-    try {
-      if (sessionStorage.getItem(SHOWN_KEY) === '1') {
-        if (splash.parentNode) splash.parentNode.removeChild(splash);
-        return;
-      }
-      sessionStorage.setItem(SHOWN_KEY, '1');
-    } catch (e) {}
-    document.body.style.overflow = 'hidden';
-    setTimeout(function () { splash.classList.add('hide'); }, 2800);
-    setTimeout(function () {
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-      document.body.style.overflow = '';
-    }, 4000);
-  })();
-</script>
 
 <!-- ═══ HEADER ═══ -->
 <header class="header">
@@ -1514,4 +1412,117 @@
     reelsPlayer.classList.remove('show');
     document.body.style.overflow = '';
     clearTimeout(rpTimer);
-    rpMedia.classList.
+    rpMedia.classList.remove('playing');
+    rpStage.classList.remove('paused');
+    renderReelsCards();
+  }
+
+  // Bind reel card clicks
+  if (reelsScroll) {
+    reelsScroll.addEventListener('click', function(e) {
+      var card = e.target.closest('.reel-card');
+      if (!card) return;
+      openReels(parseInt(card.dataset.id));
+    });
+  }
+
+  // Player buttons
+  if (rpClose) rpClose.addEventListener('click', closeReels);
+  if (rpMute)  rpMute.addEventListener('click', function() {
+    rpMuted = !rpMuted;
+    rpMute.classList.toggle('muted', rpMuted);
+  });
+  if (rpPrevBtn) rpPrevBtn.addEventListener('click', function() { loadReel(rpIndex - 1); });
+  if (rpNextBtn) rpNextBtn.addEventListener('click', function() { loadReel(rpIndex + 1); });
+
+  // Center area pause/play on tap
+  if (rpStage) {
+    var pressTimer = null, pressed = false;
+    rpStage.addEventListener('pointerdown', function(e) {
+      // Skip if target is on a button/zone
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      pressed = true;
+      pressTimer = setTimeout(function() {
+        if (pressed) pauseReel();
+      }, 200);
+    });
+    rpStage.addEventListener('pointerup', function(e) {
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      clearTimeout(pressTimer);
+      if (rpPaused) { resumeReel(); pressed = false; return; }
+      pressed = false;
+    });
+    rpStage.addEventListener('pointercancel', function() {
+      clearTimeout(pressTimer);
+      pressed = false;
+      if (rpPaused) resumeReel();
+    });
+  }
+
+  // Like
+  if (rpLike) rpLike.addEventListener('click', function() {
+    var r = reels[rpIndex];
+    if (!r) return;
+    likedSet[r.id] = !likedSet[r.id];
+    rpLike.classList.toggle('liked', !!likedSet[r.id]);
+    rpLikeNum.textContent = r.likes + (likedSet[r.id] ? 1 : 0);
+  });
+  if (rpShare) rpShare.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Ссылка скопирована');
+  });
+  if (rpSave) rpSave.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Сохранено');
+  });
+  if (rpCta) rpCta.addEventListener('click', closeReels);
+  if (rpRestBlock) rpRestBlock.addEventListener('click', closeReels);
+
+  // Swipe up/down for next/prev
+  if (rpStage) {
+    var swipeStartY = null;
+    rpStage.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+    rpStage.addEventListener('touchend', function(e) {
+      if (swipeStartY == null) return;
+      var endY = (e.changedTouches[0] || {}).clientY || swipeStartY;
+      var dy = endY - swipeStartY;
+      swipeStartY = null;
+      if (Math.abs(dy) < 50) return;
+      if (dy < 0) loadReel(rpIndex + 1);
+      else        loadReel(rpIndex - 1);
+    }, { passive: true });
+  }
+
+  // Esc closes reels
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && reelsPlayer.classList.contains('show')) closeReels();
+    if (!reelsPlayer.classList.contains('show')) return;
+    if (e.key === 'ArrowLeft')  loadReel(rpIndex - 1);
+    if (e.key === 'ArrowRight') loadReel(rpIndex + 1);
+    if (e.key === ' ') { e.preventDefault(); togglePause(); }
+  });
+
+  // initial render
+  renderReelsCards();
+
+  // ════════════════════════════════════════════════
+  //  TABBED SECTIONS — switch panes inside .tabbed-section
+  // ════════════════════════════════════════
+  document.querySelectorAll('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.pane === target); });
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

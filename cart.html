@@ -113,8 +113,16 @@
     'norin-mahalla': { name: 'Norin Mahalla',  minOrder: 35000, status: 'open' },
     'sweet-tashkent':{ name: 'Sweet Tashkent', minOrder: 15000, status: 'open' }
   };
-  function vendor(id){
-    return VENDORS[id] || { name: id, minOrder: 0, status: 'open' };
+  // Lookup vendor — falls back to whatever name the item brought along
+  // (so items added from catalog pages still get a readable label and
+  // a sane default minOrder/status).
+  function vendor(id, fallbackName){
+    if (VENDORS[id]) return VENDORS[id];
+    return { name: fallbackName || id, minOrder: 0, status: 'open' };
+  }
+  function vendorForItem(id, list){
+    var fb = (list && list[0] && list[0].vendorName) || id;
+    return vendor(id, fb);
   }
 
   var KEY = 'tg-cart';
@@ -328,13 +336,7 @@
         +   '<h2 class="cart-empty-title">Корзина пуста</h2>'
         +   '<p class="cart-empty-text">Здесь появятся блюда, которые вы захотите заказать. Загляните в каталог — там много вкусного.</p>'
         +   '<a class="cart-empty-btn" href="restaurants.html">Перейти к ресторанам</a>'
-        + '</section>'
-        + '<div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:0 16px 24px">'
-        +   '<a class="filter-action-btn" href="?demo=single">Демо: 1 ресторан</a>'
-        +   '<a class="filter-action-btn" href="?demo=multi">Демо: 2 ресторана</a>'
-        +   '<a class="filter-action-btn" href="?demo=minwarn">Демо: мин. заказ</a>'
-        +   '<a class="filter-action-btn" href="?demo=closed">Демо: закрыт</a>'
-        + '</div>';
+        + '</section>';
       return;
     }
 
@@ -344,36 +346,28 @@
     var grouped = groupByVendor(items);
     var vendorIds = grouped.order;
     var groups = grouped.map;
-    var multi = vendorIds.length > 1;
 
-    if (multi) {
-      $tabs.hidden = false;
-      var active = getActiveVendor(vendorIds);
-      $tabs.innerHTML = vendorIds.map(function(vId){
-        var list = groups[vId];
-        var v = vendor(vId);
-        var sub = vendorSubtotal(list);
-        var cls = (vId === active) ? ' active' : '';
-        return '<button class="cart-vendor-tab' + cls + '" data-vid="' + escH(vId) + '" type="button">'
-          + '<div class="cvt-name">' + escH(v.name) + '</div>'
-          + '<div class="cvt-sub">' + fmtMoney(sub) + '</div>'
-          + '</button>';
-      }).join('');
-    } else {
-      $tabs.hidden = true;
-    }
+    // Always render vendor tabs — even when there's only one vendor in cart
+    $tabs.hidden = false;
+    var active = getActiveVendor(vendorIds);
+    $tabs.innerHTML = vendorIds.map(function(vId){
+      var list = groups[vId];
+      var v = vendorForItem(vId, list);
+      var sub = vendorSubtotal(list);
+      var cls = (vId === active) ? ' active' : '';
+      return '<button class="cart-vendor-tab' + cls + '" data-vid="' + escH(vId) + '" type="button">'
+        + '<div class="cvt-name">' + escH(v.name) + '</div>'
+        + '<div class="cvt-sub">' + fmtMoney(sub) + '</div>'
+        + '</button>';
+    }).join('');
 
-    var renderVendor = multi ? getActiveVendor(vendorIds) : vendorIds[0];
+    var renderVendor = getActiveVendor(vendorIds);
     var list = groups[renderVendor];
-    var v = vendor(renderVendor);
+    var v = vendorForItem(renderVendor, list);
     var sub = vendorSubtotal(list);
     var blocked = vendorBlocked(renderVendor, list);
 
     var html = '<section class="cart-vendor" data-vendor="' + escH(renderVendor) + '">';
-    html += ''
-      + '<div class="cart-vendor-head">'
-      +   '<a class="cart-vendor-name" href="restaurant.html?name=' + encodeURIComponent(v.name) + '">' + escH(v.name) + '</a>'
-      + '</div>';
     if (v.status === 'closed'){
       html += '<div class="cart-vendor-closed">Ресторан сейчас закрыт. Заказ невозможно оформить.</div>';
     }
@@ -578,10 +572,9 @@
     if (!items.length) return;
     var grouped = groupByVendor(items);
     var vendorIds = grouped.order;
-    var multi = vendorIds.length > 1;
-    var activeId = multi ? getActiveVendor(vendorIds) : vendorIds[0];
+    var activeId = getActiveVendor(vendorIds);
     var list = grouped.map[activeId];
-    var v = vendor(activeId);
+    var v = vendorForItem(activeId, list);
     var b = vendorBlocked(activeId, list);
     if (b === 'closed'){
       showModal({

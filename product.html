@@ -322,29 +322,31 @@
       TG.showToast('Ссылка скопирована');
     }
   });
-  document.getElementById('ph-fav').addEventListener('click', function() {
-    var btn = document.getElementById('ph-fav');
-    btn.classList.toggle('active');
-    TG.showToast(btn.classList.contains('active') ? 'Добавлено в избранное' : 'Удалено из избранного');
+  // ───── Favorite (heart) ─────
+  var favBtn = document.getElementById('ph-fav');
+  var favItem = {
+    name:  product._name,
+    img:   product.img,
+    price: product.price,
+    vendorName: product.vendor
+  };
+  if (TG.favHas(favItem)) favBtn.classList.add('active');
+  favBtn.addEventListener('click', function() {
+    var nowFav = TG.favToggle(favItem);
+    favBtn.classList.toggle('active', nowFav);
+    TG.showToast(nowFav ? 'Добавлено в избранное' : 'Удалено из избранного');
   });
 
   // ───── Add to cart ─────
   document.getElementById('productAddBtn').addEventListener('click', function() {
-    var total = product.price * qty;
+    TG.cartAdd({
+      name: product._name,
+      img: product.img,
+      price: product.price,
+      vendorName: product.vendor,
+      qty: qty
+    });
     TG.showToast(product._name + ' × ' + qty + ' — добавлено');
-    try {
-      var cart = JSON.parse(localStorage.getItem('tg_cart') || '[]');
-      cart.push({
-        name: product._name,
-        img: product.img,
-        vendor: product.vendor,
-        unitPrice: product.price,
-        qty: qty,
-        total: total,
-        ts: Date.now()
-      });
-      localStorage.setItem('tg_cart', JSON.stringify(cart));
-    } catch (e) {}
     if (TG.playNotifSound) TG.playNotifSound();
   });
 

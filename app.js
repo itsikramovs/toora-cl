@@ -136,7 +136,7 @@ window.TG = (function() {
   function registerSW() {
     if (!('serviceWorker' in navigator)) return;
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js?v=54').then(function(reg) {
+      navigator.serviceWorker.register('./sw.js?v=59').then(function(reg) {
         if (reg.waiting) reg.waiting.postMessage({ type: 'skip-waiting' });
         reg.addEventListener('updatefound', function() {
           var nw = reg.installing;
@@ -267,11 +267,245 @@ window.TG = (function() {
     showToast('Новое уведомление: ' + item.title);
   }
 
+  // ════════════════════════════════════════════════
+  //  CART — shared add/remove/count helpers
+  //  storage key: 'tg-cart'  (also read by cart.html)
+  //  schema: [{ id, name, img, price, qty, vendorId, vendorName }]
+  // ════════════════════════════════════════════════
+  var CART_KEY = 'tg-cart';
+  var FAV_KEY  = 'tg-favorites';
+
+  // ─── Favorites API ───
+  function favLoad() {
+    try {
+      var s = localStorage.getItem(FAV_KEY);
+      if (!s) return [];
+      var arr = JSON.parse(s);
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function favSave(arr) {
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(arr || [])); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent('tg:fav-changed')); } catch (e) {}
+  }
+  function favId(item) {
+    return (item && (item.id || (item.name && cartSlug(item.name)))) || '';
+  }
+  function favHas(idOrItem) {
+    var id = typeof idOrItem === 'string' ? idOrItem : favId(idOrItem);
+    if (!id) return false;
+    return favLoad().some(function (it) { return favId(it) === id; });
+  }
+  function favRemove(idOrItem) {
+    var id = typeof idOrItem === 'string' ? idOrItem : favId(idOrItem);
+    if (!id) return;
+    var items = favLoad().filter(function (it) { return favId(it) !== id; });
+    favSave(items);
+  }
+  /** Toggle a product in favorites. Returns true if it's now favorited, false otherwise. */
+  function favToggle(item) {
+    if (!item || !item.name) return false;
+    var id = favId(item);
+    var items = favLoad();
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (favId(items[i]) === id) { idx = i; break; }
+    }
+    if (idx >= 0) {
+      items.splice(idx, 1);
+      favSave(items);
+      return false;
+    }
+    items.unshift({
+      id:    id,
+      name:  item.name,
+      img:   item.img || '',
+      price: Number(item.price) || 0,
+      vendorName: item.vendorName || item.vendor || ''
+    });
+    favSave(items);
+    return true;
+  }
+  function favCount() { return favLoad().length; }
+
+  function cartSlug(s) {
+    return String(s || '')
+      .toLowerCase()
+      .replace(/['`’]/g, '')
+      .replace(/[^a-z0-9а-яё]+/gi, '-')
+      .replace(/^-+|-+$/g, '') || 'unknown';
+  }
+  function cartParsePrice(s) {
+    var n = String(s || '').replace(/[^\d]/g, '');
+    return n ? parseInt(n, 10) : 0;
+  }
+  function cartLoad() {
+    try {
+      var s = localStorage.getItem(CART_KEY);
+      if (!s) return [];
+      var arr = JSON.parse(s);
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function cartSave(items) {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent('tg:cart-changed')); } catch (e) {}
+    cartUpdateNavPill();
+  }
+  function cartCount() {
+    return cartLoad().reduce(function (s, i) { return s + (Number(i.qty) || 0); }, 0);
+  }
+  function cartUpdateNavPill() {
+    var pill = document.querySelector('.bottom-nav .cart-pill');
+    if (!pill) return;
+    var n = cartCount();
+    if (n > 0) {
+      pill.hidden = false;
+      pill.textContent = String(n);
+      pill.classList.remove('hidden');
+    } else {
+      pill.hidden = true;
+      pill.textContent = '0';
+    }
+  }
+  /**
+   * Add an item to the cart (or +1 qty if already there).
+   * item: { name, img, price, vendorName, vendorId?, id?, qty? }
+   *  - vendorId is auto-derived from vendorName if missing
+   *  - id falls back to the name (so two cards w/ same name+vendor merge)
+   */
+  function cartAdd(item) {
+    if (!item || !item.name) return;
+    var vendorName = item.vendorName || item.vendor || 'Togora';
+    var vendorId   = item.vendorId  || cartSlug(vendorName);
+    var id   = item.id || cartSlug(item.name);
+    var price = Number(item.price) || 0;
+    var qty   = Math.max(1, Number(item.qty) || 1);
+
+    var items = cartLoad();
+    var existing = null;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].vendorId === vendorId && (items[i].id === id || items[i].name === item.name)) {
+        existing = items[i]; break;
+      }
+    }
+    if (existing) {
+      existing.qty = (Number(existing.qty) || 0) + qty;
+    } else {
+      items.push({
+        id: id,
+        name: item.name,
+        img: item.img || '',
+        price: price,
+        qty: qty,
+        vendorId: vendorId,
+        vendorName: vendorName
+      });
+    }
+    cartSave(items);
+  }
+  function cartChange(vendorId, id, delta) {
+    var items = cartLoad();
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].vendorId === vendorId && items[i].id === id) {
+        items[i].qty = (Number(items[i].qty) || 0) + delta;
+        if (items[i].qty <= 0) items.splice(i, 1);
+        break;
+      }
+    }
+    cartSave(items);
+  }
+  function cartFindQty(vendorId, id) {
+    var items = cartLoad();
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].vendorId === vendorId && items[i].id === id) {
+        return Number(items[i].qty) || 0;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Wire mini-cards on a container so the + button stores into the real cart.
+   * Container: parent element holding `.mini-card` cards. Each card must have:
+   *   .mini-name, .mini-vendor (optional, falls back to opts.vendorName),
+   *   .mini-price, .mini-img > img, and a `.add-btn-float` button.
+   * The handler converts + → qty-stepper inline; pressing − below 1 restores +.
+   */
+  function wireMiniCardCart(container, opts) {
+    if (!container) return;
+    opts = opts || {};
+    container.addEventListener('click', function (e) {
+      var card = e.target.closest('.mini-card');
+      var add  = e.target.closest('.add-btn-float');
+      var qsBtn = e.target.closest('.qs-btn');
+
+      // + button → add to cart, swap to stepper
+      if (add && card) {
+        e.preventDefault();
+        e.stopPropagation();
+        var name   = (card.querySelector('.mini-name')   || {}).textContent || add.dataset.name || 'Блюдо';
+        var vName  = (card.querySelector('.mini-vendor') || {}).textContent || opts.vendorName || 'Togora';
+        var pTxt   = (card.querySelector('.mini-price')  || {}).textContent || '0';
+        var img    = (card.querySelector('.mini-img img') || {}).getAttribute ? card.querySelector('.mini-img img').getAttribute('src') : '';
+        var price  = cartParsePrice(pTxt);
+        cartAdd({ name: name, img: img, price: price, vendorName: vName });
+        var stepper = document.createElement('div');
+        stepper.className = 'qty-stepper';
+        stepper.dataset.name = name;
+        stepper.dataset.vendor = vName;
+        stepper.innerHTML =
+          '<button class="qs-btn qs-minus" type="button" aria-label="Меньше">−</button>' +
+          '<span class="qs-count">1</span>' +
+          '<button class="qs-btn qs-plus" type="button" aria-label="Больше">+</button>';
+        add.replaceWith(stepper);
+        showToast(name + ' — добавлено');
+        return;
+      }
+
+      // stepper +/−
+      if (qsBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        var stepper2 = qsBtn.closest('.qty-stepper');
+        if (!stepper2) return;
+        var card2 = qsBtn.closest('.mini-card');
+        var name2 = stepper2.dataset.name || ((card2 && card2.querySelector('.mini-name') || {}).textContent) || 'Блюдо';
+        var vendor2 = stepper2.dataset.vendor || ((card2 && card2.querySelector('.mini-vendor') || {}).textContent) || opts.vendorName || 'Togora';
+        var vId = cartSlug(vendor2);
+        var id  = cartSlug(name2);
+        var countEl = stepper2.querySelector('.qs-count');
+        var n = parseInt(countEl.textContent, 10) || 0;
+        if (qsBtn.classList.contains('qs-plus'))  { n += 1; cartChange(vId, id, +1); }
+        if (qsBtn.classList.contains('qs-minus')) {
+          n -= 1; cartChange(vId, id, -1);
+          if (n <= 0) {
+            var add2 = document.createElement('button');
+            add2.className = 'add-btn-float';
+            add2.type = 'button';
+            add2.dataset.name = name2;
+            add2.setAttribute('aria-label','Добавить');
+            add2.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+            stepper2.replaceWith(add2);
+            return;
+          }
+        }
+        countEl.textContent = String(n);
+        return;
+      }
+    });
+  }
+
   function init() {
     setBottomNavActive();
     updateBellBadge();
     registerSW();
     scheduleRandomAutoNotif(30000);
+    cartUpdateNavPill();
+    window.addEventListener('tg:cart-changed', cartUpdateNavPill);
+    window.addEventListener('storage', function (e) {
+      if (e.key === CART_KEY) cartUpdateNavPill();
+    });
   }
 
   if (document.readyState === 'loading') {
@@ -295,7 +529,25 @@ window.TG = (function() {
     fireRandomAutoNotif: fireRandomAutoNotif,
     NICON: NICON,
     DEFAULT_NOTIFICATIONS: DEFAULT_NOTIFICATIONS,
-    AUTO_NOTIF_POOL: AUTO_NOTIF_POOL
+    AUTO_NOTIF_POOL: AUTO_NOTIF_POOL,
+    // ── Cart API ──
+    cartLoad: cartLoad,
+    cartSave: cartSave,
+    cartAdd: cartAdd,
+    cartChange: cartChange,
+    cartCount: cartCount,
+    cartFindQty: cartFindQty,
+    cartParsePrice: cartParsePrice,
+    cartSlug: cartSlug,
+    cartUpdateNavPill: cartUpdateNavPill,
+    wireMiniCardCart: wireMiniCardCart,
+    // ── Favorites API ──
+    favLoad: favLoad,
+    favSave: favSave,
+    favHas: favHas,
+    favToggle: favToggle,
+    favRemove: favRemove,
+    favCount: favCount
   };
 
 })();

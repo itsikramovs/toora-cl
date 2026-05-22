@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Togora">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -75,16 +77,11 @@
     <div class="checkout-order" id="orderItems"></div>
   </section>
 
-  <!-- ===== COMMENTS ===== -->
+  <!-- ===== COMMENT ===== -->
   <section class="checkout-block">
-    <div class="checkout-block-title">Комментарии</div>
+    <div class="checkout-block-title">Комментарий</div>
     <div class="checkout-field">
-      <label class="checkout-field-label" for="commentCourier">Курьеру</label>
-      <textarea class="checkout-textarea" id="commentCourier" placeholder="Например: позвонить за 10 минут до приезда"></textarea>
-    </div>
-    <div class="checkout-field">
-      <label class="checkout-field-label" for="commentRestaurant">Ресторану</label>
-      <textarea class="checkout-textarea" id="commentRestaurant" placeholder="Например: без лука, побольше соуса"></textarea>
+      <textarea class="checkout-textarea" id="commentCourier" placeholder="Например: позвонить за 10 минут до приезда, без лука"></textarea>
     </div>
   </section>
 
@@ -110,30 +107,45 @@
   </button>
 </div>
 
-<!-- Address-edit bottom sheet -->
-<div class="filter-overlay" id="addrOverlay"></div>
-<aside class="filter-sheet filter-sheet--blocks" id="addrSheet" aria-modal="true">
-  <div class="fbs-head">
-    <div class="filter-sheet-title">Адрес доставки</div>
-    <button class="fbs-close" id="addrClose" type="button" aria-label="Закрыть">
+<!-- ═══ ADDRESS SHEET (map + search + saved addresses) ═══ -->
+<div class="addr-overlay" id="addrOverlay"></div>
+<div class="addr-sheet" id="addrSheet" role="dialog" aria-label="Выбор адреса">
+
+  <div class="addr-handle"></div>
+
+  <div class="addr-sheet-head">
+    <div class="addr-sheet-title">Куда доставить?</div>
+    <button class="addr-close-btn" id="addrClose" aria-label="Закрыть">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
-  <div class="fbs-body">
-    <div class="checkout-field" style="margin-top:8px">
-      <label class="checkout-field-label" for="addrStreet">Улица и дом</label>
-      <input class="checkout-input" type="text" id="addrStreet" placeholder="ул. Амира Темура, 12">
+
+  <!-- Search -->
+  <div class="addr-search-wrap">
+    <div class="addr-input-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="addr-search-input" type="text" placeholder="Улица, дом, район..." id="addrInput" autocomplete="off">
+      <div class="addr-suggest-list" id="addrSuggestList"></div>
     </div>
-    <div class="checkout-field">
-      <label class="checkout-field-label" for="addrApt">Квартира / офис</label>
-      <input class="checkout-input" type="text" id="addrApt" placeholder="кв. 45">
-    </div>
+    <button class="addr-save-btn" id="addrSaveBtn">Сохранить как новый адрес</button>
   </div>
-  <div class="fbs-foot">
-    <button class="fbs-btn fbs-btn-reset" id="addrCancel" type="button">Отмена</button>
-    <button class="fbs-btn fbs-btn-apply" id="addrSave" type="button">Сохранить</button>
+
+  <!-- Interactive Leaflet Map -->
+  <div class="addr-map">
+    <div id="leafletMap"></div>
+    <button class="addr-geo-btn" id="addrGeoBtn" title="Моё местоположение">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9"/></svg>
+    </button>
+    <button class="addr-map-confirm" id="addrConfirm">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="var(--color-orange)"/></svg>
+      <span id="addrConfirmText">Определяем адрес...</span>
+    </button>
   </div>
-</aside>
+
+  <!-- Address list — rendered by JS -->
+  <div class="addr-list" id="addrList"></div>
+
+</div>
 
 <!-- Success modal -->
 <div class="cart-modal-overlay" id="successOverlay"></div>
@@ -236,20 +248,12 @@
   var $orderItems = document.getElementById('orderItems');
   var $composeTitle = document.getElementById('composeTitle');
   var $commentCourier = document.getElementById('commentCourier');
-  var $commentRest = document.getElementById('commentRestaurant');
   var $promoInput = document.getElementById('promoInput');
   var $promoApply = document.getElementById('promoApply');
   var $promoMsg = document.getElementById('promoMsg');
   var $cptAmount = document.getElementById('cptAmount');
   var $placeBtn = document.getElementById('placeBtn');
   var $addressRow = document.getElementById('addressRow');
-  var $addrOverlay = document.getElementById('addrOverlay');
-  var $addrSheet = document.getElementById('addrSheet');
-  var $addrStreet = document.getElementById('addrStreet');
-  var $addrApt = document.getElementById('addrApt');
-  var $addrCancel = document.getElementById('addrCancel');
-  var $addrSave = document.getElementById('addrSave');
-  var $addrClose = document.getElementById('addrClose');
   var $successOv = document.getElementById('successOverlay');
   var $successModal = document.getElementById('successModal');
   var $successText = document.getElementById('successText');
@@ -258,38 +262,270 @@
   // ---- State ----
   var state = {
     selectedDay: 0,        // 0..6 (offset from today)
-    selectedSlot: 'asap',
+    selectedSlot: null,
     payment: 'card-9957',
     promoCode: '',
     promoApplied: false,
     promoDiscount: 0
   };
 
-  // ---- Address ----
+  // ====================================================
+  //  ADDRESS MODULE — Leaflet + Nominatim + saved CRUD
+  //  (mirrors the home page sheet so the experience is the same)
+  // ====================================================
+  var addrOverlay    = document.getElementById('addrOverlay');
+  var addrSheet      = document.getElementById('addrSheet');
+  var addrClose      = document.getElementById('addrClose');
+  var addrInput      = document.getElementById('addrInput');
+  var addrSaveBtn    = document.getElementById('addrSaveBtn');
+  var addrList       = document.getElementById('addrList');
+  var addrConfirm    = document.getElementById('addrConfirm');
+  var addrConfirmTxt = document.getElementById('addrConfirmText');
+  var addrSuggest    = document.getElementById('addrSuggestList');
+  var addrGeoBtn     = document.getElementById('addrGeoBtn');
+
+  var currentAddressText = address.street + (address.apt ? ', ' + address.apt : '');
+  var currentCoords = [41.299496, 69.279737]; // Tashkent center
+  var leafletMap = null, leafletMarker = null;
+  var searchTimer = null;
+
+  var savedAddresses = [];
+  var nextAddrId = 1;
+  try {
+    var raw = JSON.parse(localStorage.getItem('tg_addresses') || 'null');
+    if (Array.isArray(raw) && raw.length) {
+      savedAddresses = raw;
+      nextAddrId = savedAddresses.reduce(function(m, a){ return Math.max(m, a.id||0); }, 0) + 1;
+    }
+  } catch(e){}
+  function persistAddresses(){
+    try { localStorage.setItem('tg_addresses', JSON.stringify(savedAddresses)); } catch(e){}
+  }
+
+  var ADDR_ICONS = {
+    pin:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    loc:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M5 10v10h14V10"/></svg>',
+    work: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>'
+  };
+  var ADDR_ARROW = '<div class="addr-item-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>';
+  var ADDR_TRASH = '<button class="addr-delete-btn" title="Удалить"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>';
+
   function renderAddress(){
-    $addressValue.textContent = address.street + (address.apt ? ', ' + address.apt : '');
+    $addressValue.textContent = currentAddressText;
   }
-  renderAddress();
-  $addressRow.addEventListener('click', function(){
-    $addrStreet.value = address.street || '';
-    $addrApt.value    = address.apt || '';
-    $addrOverlay.classList.add('show');
-    $addrSheet.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  });
-  function closeAddr(){
-    $addrOverlay.classList.remove('show');
-    $addrSheet.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-  $addrOverlay.addEventListener('click', closeAddr);
-  $addrClose.addEventListener('click', closeAddr);
-  $addrCancel.addEventListener('click', closeAddr);
-  $addrSave.addEventListener('click', function(){
-    address = { street: $addrStreet.value.trim() || 'ул. Амира Темура, 12', apt: $addrApt.value.trim() };
+  function setMainAddress(text){
+    currentAddressText = text;
+    address = { street: text, apt: '' };
     saveAddress(address);
     renderAddress();
-    closeAddr();
+  }
+  renderAddress();
+
+  function formatAddr(data){
+    if (!data) return 'Адрес не найден';
+    var a = data.address || {};
+    var street = a.road || a.pedestrian || a.path || a.neighbourhood || '';
+    var house  = a.house_number || '';
+    var district = a.suburb || a.city_district || a.city || '';
+    if (street && house) return street + ' ' + house + (district ? ', ' + district : '');
+    if (street) return street + (district ? ', ' + district : '');
+    return (data.display_name || 'Адрес найден').split(',').slice(0, 2).join(',');
+  }
+
+  function reverseGeocode(lat, lon){
+    if (addrConfirmTxt) addrConfirmTxt.textContent = 'Определяем адрес...';
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json&accept-language=ru&zoom=18')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var txt = formatAddr(data);
+        if (addrConfirmTxt) addrConfirmTxt.textContent = txt;
+        addrConfirm.dataset.address = txt;
+        addrConfirm.dataset.lat = lat;
+        addrConfirm.dataset.lon = lon;
+      })
+      .catch(function(){
+        if (addrConfirmTxt) addrConfirmTxt.textContent = 'Адрес здесь';
+      });
+  }
+
+  function ensureMap(){
+    if (leafletMap || typeof L === 'undefined') {
+      if (leafletMap) leafletMap.invalidateSize();
+      return;
+    }
+    leafletMap = L.map('leafletMap', {
+      center: currentCoords,
+      zoom: 16,
+      zoomControl: false,
+      attributionControl: false
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletMap);
+    var pinIcon = L.divIcon({
+      className: 'lf-pin-wrap',
+      html: '<div class="lf-pin-head"></div><div class="lf-pin-shadow"></div>',
+      iconSize: [32, 42],
+      iconAnchor: [16, 38]
+    });
+    leafletMarker = L.marker(currentCoords, { icon: pinIcon }).addTo(leafletMap);
+    leafletMap.on('move', function(){
+      var c = leafletMap.getCenter();
+      leafletMarker.setLatLng(c);
+    });
+    leafletMap.on('moveend', function(){
+      var c = leafletMap.getCenter();
+      currentCoords = [c.lat, c.lng];
+      reverseGeocode(c.lat, c.lng);
+    });
+    setTimeout(function(){
+      leafletMap.invalidateSize();
+      reverseGeocode(currentCoords[0], currentCoords[1]);
+    }, 250);
+  }
+
+  function renderAddrList(){
+    if (!addrList) return;
+    var html = '<div class="addr-item" data-loc="1">' +
+      '<div class="addr-item-icon loc">' + ADDR_ICONS.loc + '</div>' +
+      '<div class="addr-item-body">' +
+        '<div class="addr-item-title">Моё местоположение</div>' +
+        '<div class="addr-item-sub">Использовать геолокацию</div>' +
+      '</div>' + ADDR_ARROW + '</div>';
+    if (savedAddresses.length) {
+      html += '<div class="addr-sep-line"></div>';
+      html += '<div class="addr-divider">Сохранённые адреса</div>';
+      savedAddresses.forEach(function(a){
+        var key = ADDR_ICONS[a.type] ? a.type : 'pin';
+        html += '<div class="addr-item" data-id="' + a.id + '">' +
+          '<div class="addr-item-icon ' + key + '">' + ADDR_ICONS[key] + '</div>' +
+          '<div class="addr-item-body">' +
+            '<div class="addr-item-title">' + escH(a.title) + '</div>' +
+            '<div class="addr-item-sub">' + escH(a.sub || '') + '</div>' +
+          '</div>' + ADDR_TRASH + '</div>';
+      });
+    }
+    addrList.innerHTML = html;
+  }
+
+  function openAddrSheet(){
+    addrOverlay.classList.add('show');
+    addrSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderAddrList();
+    setTimeout(ensureMap, 300);
+  }
+  function closeAddrSheet(){
+    addrOverlay.classList.remove('show');
+    addrSheet.classList.remove('show');
+    document.body.style.overflow = '';
+    if (addrSuggest) addrSuggest.classList.remove('show');
+  }
+
+  $addressRow.addEventListener('click', openAddrSheet);
+  if (addrClose)   addrClose.addEventListener('click', closeAddrSheet);
+  if (addrOverlay) addrOverlay.addEventListener('click', closeAddrSheet);
+
+  // Debounced Nominatim search
+  if (addrInput) addrInput.addEventListener('input', function(){
+    var q = addrInput.value.trim();
+    clearTimeout(searchTimer);
+    if (q.length < 2) {
+      if (addrSuggest) { addrSuggest.classList.remove('show'); addrSuggest.innerHTML = ''; }
+      return;
+    }
+    searchTimer = setTimeout(function(){
+      fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q + ', Tashkent') +
+            '&format=json&accept-language=ru&limit=5')
+        .then(function(r){ return r.json(); })
+        .then(function(results){
+          if (!results.length || !addrSuggest) {
+            if (addrSuggest) addrSuggest.classList.remove('show');
+            return;
+          }
+          addrSuggest.innerHTML = results.map(function(r){
+            var name = r.display_name || '';
+            var parts = name.split(',');
+            var head = (parts[0] || name).trim();
+            var rest = parts.slice(1, 3).join(',').trim();
+            return '<div class="addr-suggest-item" data-lat="' + r.lat + '" data-lon="' + r.lon +
+                   '" data-name="' + escH(head).replace(/"/g, '&quot;') + '">' +
+                   '<b>' + escH(head) + '</b><span>' + escH(rest) + '</span></div>';
+          }).join('');
+          addrSuggest.classList.add('show');
+          addrSuggest.querySelectorAll('.addr-suggest-item').forEach(function(item){
+            item.addEventListener('click', function(){
+              var lat = parseFloat(item.dataset.lat);
+              var lon = parseFloat(item.dataset.lon);
+              currentCoords = [lat, lon];
+              if (leafletMap) leafletMap.setView([lat, lon], 17);
+              addrInput.value = item.dataset.name;
+              addrSuggest.classList.remove('show');
+            });
+          });
+        })
+        .catch(function(){
+          if (addrSuggest) addrSuggest.classList.remove('show');
+        });
+    }, 350);
+  });
+
+  document.addEventListener('click', function(e){
+    if (!addrSuggest) return;
+    if (!e.target.closest('.addr-input-wrap')) addrSuggest.classList.remove('show');
+  });
+
+  if (addrGeoBtn) addrGeoBtn.addEventListener('click', function(){
+    if (!navigator.geolocation || !leafletMap) return;
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var lat = pos.coords.latitude, lon = pos.coords.longitude;
+      leafletMap.setView([lat, lon], 17);
+    });
+  });
+
+  if (addrConfirm) addrConfirm.addEventListener('click', function(){
+    var txt = addrConfirm.dataset.address || (addrConfirmTxt ? addrConfirmTxt.textContent : '');
+    if (txt && txt !== 'Определяем адрес...') setMainAddress(txt);
+    closeAddrSheet();
+  });
+
+  if (addrSaveBtn) addrSaveBtn.addEventListener('click', function(){
+    var addrText = (addrConfirm && addrConfirm.dataset.address) || (addrConfirmTxt && addrConfirmTxt.textContent) || 'Новый адрес';
+    if (addrText === 'Определяем адрес...') addrText = 'Новый адрес';
+    savedAddresses.push({
+      id: nextAddrId++, type: 'pin',
+      title: addrText,
+      sub: 'Ташкент',
+      lat: currentCoords[0], lon: currentCoords[1]
+    });
+    persistAddresses();
+    renderAddrList();
+    toast('Адрес сохранён');
+  });
+
+  if (addrList) addrList.addEventListener('click', function(e){
+    var del = e.target.closest('.addr-delete-btn');
+    if (del) {
+      e.stopPropagation();
+      var pItem = del.closest('.addr-item');
+      var pid = parseInt(pItem.dataset.id);
+      savedAddresses = savedAddresses.filter(function(a){ return a.id !== pid; });
+      persistAddresses();
+      renderAddrList();
+      return;
+    }
+    var item = e.target.closest('.addr-item');
+    if (!item) return;
+    if (item.dataset.loc) {
+      if (addrGeoBtn) addrGeoBtn.click();
+      return;
+    }
+    var id = parseInt(item.dataset.id);
+    var a = savedAddresses.find(function(x){ return x.id === id; });
+    if (a) {
+      setMainAddress(a.title);
+      if (a.lat && leafletMap) leafletMap.setView([a.lat, a.lon], 17);
+      closeAddrSheet();
+    }
   });
 
   // ---- Recipient prefill + mask ----
@@ -343,7 +579,7 @@
     var chip = e.target.closest('.checkout-day-chip');
     if (!chip) return;
     state.selectedDay = parseInt(chip.dataset.day, 10);
-    state.selectedSlot = state.selectedDay === 0 ? 'asap' : null;
+    state.selectedSlot = null;
     renderDayList();
     renderSlots();
     validate();
@@ -356,7 +592,6 @@
     var now = new Date();
     var startHour;
     if (state.selectedDay === 0) {
-      html += '<button class="checkout-slot-chip asap' + (state.selectedSlot === 'asap' ? ' selected' : '') + '" type="button" data-slot="asap">⚡ Как можно скорее</button>';
       startHour = now.getHours() + 1;
     } else {
       startHour = 9;
@@ -368,7 +603,7 @@
       html += '<button class="checkout-slot-chip' + sel + '" type="button" data-slot="' + slot + '">' + label + '</button>';
     }
     $slotList.innerHTML = html;
-    if (state.selectedDay !== 0 && !state.selectedSlot) {
+    if (!state.selectedSlot) {
       var firstChip = $slotList.querySelector('.checkout-slot-chip');
       if (firstChip) {
         state.selectedSlot = firstChip.dataset.slot;
@@ -524,9 +759,7 @@
       var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
       dayLabel = d.getDate() + ' ' + months[d.getMonth()];
     }
-    var slotText = state.selectedSlot === 'asap'
-      ? 'как можно скорее'
-      : 'в окне ' + state.selectedSlot.replace('-', ':00 – ') + ':00';
+    var slotText = 'в окне ' + state.selectedSlot.replace('-', ':00 – ') + ':00';
     $successText.textContent = 'Заказ из «' + v.name + '» оформлен на ' + dayLabel + ' ' + slotText + '. Скоро курьер свяжется с вами.';
     $successOv.classList.add('open');
     $successModal.classList.add('open');
@@ -542,7 +775,7 @@
 
   document.addEventListener('keydown', function(e){
     if (e.key !== 'Escape') return;
-    if ($addrSheet.classList.contains('show')) closeAddr();
+    if (addrSheet.classList.contains('show')) closeAddrSheet();
   });
 })();
 </script>

@@ -56,35 +56,49 @@
 </div>
 <div class="sep"></div>
 
-<!-- ═══ PROMO BANNERS ═══ -->
+<!-- ═══ PROMO BANNERS — мероприятия ═══ -->
 <section class="promo-section surface">
   <div class="scroll-x promo-scroll">
 
-    <div class="promo-card pc1">
-      <div class="promo-badge">−30%<span class="pb-sub">скидка</span></div>
+    <a class="promo-card pc-event" href="event.html?type=kuda" style="background-image:url('./img/ev-01.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-badge">−20%<span class="pb-sub">скидка</span></div>
       <div class="promo-content">
-        <div class="promo-eyebrow">🎉 Акция</div>
-        <div class="promo-title">Первый заказ<br>дешевле</div>
-        <div class="promo-sub">Промокод TOGORA30</div>
+        <div class="promo-eyebrow">💍 Куда чакирик</div>
+        <div class="promo-title">Праздничный<br>стол сватам</div>
+        <div class="promo-sub">Меню под торжество · от 800 000 сум</div>
       </div>
-    </div>
+    </a>
 
-    <div class="promo-card pc2">
-      <div class="promo-badge">0 сум<span class="pb-sub">достав.</span></div>
+    <a class="promo-card pc-event" href="event.html?type=engagement" style="background-image:url('./img/ev-04.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-badge">−15%<span class="pb-sub">банкет</span></div>
       <div class="promo-content">
-        <div class="promo-eyebrow">✦ Togora+</div>
-        <div class="promo-title">Бесплатная<br>доставка</div>
-        <div class="promo-sub">Каждый день с подпиской</div>
+        <div class="promo-eyebrow">🌸 Помолвка</div>
+        <div class="promo-title">Помолвка<br>под ключ</div>
+        <div class="promo-sub">Закажите праздничное меню заранее</div>
       </div>
-    </div>
+    </a>
 
-    <div class="promo-card pc3">
+    <a class="promo-card pc-event" href="event.html?type=beshik" style="background-image:url('./img/ev-05.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-badge">Хит<span class="pb-sub">сезона</span></div>
       <div class="promo-content">
-        <div class="promo-eyebrow">🌸 Наврӯз</div>
-        <div class="promo-title">Сезонное<br>меню</div>
-        <div class="promo-sub">Ограниченное время</div>
+        <div class="promo-eyebrow">👶 Бешик туй</div>
+        <div class="promo-title">Стол для<br>бешик туй</div>
+        <div class="promo-sub">Доставим горячим к началу торжества</div>
       </div>
-    </div>
+    </a>
+
+    <a class="promo-card pc-event" href="event.html?type=kavurdak" style="background-image:url('./img/ev-02.jpg')">
+      <div class="promo-shade"></div>
+      <div class="promo-badge">★ 4.9<span class="pb-sub">оценка</span></div>
+      <div class="promo-content">
+        <div class="promo-eyebrow">🍖 Кавурдак</div>
+        <div class="promo-title">Кавурдак<br>для гостей</div>
+        <div class="promo-sub">Настоящий вкус узбекского очага</div>
+      </div>
+    </a>
 
   </div>
 </section>
@@ -644,25 +658,25 @@
     <a class="ev-card" href="event.html?type=kavurdak">
       <img src="./img/ev-02.jpg" alt="Кавурдак">
       <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">🍖</div><div class="ev-label">Кавурдак</div></div>
+      <div class="ev-content"><div class="ev-label">Кавурдак</div></div>
     </a>
 
     <a class="ev-card" href="event.html?type=kuda">
       <img src="./img/ev-01.jpg" alt="Куда чакирик">
       <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">💍</div><div class="ev-label">Куда чакирик</div></div>
+      <div class="ev-content"><div class="ev-label">Куда чакирик</div></div>
     </a>
 
     <a class="ev-card" href="event.html?type=engagement">
       <img src="./img/ev-04.jpg" alt="Помолвка">
       <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">🌸</div><div class="ev-label">Помолвка</div></div>
+      <div class="ev-content"><div class="ev-label">Помолвка</div></div>
     </a>
 
     <a class="ev-card" href="event.html?type=beshik">
       <img src="./img/ev-05.jpg" alt="Бешик туй">
       <div class="ev-overlay"></div>
-      <div class="ev-content"><div class="ev-emoji">👶</div><div class="ev-label">Бешик туй</div></div>
+      <div class="ev-content"><div class="ev-label">Бешик туй</div></div>
     </a>
 
   </div>
@@ -921,90 +935,22 @@
   // Helpers from shared module
   var escNH = (window.TG && TG.escHTML) || function(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];}); };
 
-  var toast = document.getElementById('cart-toast');
-  var toastText = toast ? toast.querySelector('.toast-text') : null;
-  var cartPill = document.querySelector('.cart-pill');
-  var cartCount = parseInt(cartPill ? cartPill.textContent : 3);
-  var timer;
+  // Cart wiring — uses shared TG.cartAdd (writes to localStorage 'tg-cart'
+  // with vendor info so cart.html groups items by vendor correctly).
+  TG.wireMiniCardCart(document);
 
-  function showToast(name) {
-    toastText.textContent = (name || 'Блюдо') + ' — в корзине';
-    toast.classList.add('show');
-    clearTimeout(timer);
-    timer = setTimeout(function() { toast.classList.remove('show'); }, 2400);
-  }
-
+  // Tap on mini-card body → open product page
   document.addEventListener('click', function(e) {
-    // Handle + (add-btn-float) tap
-    var btn = e.target.closest('.add-btn-float');
-    if (btn) {
-      e.stopPropagation();
-      var card = btn.closest('.mini-img');
-      var name = btn.dataset.name || btn.closest('.mini-card')?.querySelector('.mini-name')?.textContent || 'Блюдо';
-      cartCount++;
-      if (cartPill) cartPill.textContent = cartCount;
-      // Replace + button with stepper
-      var stepper = document.createElement('div');
-      stepper.className = 'qty-stepper';
-      stepper.dataset.name = name;
-      stepper.innerHTML =
-        '<button class="qs-btn qs-minus">−</button>' +
-        '<span class="qs-count">1</span>' +
-        '<button class="qs-btn qs-plus">+</button>';
-      btn.replaceWith(stepper);
-      showToast(name);
-      return;
-    }
-
-    // Handle stepper minus
-    var minus = e.target.closest('.qs-minus');
-    if (minus) {
-      e.stopPropagation();
-      var stepper = minus.closest('.qty-stepper');
-      var countEl = stepper.querySelector('.qs-count');
-      var qty = parseInt(countEl.textContent) - 1;
-      cartCount = Math.max(0, cartCount - 1);
-      if (cartPill) cartPill.textContent = cartCount;
-      if (qty <= 0) {
-        // Restore the + button
-        var name = stepper.dataset.name || 'Блюдо';
-        var addBtn = document.createElement('button');
-        addBtn.className = 'add-btn-float';
-        addBtn.dataset.name = name;
-        addBtn.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-        stepper.replaceWith(addBtn);
-      } else {
-        countEl.textContent = qty;
-      }
-      return;
-    }
-
-    // Handle stepper plus
-    var plus = e.target.closest('.qs-plus');
-    if (plus) {
-      e.stopPropagation();
-      var stepper = plus.closest('.qty-stepper');
-      var countEl = stepper.querySelector('.qs-count');
-      var qty = parseInt(countEl.textContent) + 1;
-      countEl.textContent = qty;
-      cartCount++;
-      if (cartPill) cartPill.textContent = cartCount;
-      showToast(stepper.dataset.name || 'Блюдо');
-      return;
-    }
-
-    // Tap on mini-card body → open product page (skip + / stepper / inline controls)
+    if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
     var miniCard = e.target.closest('.mini-card');
-    if (miniCard && !e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) {
-      var nameEl = miniCard.querySelector('.mini-name');
-      var imgEl  = miniCard.querySelector('.mini-img img');
-      var name = nameEl ? nameEl.textContent.trim() : '';
-      var img  = imgEl  ? imgEl.getAttribute('src')  : '';
-      if (name) {
-        var qs = 'name=' + encodeURIComponent(name) + (img ? '&img=' + encodeURIComponent(img) : '');
-        location.href = 'product.html?' + qs;
-      }
-      return;
+    if (!miniCard) return;
+    var nameEl = miniCard.querySelector('.mini-name');
+    var imgEl  = miniCard.querySelector('.mini-img img');
+    var name = nameEl ? nameEl.textContent.trim() : '';
+    var img  = imgEl  ? imgEl.getAttribute('src')  : '';
+    if (name) {
+      var qs = 'name=' + encodeURIComponent(name) + (img ? '&img=' + encodeURIComponent(img) : '');
+      location.href = 'product.html?' + qs;
     }
   });
 

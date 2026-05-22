@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Togora">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -30,6 +32,57 @@
 <main class="orders-page">
   <div class="orders-list" id="ordersList"></div>
 </main>
+
+<!-- ═══ Courier tracking sheet (full-screen, opens from detail) ═══ -->
+<div class="track-sheet" id="trackSheet" role="dialog" aria-modal="true" aria-label="Отслеживание курьера">
+  <header class="track-head">
+    <button class="track-back" id="trackBack" type="button" aria-label="Назад">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="track-title-wrap">
+      <div class="track-title" id="trackTitle">Доставка</div>
+      <div class="track-sub" id="trackSub">Курьер в пути</div>
+    </div>
+  </header>
+  <div class="track-map-wrap">
+    <div id="trackMap"></div>
+    <div class="track-card" id="trackCard">
+      <div class="track-eta-row">
+        <div class="track-eta-block">
+          <div class="track-eta-label">До вас</div>
+          <div class="track-eta-value"><span id="trackEtaMin">—</span> <span class="track-eta-unit">мин</span></div>
+        </div>
+        <div class="track-eta-sep"></div>
+        <div class="track-eta-block">
+          <div class="track-eta-label">Расстояние</div>
+          <div class="track-eta-value"><span id="trackDistance">—</span> <span class="track-eta-unit">км</span></div>
+        </div>
+        <div class="track-eta-sep"></div>
+        <div class="track-eta-block">
+          <div class="track-eta-label">Прибытие</div>
+          <div class="track-eta-value" id="trackArrive">—</div>
+        </div>
+      </div>
+      <div class="track-courier">
+        <div class="track-avatar" id="trackAvatar">А</div>
+        <div class="track-courier-body">
+          <div class="track-courier-name" id="trackName">Курьер</div>
+          <div class="track-courier-role" id="trackRole">Едет к вам</div>
+        </div>
+        <a class="track-call-btn" id="trackCall" href="tel:+998901234567" aria-label="Позвонить курьеру">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg>
+        </a>
+      </div>
+      <div class="track-address">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="track-address-text">
+          <div class="track-address-label">Адрес доставки</div>
+          <div class="track-address-value" id="trackAddress">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Order detail bottom sheet -->
 <div class="filter-overlay" id="odOverlay"></div>
@@ -107,16 +160,17 @@
   }
 
   // ---- Status definitions ----
-  // Order of steps in the timeline
+  // Order of steps in the timeline (cancelled is a terminal branch, not part of the flow)
   var STATUS_FLOW = ['new', 'accepted', 'cooking', 'delivering', 'completed'];
   var STATUS_META = {
     'new':        { label: 'Новый',            short: 'Передан', cls: 'new',        icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
     'accepted':   { label: 'Принят рестораном', short: 'Принят',  cls: 'accepted',   icon: '<polyline points="20 6 9 17 4 12"/>' },
     'cooking':    { label: 'Готовится',         short: 'Готовится',cls: 'cooking',    icon: '<path d="M6 8h12l-1 11H7L6 8z"/><path d="M9 8V5a3 3 0 016 0v3"/>' },
     'delivering': { label: 'В пути',            short: 'В пути',  cls: 'delivering', icon: '<circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/><path d="M3 17h2l2-7h8l3 4h3v3"/>' },
-    'completed':  { label: 'Завершён',          short: 'Доставлен',cls: 'completed',  icon: '<polyline points="20 6 9 17 4 12"/>' }
+    'completed':  { label: 'Завершён',          short: 'Доставлен',cls: 'completed',  icon: '<polyline points="20 6 9 17 4 12"/>' },
+    'cancelled':  { label: 'Отменён',           short: 'Отменён', cls: 'cancelled',  icon: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' }
   };
-  function isActive(status){ return status !== 'completed'; }
+  function isActive(status){ return status !== 'completed' && status !== 'cancelled'; }
 
   // ---- Mock orders ----
   var ORDERS = [
@@ -167,6 +221,13 @@
       slotText: 'к 13:00',
       address: 'ул. Амира Темура, 12, кв. 45',
       payment: 'Наличные',
+      destCoords: [41.31093, 69.27924],
+      courier: {
+        name: 'Алишер',
+        role: 'Курьер · скутер',
+        phone: '+998 90 123-45-67',
+        coords: [41.31785, 69.27220]
+      },
       items: [
         { name: 'Qazili norin', qty: 2, price: 35000, img: './img/dish-13.jpg' },
         { name: 'Чай чёрный', qty: 1, price: 6000, img: './img/dish-15.jpg' }
@@ -178,6 +239,7 @@
       status: 'completed',
       datetime: '21 мая, 19:42',
       slotText: '20:00 – 21:00',
+      deliveredAt: '21 мая, 20:23',
       address: 'ул. Амира Темура, 12, кв. 45',
       payment: 'Картой онлайн',
       items: [
@@ -191,11 +253,28 @@
       status: 'completed',
       datetime: '20 мая, 16:15',
       slotText: '16:30 – 17:30',
+      deliveredAt: '20 мая, 17:08',
       address: 'Саларская набережная, 35А',
       payment: 'Click',
       items: [
         { name: 'Десертный набор', qty: 1, price: 25000, img: './img/dish-14.jpg' },
         { name: 'Чак-чак', qty: 1, price: 18000, img: './img/dish-15.jpg' }
+      ]
+    },
+    {
+      id: 'TG-7689',
+      vendor: 'Besh Qozon',
+      status: 'cancelled',
+      datetime: '19 мая, 13:24',
+      slotText: '14:00 – 15:00',
+      cancelledAt: '19 мая, 13:38',
+      cancelReason: 'Ресторан временно перестал принимать заказы — не хватает ингредиентов для свадебного плова. Средства возвращены на карту в течение 1–3 рабочих дней.',
+      cancelInitiator: 'Отменён рестораном',
+      address: 'ул. Амира Темура, 12, кв. 45',
+      payment: 'Картой онлайн · возврат',
+      items: [
+        { name: 'Свадебный плов', qty: 2, price: 38000, img: './img/dish-03.jpg' },
+        { name: 'Лагман по-узбекски', qty: 1, price: 32000, img: './img/dish-05.jpg' }
       ]
     }
   ];
@@ -286,11 +365,7 @@
         +   '<div class="order-items-preview">' + escH(itemsPreview(o)) + '</div>'
         +   '<div class="order-foot">'
         +     '<div class="order-total">' + fmtMoney(orderTotal(o)) + '</div>'
-        +     (o.status === 'completed'
-            ? '<button class="order-action" type="button" data-act="repeat" data-id="' + escH(o.id) + '">Повторить заказ →</button>'
-            : (o.status === 'delivering'
-              ? '<button class="order-action" type="button" data-act="track" data-id="' + escH(o.id) + '">Отследить →</button>'
-              : '<button class="order-action" type="button" data-act="open" data-id="' + escH(o.id) + '">Подробнее →</button>'))
+        +     '<button class="order-action" type="button" data-act="open" data-id="' + escH(o.id) + '">Подробнее →</button>'
         +   '</div>'
         + '</article>';
     }).join('');
@@ -309,6 +384,15 @@
   });
 
   // ---- Detail sheet ----
+  // Short labels for the horizontal timeline cells
+  var STEP_LABELS_SHORT = {
+    'new':        'Новый',
+    'accepted':   'Принят',
+    'cooking':    'Готовится',
+    'delivering': 'В пути',
+    'completed':  'Завершён'
+  };
+
   function buildTimeline(status){
     // For 'completed', all steps are done.
     // For other statuses, steps up to current are 'done', current is 'active', rest are pending.
@@ -325,7 +409,7 @@
       html += '<div class="od-step ' + cls + '">'
         + '<div class="od-step-dot"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg></div>'
         + '<div class="od-step-body">'
-        +   '<div class="od-step-title">' + escH(meta.label) + '</div>'
+        +   '<div class="od-step-title">' + escH(STEP_LABELS_SHORT[step] || meta.label) + '</div>'
         +   (cls === 'active' ? '<div class="od-step-time">сейчас</div>' : '')
         + '</div>'
         + '</div>';
@@ -353,17 +437,57 @@
         + '</div>';
     }).join('');
 
+    var trackBtnHtml = (o.status === 'delivering')
+      ? '<button class="od-track-btn" type="button" data-act="track" data-id="' + escH(o.id) + '">'
+        + '<span class="od-track-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>'
+        + '<span class="od-track-text"><span class="od-track-title">Отследить курьера</span><span class="od-track-sub">Карта · маршрут · время</span></span>'
+        + '<span class="od-track-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>'
+        + '</button>'
+      : '';
+
+    var deliveryRows = '<div class="od-info-row"><div class="od-info-label">Адрес</div><div class="od-info-value">' + escH(o.address) + '</div></div>'
+      + '<div class="od-info-row"><div class="od-info-label">Время</div><div class="od-info-value">' + escH(o.slotText) + '</div></div>';
+    if (o.status === 'completed' && o.deliveredAt) {
+      deliveryRows += '<div class="od-info-row"><div class="od-info-label">Доставлен</div><div class="od-info-value od-info-success">' + escH(o.deliveredAt) + '</div></div>';
+    }
+    if (o.status === 'cancelled' && o.cancelledAt) {
+      deliveryRows += '<div class="od-info-row"><div class="od-info-label">Отменён</div><div class="od-info-value od-info-danger">' + escH(o.cancelledAt) + '</div></div>';
+    }
+    deliveryRows += '<div class="od-info-row"><div class="od-info-label">Оплата</div><div class="od-info-value">' + escH(o.payment) + '</div></div>'
+      + '<div class="od-info-row"><div class="od-info-label">Сумма</div><div class="od-info-value">' + fmtMoney(total) + '</div></div>';
+
+    // Cancelled orders: replace the timeline section with a "reason" callout.
+    var statusSection;
+    if (o.status === 'cancelled') {
+      statusSection = ''
+        + '<div class="od-cancel-callout">'
+        +   '<div class="od-cancel-icon">'
+        +     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+        +   '</div>'
+        +   '<div class="od-cancel-body">'
+        +     '<div class="od-cancel-title">Заказ отменён</div>'
+        +     (o.cancelInitiator ? '<div class="od-cancel-meta">' + escH(o.cancelInitiator) + (o.cancelledAt ? ' · ' + escH(o.cancelledAt) : '') + '</div>' : '')
+        +     (o.cancelReason
+                ? '<div class="od-cancel-reason"><div class="od-cancel-reason-label">Причина отмены</div><div class="od-cancel-reason-text">' + escH(o.cancelReason) + '</div></div>'
+                : '')
+        +   '</div>'
+        + '</div>';
+    } else {
+      statusSection = ''
+        + '<div class="od-section">'
+        +   '<div class="od-section-title">Статус заказа</div>'
+        +   buildTimeline(o.status)
+        + '</div>';
+    }
+
     $odBody.innerHTML = ''
       + '<div class="od-head">'
       +   '<div class="od-vendor">' + escH(o.vendor) + '</div>'
       +   '<div class="od-date">Заказ ' + escH(o.id) + ' · ' + escH(o.datetime) + '</div>'
       + '</div>'
       + '<div class="od-status-row">' + statusPill(o.status) + '</div>'
-
-      + '<div class="od-section">'
-      +   '<div class="od-section-title">Статус заказа</div>'
-      +   buildTimeline(o.status)
-      + '</div>'
+      + trackBtnHtml
+      + statusSection
 
       + '<div class="od-section">'
       +   '<div class="od-section-title">Состав</div>'
@@ -372,14 +496,11 @@
 
       + '<div class="od-section">'
       +   '<div class="od-section-title">Доставка</div>'
-      +   '<div class="od-info-row"><div class="od-info-label">Адрес</div><div class="od-info-value">' + escH(o.address) + '</div></div>'
-      +   '<div class="od-info-row"><div class="od-info-label">Время</div><div class="od-info-value">' + escH(o.slotText) + '</div></div>'
-      +   '<div class="od-info-row"><div class="od-info-label">Оплата</div><div class="od-info-value">' + escH(o.payment) + '</div></div>'
-      +   '<div class="od-info-row"><div class="od-info-label">Сумма</div><div class="od-info-value">' + fmtMoney(total) + '</div></div>'
+      +   deliveryRows
       + '</div>';
 
     // Adjust footer buttons
-    var canRepeat = o.status === 'completed';
+    var canRepeat = o.status === 'completed' || o.status === 'cancelled';
     $odRepeat.style.display = canRepeat ? '' : 'none';
 
     $odOv.classList.add('show');
@@ -400,19 +521,19 @@
     var btn = e.target.closest('.order-action');
     if (btn) {
       e.stopPropagation();
-      var act = btn.dataset.act;
-      var id = btn.dataset.id;
-      if (act === 'repeat') {
-        repeatOrder(id);
-        return;
-      }
-      if (act === 'track' || act === 'open') {
-        openDetail(id);
-        return;
-      }
+      openDetail(btn.dataset.id);
+      return;
     }
     var card = e.target.closest('.order-card');
     if (card) openDetail(card.dataset.id);
+  });
+
+  // ---- Track button inside detail sheet ----
+  $odBody.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-act="track"]');
+    if (!btn) return;
+    var id = btn.dataset.id;
+    openTracking(id);
   });
 
   // ---- Repeat order: add items to cart ----
@@ -447,8 +568,175 @@
     toast('Поддержка: +998 71 200-00-00');
   });
 
+  // ========================================================
+  //  COURIER TRACKING — Leaflet map + route + ETA
+  // ========================================================
+  var $trackSheet = document.getElementById('trackSheet');
+  var $trackBack  = document.getElementById('trackBack');
+  var $trackTitle = document.getElementById('trackTitle');
+  var $trackSub   = document.getElementById('trackSub');
+  var $trackName  = document.getElementById('trackName');
+  var $trackRole  = document.getElementById('trackRole');
+  var $trackAvatar = document.getElementById('trackAvatar');
+  var $trackCall  = document.getElementById('trackCall');
+  var $trackAddress = document.getElementById('trackAddress');
+  var $trackEtaMin = document.getElementById('trackEtaMin');
+  var $trackDist  = document.getElementById('trackDistance');
+  var $trackArrive = document.getElementById('trackArrive');
+
+  var trackMap = null, trackDestMarker = null, trackCourierMarker = null, trackRouteLine = null;
+  var trackTimer = null;
+
+  function haversineKm(a, b){
+    var R = 6371;
+    var dLat = (b[0]-a[0]) * Math.PI/180;
+    var dLon = (b[1]-a[1]) * Math.PI/180;
+    var la1 = a[0] * Math.PI/180, la2 = b[0] * Math.PI/180;
+    var h = Math.sin(dLat/2)*Math.sin(dLat/2) +
+            Math.sin(dLon/2)*Math.sin(dLon/2) * Math.cos(la1) * Math.cos(la2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  // Simulated street route between two points: a few right-angle waypoints
+  function mockRoute(from, to){
+    var midLat = from[0] + (to[0] - from[0]) * 0.6;
+    var midLon = from[1] + (to[1] - from[1]) * 0.35;
+    return [
+      from,
+      [from[0], from[1] + (to[1]-from[1])*0.25],
+      [midLat,  from[1] + (to[1]-from[1])*0.25],
+      [midLat,  midLon],
+      [to[0],   midLon],
+      to
+    ];
+  }
+
+  function routeLengthKm(pts){
+    var s = 0;
+    for (var i = 1; i < pts.length; i++) s += haversineKm(pts[i-1], pts[i]);
+    return s;
+  }
+
+  function pad2t(n){ return n < 10 ? '0' + n : '' + n; }
+  function formatArrival(addMin){
+    var d = new Date();
+    d.setMinutes(d.getMinutes() + addMin);
+    return pad2t(d.getHours()) + ':' + pad2t(d.getMinutes());
+  }
+
+  function ensureTrackMap(centerCoords){
+    if (typeof L === 'undefined') return null;
+    if (!trackMap) {
+      trackMap = L.map('trackMap', {
+        center: centerCoords,
+        zoom: 15,
+        zoomControl: false,
+        attributionControl: false
+      });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(trackMap);
+    }
+    setTimeout(function(){ if (trackMap) trackMap.invalidateSize(); }, 60);
+    return trackMap;
+  }
+
+  function clearTrackLayers(){
+    if (!trackMap) return;
+    if (trackDestMarker) { trackMap.removeLayer(trackDestMarker); trackDestMarker = null; }
+    if (trackCourierMarker) { trackMap.removeLayer(trackCourierMarker); trackCourierMarker = null; }
+    if (trackRouteLine) { trackMap.removeLayer(trackRouteLine); trackRouteLine = null; }
+  }
+
+  function openTracking(orderId){
+    var o = ORDERS.find(function(x){ return x.id === orderId; });
+    if (!o || o.status !== 'delivering' || !o.courier || !o.destCoords) return;
+
+    closeDetail();
+
+    // Populate text
+    $trackTitle.textContent = o.vendor;
+    $trackSub.textContent = 'Курьер в пути';
+    $trackName.textContent = o.courier.name || 'Курьер';
+    $trackRole.textContent = o.courier.role || 'Едет к вам';
+    $trackAvatar.textContent = (o.courier.name || '?').charAt(0).toUpperCase();
+    $trackAddress.textContent = o.address || '';
+    var phoneDigits = (o.courier.phone || '').replace(/[^\d+]/g, '');
+    $trackCall.href = 'tel:' + phoneDigits;
+
+    // Show sheet
+    $trackSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    // Map + markers + route
+    var dest = o.destCoords;
+    var courier = o.courier.coords;
+    var midPoint = [(dest[0]+courier[0])/2, (dest[1]+courier[1])/2];
+    var map = ensureTrackMap(midPoint);
+    if (!map) return;
+
+    clearTrackLayers();
+
+    var destIcon = L.divIcon({
+      className: 'tk-pin-wrap tk-pin-dest',
+      html: '<div class="tk-pin-head"></div><div class="tk-pin-shadow"></div>',
+      iconSize: [32, 42], iconAnchor: [16, 38]
+    });
+    var courierIcon = L.divIcon({
+      className: 'tk-pin-wrap tk-pin-courier',
+      html: '<div class="tk-courier-head"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/><path d="M3 17h2l2-7h8l3 4h3v3"/></svg></div><div class="tk-pin-pulse"></div>',
+      iconSize: [40, 40], iconAnchor: [20, 20]
+    });
+    trackDestMarker = L.marker(dest, { icon: destIcon }).addTo(map);
+    trackCourierMarker = L.marker(courier, { icon: courierIcon }).addTo(map);
+
+    var route = mockRoute(courier, dest);
+    trackRouteLine = L.polyline(route, {
+      color: '#FC3F1D', weight: 5, opacity: 0.9, lineCap: 'round', lineJoin: 'round'
+    }).addTo(map);
+
+    // Fit bounds
+    var bounds = L.latLngBounds([courier, dest]);
+    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16 });
+
+    // ETA / distance from route length, avg scooter speed 22 km/h
+    var distKm = routeLengthKm(route);
+    var etaMin = Math.max(1, Math.round(distKm / 22 * 60));
+    $trackDist.textContent = distKm.toFixed(1);
+    $trackEtaMin.textContent = etaMin;
+    $trackArrive.textContent = formatArrival(etaMin);
+
+    // Try real OSRM routing in the background; replace the mock line on success
+    fetch('https://router.project-osrm.org/route/v1/driving/'
+        + courier[1] + ',' + courier[0] + ';' + dest[1] + ',' + dest[0]
+        + '?overview=full&geometries=geojson')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (!data || !data.routes || !data.routes.length) return;
+        var coords = data.routes[0].geometry.coordinates.map(function(c){ return [c[1], c[0]]; });
+        if (trackRouteLine) map.removeLayer(trackRouteLine);
+        trackRouteLine = L.polyline(coords, {
+          color: '#FC3F1D', weight: 5, opacity: 0.95, lineCap: 'round', lineJoin: 'round'
+        }).addTo(map);
+        var km = data.routes[0].distance / 1000;
+        var realEta = Math.max(1, Math.round(data.routes[0].duration / 60));
+        $trackDist.textContent = km.toFixed(1);
+        $trackEtaMin.textContent = realEta;
+        $trackArrive.textContent = formatArrival(realEta);
+        map.fitBounds(L.latLngBounds(coords), { padding: [60, 60], maxZoom: 16 });
+      })
+      .catch(function(){ /* keep mock */ });
+  }
+
+  function closeTracking(){
+    $trackSheet.classList.remove('show');
+    document.body.style.overflow = '';
+    if (trackTimer) { clearInterval(trackTimer); trackTimer = null; }
+  }
+
+  $trackBack.addEventListener('click', closeTracking);
+
   document.addEventListener('keydown', function(e){
     if (e.key !== 'Escape') return;
+    if ($trackSheet.classList.contains('show')) { closeTracking(); return; }
     if ($odSh.classList.contains('show')) closeDetail();
   });
 })();

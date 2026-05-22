@@ -37,7 +37,9 @@
 </div>
 
 <div class="list-page">
-  <div class="rest-list" id="restList"></div>
+  <section class="product-block" style="padding: 4px 0 16px;">
+    <div class="rest-list" id="restList"></div>
+  </section>
 </div>
 
 <nav class="bottom-nav">
@@ -95,16 +97,11 @@
     { name: 'Sweet Lab',      img: './img/dish-14.jpg', rating: 4.9, eta: '20–30 мин', cuisine: 'Десерты',         fee: '5 000 сум', badge: '−20%' }
   ];
 
-  var STORAGE_FAV = 'tg_fav_rest';
-  function loadFav() { try { return JSON.parse(localStorage.getItem(STORAGE_FAV) || '[]'); } catch(e) { return []; } }
-  function saveFav(arr) { try { localStorage.setItem(STORAGE_FAV, JSON.stringify(arr)); } catch(e) {} }
-
   var listEl = document.getElementById('restList');
   var filterBar = document.getElementById('filterBar');
   var currentCuisine = 'all';
 
   function render() {
-    var fav = loadFav();
     var filtered = currentCuisine === 'all'
       ? RESTAURANTS
       : RESTAURANTS.filter(function(r) { return r.cuisine === currentCuisine; });
@@ -113,25 +110,16 @@
       return;
     }
     listEl.innerHTML = filtered.map(function(r) {
-      var isFav = fav.indexOf(r.name) >= 0;
-      var badge = r.badge ? '<div class="rest-list-badge">' + TG.escHTML(r.badge) + '</div>' : '';
       return '<a class="rest-list-card" href="restaurant.html?name=' + encodeURIComponent(r.name) + '">' +
         '<div class="rest-list-photo">' +
           '<img src="' + r.img + '" alt="' + TG.escHTML(r.name) + '">' +
-          badge +
-          '<button class="rest-list-fav ' + (isFav ? 'active' : '') + '" data-name="' + TG.escHTML(r.name).replace(/"/g,'&quot;') + '" aria-label="Избранное">' +
-            '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' +
-          '</button>' +
+          '<div class="rest-list-rating-pill">' +
+            '<svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>' +
+            '<span>' + r.rating + '</span>' +
+          '</div>' +
         '</div>' +
         '<div class="rest-list-body">' +
           '<div class="rest-list-name">' + TG.escHTML(r.name) + '</div>' +
-          '<div class="rest-list-meta">' +
-            '<span class="rlm-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>' + r.rating + '</span>' +
-            '<span class="rlm-dot"></span>' +
-            '<span>' + r.eta + '</span>' +
-            '<span class="rlm-dot"></span>' +
-            '<span>Доставка: ' + r.fee + '</span>' +
-          '</div>' +
         '</div>' +
       '</a>';
     }).join('');
@@ -146,19 +134,6 @@
       c.classList.toggle('active', c === btn);
     });
     render();
-  });
-
-  listEl.addEventListener('click', function(e) {
-    var fav = e.target.closest('.rest-list-fav');
-    if (!fav) return;
-    e.preventDefault(); e.stopPropagation();
-    var arr = loadFav();
-    var n = fav.dataset.name;
-    var i = arr.indexOf(n);
-    if (i >= 0) arr.splice(i, 1); else arr.push(n);
-    saveFav(arr);
-    fav.classList.toggle('active');
-    TG.showToast(i >= 0 ? 'Убрано из избранного' : 'Добавлено в избранное');
   });
 })();
 </script>

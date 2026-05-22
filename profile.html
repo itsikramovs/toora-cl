@@ -19,9 +19,9 @@
     <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </a>
   <h1 class="page-title">Профиль</h1>
-  <a class="page-header-icon" href="notifications.html" aria-label="Настройки">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-  </a>
+  <button class="page-header-icon profile-header-logout" id="topLogoutBtn" type="button" aria-label="Выйти из аккаунта">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
 </header>
 
 <main class="profile-page">
@@ -48,10 +48,6 @@
       <div class="ps-value" id="statFavorites">8</div>
       <div class="ps-label">Избранных</div>
     </div>
-    <div class="ps-item">
-      <div class="ps-value" id="statPromos">2</div>
-      <div class="ps-label">Промокода</div>
-    </div>
   </section>
 
   <!-- ===== ORDERS / FAVORITES / ADDRESSES ===== -->
@@ -65,27 +61,19 @@
       </div>
       <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
     </a>
-    <a class="checkout-row" data-link="favorites">
+    <a class="checkout-row" href="favorites.html">
       <div class="checkout-row-icon">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
       <div class="checkout-row-body">
         <div class="checkout-row-value">Избранное</div>
-      </div>
-      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-    </a>
-    <a class="checkout-row" data-link="addresses">
-      <div class="checkout-row-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-      <div class="checkout-row-body">
-        <div class="checkout-row-value">Адреса доставки</div>
+        <div class="checkout-row-label" id="favProfileCount" hidden></div>
       </div>
       <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
     </a>
   </section>
 
-  <!-- ===== PAYMENT / PROMO ===== -->
+  <!-- ===== PAYMENT ===== -->
   <section class="checkout-block">
     <a class="checkout-row" data-link="payment">
       <div class="checkout-row-icon">
@@ -97,16 +85,6 @@
       </div>
       <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
     </a>
-    <a class="checkout-row" data-link="promos">
-      <div class="checkout-row-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      </div>
-      <div class="checkout-row-body">
-        <div class="checkout-row-value">Промокоды</div>
-        <div class="checkout-row-label">Доступно 2 промокода</div>
-      </div>
-      <div class="checkout-row-chevron"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-    </a>
   </section>
 
   <!-- ===== NOTIFICATIONS TOGGLES ===== -->
@@ -115,10 +93,6 @@
     <div class="checkout-toggle-row">
       <div class="checkout-toggle-label">Push-уведомления</div>
       <div class="checkout-toggle on" id="togglePush" role="switch" aria-checked="true" tabindex="0"></div>
-    </div>
-    <div class="checkout-toggle-row" style="border-top:1px solid #EEEEF0; padding-top:14px; margin-top:8px">
-      <div class="checkout-toggle-label">Email-рассылка</div>
-      <div class="checkout-toggle" id="toggleEmail" role="switch" aria-checked="false" tabindex="0"></div>
     </div>
     <div class="checkout-toggle-row" style="border-top:1px solid #EEEEF0; padding-top:14px; margin-top:8px">
       <div class="checkout-toggle-label">Звук уведомлений</div>
@@ -158,8 +132,15 @@
     </a>
   </section>
 
-  <!-- ===== LOGOUT ===== -->
-  <button class="profile-logout" id="logoutBtn" type="button">Выйти из аккаунта</button>
+  <!-- ===== SOCIAL LINKS ===== -->
+  <section class="profile-socials">
+    <a class="profile-social profile-social--tg" href="https://t.me/togora" target="_blank" rel="noopener" aria-label="Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.94c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+    </a>
+    <a class="profile-social profile-social--ig" href="https://instagram.com/togora" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+  </section>
 
   <div class="profile-version">Togora · v1.0</div>
 </main>
@@ -186,6 +167,39 @@
   <div class="fbs-foot">
     <button class="fbs-btn fbs-btn-reset" id="editCancel" type="button">Отмена</button>
     <button class="fbs-btn fbs-btn-apply" id="editSave" type="button">Сохранить</button>
+  </div>
+</aside>
+
+<!-- Support bottom sheet -->
+<div class="filter-overlay" id="supportOverlay"></div>
+<aside class="filter-sheet filter-sheet--blocks" id="supportSheet" aria-modal="true" aria-label="Поддержка">
+  <div class="fbs-head">
+    <div class="filter-sheet-title">Поддержка</div>
+    <button class="fbs-close" id="supportClose" type="button" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fbs-body">
+    <a class="support-row" href="tel:+998712000000">
+      <div class="support-row-icon support-row-icon--green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg>
+      </div>
+      <div class="support-row-body">
+        <div class="support-row-title">Позвонить</div>
+        <div class="support-row-sub">+998 71 200-00-00 · ежедневно 9:00–23:00</div>
+      </div>
+      <div class="support-row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+    <a class="support-row" href="https://t.me/togora_support" target="_blank" rel="noopener">
+      <div class="support-row-icon support-row-icon--blue">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.94c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      </div>
+      <div class="support-row-body">
+        <div class="support-row-title">Чат с поддержкой</div>
+        <div class="support-row-sub">Telegram · отвечаем в течение 5 минут</div>
+      </div>
+      <div class="support-row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
   </div>
 </aside>
 
@@ -291,21 +305,26 @@
   var $editSave  = document.getElementById('editSave');
 
   var $togglePush  = document.getElementById('togglePush');
-  var $toggleEmail = document.getElementById('toggleEmail');
   var $toggleSound = document.getElementById('toggleSound');
 
-  var $logoutBtn   = document.getElementById('logoutBtn');
+  var $logoutBtn   = document.getElementById('topLogoutBtn');
   var $logoutOv    = document.getElementById('logoutOverlay');
   var $logoutModal = document.getElementById('logoutModal');
   var $logoutConfirm = document.getElementById('logoutConfirm');
   var $logoutCancel  = document.getElementById('logoutCancel');
+
+  // Support sheet
+  var $supportOv     = document.getElementById('supportOverlay');
+  var $supportSheet  = document.getElementById('supportSheet');
+  var $supportClose  = document.getElementById('supportClose');
 
   var $navPill = document.getElementById('navCartPill');
 
   // ---- Render profile ----
   function renderProfile(){
     var p = loadProfile();
-    if (p.name && p.name.trim()) {
+    var isGuest = !(p.name && p.name.trim());
+    if (!isGuest) {
       $name.textContent = p.name.trim();
       $avatar.textContent = p.name.trim().charAt(0).toUpperCase();
     } else {
@@ -317,6 +336,8 @@
     } else {
       $phone.textContent = 'Войдите, чтобы получать заказы';
     }
+    // Guests have nothing to log out from — hide the header exit button.
+    if ($logoutBtn) $logoutBtn.hidden = isGuest;
   }
   renderProfile();
 
@@ -375,7 +396,6 @@
   // ---- Toggles ----
   var prefs = loadPrefs();
   if (prefs.push  === false) $togglePush.classList.remove('on');
-  if (prefs.email === true)  $toggleEmail.classList.add('on');
   if (prefs.sound === false) $toggleSound.classList.remove('on');
 
   function setupToggle(el, key){
@@ -394,22 +414,32 @@
     });
   }
   setupToggle($togglePush,  'push');
-  setupToggle($toggleEmail, 'email');
   setupToggle($toggleSound, 'sound');
+
+  // ---- Support bottom sheet ----
+  function openSupport(){
+    $supportOv.classList.add('show');
+    $supportSheet.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSupport(){
+    $supportOv.classList.remove('show');
+    $supportSheet.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  $supportOv.addEventListener('click', closeSupport);
+  $supportClose.addEventListener('click', closeSupport);
 
   // ---- Menu rows ----
   document.querySelectorAll('.checkout-row[data-link]').forEach(function(row){
     row.addEventListener('click', function(){
       var k = row.getAttribute('data-link');
+      if (k === 'support') { openSupport(); return; }
       var msg = ({
-        orders:    'Мои заказы — в разработке',
-        favorites: 'Избранное — в разработке',
-        addresses: 'Адреса доставки — в разработке',
-        payment:   'Способы оплаты — в разработке',
-        promos:    'Промокоды — в разработке',
-        support:   'Поддержка: +998 71 200-00-00',
-        about:     'Togora — доставка еды в Ташкенте, v1.0',
-        lang:      'Смена языка — в разработке'
+        orders:  'Мои заказы — в разработке',
+        payment: 'Способы оплаты — в разработке',
+        about:   'Togora — доставка еды в Ташкенте, v1.0',
+        lang:    'Смена языка — в разработке'
       })[k] || 'Раздел в разработке';
       toast(msg);
     });
@@ -443,11 +473,30 @@
   document.addEventListener('keydown', function(e){
     if (e.key !== 'Escape') return;
     if ($editSh.classList.contains('show')) closeEdit();
+    if ($supportSheet.classList.contains('show')) closeSupport();
     if ($logoutModal.classList.contains('open')) closeLogout();
   });
 
   // ---- Stats (mock) ----
   // Could be replaced with real data from order history later
+
+  // ---- Favorites count next to the row label ----
+  function pluralFav(n){
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return n + ' блюдо';
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return n + ' блюда';
+    return n + ' блюд';
+  }
+  function refreshFavCount(){
+    var $fc = document.getElementById('favProfileCount');
+    if (!$fc || !window.TG || !TG.favCount) return;
+    var n = TG.favCount();
+    if (n > 0) { $fc.hidden = false; $fc.textContent = pluralFav(n); }
+    else { $fc.hidden = true; }
+  }
+  refreshFavCount();
+  window.addEventListener('storage', function(e){ if (e.key === 'tg-favorites') refreshFavCount(); });
+  window.addEventListener('tg:fav-changed', refreshFavCount);
 })();
 </script>
 </body>

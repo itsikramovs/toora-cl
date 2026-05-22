@@ -49,6 +49,8 @@
   <div class="sep"></div>
 
   <section class="product-block" id="menuBlock">
+    <!-- Sticky category tabs (rendered by JS) — lives inside the same card as the menu -->
+    <div class="menu-cat-tabs" id="menuCatTabs" hidden></div>
     <!-- Menu sections rendered by JS -->
   </section>
 
@@ -149,6 +151,20 @@
           { name: 'Lula kabob',        img: './img/dish-01.jpg', price: 32000 },
           { name: 'Куриный шашлык',    img: './img/dish-03.jpg', price: 28000 },
           { name: 'Говяжий шашлык',    img: './img/dish-05.jpg', price: 38000 }
+        ]},
+        { title: 'Гарниры', items: [
+          { name: 'Лепёшка тандыр',   img: './img/dish-06.jpg', price: 12000 },
+          { name: 'Маринованный лук', img: './img/dish-07.jpg', price: 8000  },
+          { name: 'Овощной гриль',    img: './img/dish-11.jpg', price: 22000 }
+        ]},
+        { title: 'Салаты', items: [
+          { name: 'Ачичук',           img: './img/dish-05.jpg', price: 18000 },
+          { name: 'Помидоры с луком', img: './img/dish-08.jpg', price: 14000 }
+        ]},
+        { title: 'Напитки', items: [
+          { name: 'Чай чёрный',       img: './img/dish-15.jpg', price: 6000  },
+          { name: 'Айран',            img: './img/dish-14.jpg', price: 9000  },
+          { name: 'Coca-Cola 0.5л',   img: './img/dish-07.jpg', price: 12000 }
         ]}
       ]
     },
@@ -193,7 +209,10 @@
 
   function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
 
-  var menuHtml = (r.menu || []).map(function(section) {
+  var sections = r.menu || [];
+
+  // Build menu with each section wrapped in an anchorable target
+  var menuHtml = sections.map(function(section, i) {
     var cards = section.items.map(function(it) {
       return '<div class="related-card" data-name="' + TG.escHTML(it.name).replace(/"/g,'&quot;') +
              '" data-img="' + TG.escHTML(it.img).replace(/"/g,'&quot;') + '">' +
@@ -204,10 +223,92 @@
         '</div>' +
       '</div>';
     }).join('');
-    return '<div class="menu-cat-title">' + TG.escHTML(section.title) + '</div>' +
-           '<div class="related-grid" style="margin-bottom:18px">' + cards + '</div>';
+    return '<div class="menu-cat-section" id="menuCat-' + i + '" data-cat-index="' + i + '">'
+         +   '<div class="menu-cat-title">' + TG.escHTML(section.title) + '</div>'
+         +   '<div class="related-grid" style="margin-bottom:18px">' + cards + '</div>'
+         + '</div>';
   }).join('');
-  document.getElementById('menuBlock').innerHTML = menuHtml;
+  // Keep the (sticky) tabs element in place; append the menu sections after it.
+  var $tabs = document.getElementById('menuCatTabs');
+  var $menuBlock = document.getElementById('menuBlock');
+  // Remove any previous rendered sections (in case of re-render) but keep $tabs.
+  Array.prototype.slice.call($menuBlock.querySelectorAll('.menu-cat-section')).forEach(function(n){ n.remove(); });
+  $menuBlock.insertAdjacentHTML('beforeend', menuHtml);
+
+  // Build category tabs (only when there are 2+ categories — otherwise no need)
+  if (sections.length >= 2) {
+    $tabs.hidden = false;
+    $tabs.innerHTML = sections.map(function(s, i) {
+      return '<button class="menu-cat-tab' + (i === 0 ? ' active' : '') + '" type="button" data-target="menuCat-' + i + '">'
+        + TG.escHTML(s.title)
+        + '</button>';
+    }).join('');
+  } else {
+    $tabs.hidden = true;
+  }
+
+  // ---- Smooth scroll on tab click ----
+  function tabsHeight(){ return ($tabs && !$tabs.hidden) ? $tabs.getBoundingClientRect().height : 0; }
+  function scrollToCat(id, smooth){
+    var el = document.getElementById(id);
+    if (!el) return;
+    var offset = tabsHeight() + 8;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: y, behavior: smooth === false ? 'auto' : 'smooth' });
+  }
+  function setActiveTab(id){
+    if (!$tabs || $tabs.hidden) return;
+    var changed = null;
+    $tabs.querySelectorAll('.menu-cat-tab').forEach(function(t){
+      var on = t.dataset.target === id;
+      if (on && !t.classList.contains('active')) changed = t;
+      t.classList.toggle('active', on);
+    });
+    if (changed) {
+      // bring the active tab into view inside the horizontal scroller
+      var pad = 12;
+      var tRect = changed.getBoundingClientRect();
+      var pRect = $tabs.getBoundingClientRect();
+      if (tRect.left < pRect.left + pad)        $tabs.scrollBy({ left: tRect.left - pRect.left - pad, behavior: 'smooth' });
+      else if (tRect.right > pRect.right - pad) $tabs.scrollBy({ left: tRect.right - pRect.right + pad, behavior: 'smooth' });
+    }
+  }
+  if ($tabs && !$tabs.hidden) {
+    $tabs.addEventListener('click', function(e){
+      var b = e.target.closest('.menu-cat-tab');
+      if (!b) return;
+      var id = b.dataset.target;
+      // Suppress scroll-spy fight while we're animating to a target
+      programmaticScrollUntil = Date.now() + 700;
+      setActiveTab(id);
+      scrollToCat(id, true);
+    });
+  }
+
+  // ---- Scroll spy: highlight section closest to the top under the sticky tabs ----
+  var programmaticScrollUntil = 0;
+  function spy(){
+    if (!$tabs || $tabs.hidden) return;
+    if (Date.now() < programmaticScrollUntil) return;
+    var cutoff = tabsHeight() + 16;
+    var bestId = null, bestTop = -Infinity;
+    sections.forEach(function(_, i){
+      var el = document.getElementById('menuCat-' + i);
+      if (!el) return;
+      var top = el.getBoundingClientRect().top - cutoff;
+      // pick the last section whose top has already crossed the cutoff (top <= 0),
+      // i.e. the one we're currently reading
+      if (top <= 0 && top > bestTop) { bestTop = top; bestId = el.id; }
+    });
+    if (!bestId) bestId = 'menuCat-0';
+    setActiveTab(bestId);
+  }
+  var spyRaf = null;
+  window.addEventListener('scroll', function(){
+    if (spyRaf) return;
+    spyRaf = requestAnimationFrame(function(){ spyRaf = null; spy(); });
+  }, { passive: true });
+  spy();
 
   document.getElementById('menuBlock').addEventListener('click', function(e) {
     var card = e.target.closest('.related-card');

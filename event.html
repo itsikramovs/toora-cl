@@ -14,86 +14,79 @@
 </head>
 <body>
 
-<div class="product-page">
+<div class="product-page event-landing">
 
-  <!-- Hero photo with back + share buttons -->
-  <div class="product-hero rest-detail-hero" style="aspect-ratio:16/9">
+  <!-- Hero with title overlay -->
+  <div class="event-hero">
     <img id="eventImg" src="./img/ev-04.jpg" alt="">
+    <div class="event-hero-gradient"></div>
     <div class="product-hero-top">
       <button class="ph-btn" id="ph-back" aria-label="Назад">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="ph-btn-group">
-        <button class="ph-btn" id="ph-share" aria-label="Поделиться">
-          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
-      </div>
+      <button class="ph-btn" id="ph-share" aria-label="Поделиться">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+    <div class="event-hero-meta">
+      <span class="event-hero-kicker" id="eventKicker">Национальное торжество</span>
+      <h1 class="event-hero-title" id="eventTitle">Свадьба</h1>
     </div>
   </div>
 
-  <!-- Title + description card (overlaps hero) -->
-  <section class="product-block product-block-main">
-    <h1 class="rest-detail-name" id="eventTitle">Мероприятие</h1>
-    <div class="rest-detail-desc" id="eventDesc"></div>
+  <!-- Intro card: rich event description (collapsed by default) -->
+  <section class="product-block event-intro">
+    <p class="event-intro-text collapsed" id="eventDesc"></p>
+    <button class="event-intro-toggle" id="eventDescToggle" type="button" hidden>Читать полностью</button>
   </section>
 
-  <!-- Filter row (top half of merged card) -->
-  <div class="filter-actions" id="filterActions" style="top:0">
-    <button class="filter-action-btn" data-filter="sort" type="button">
-      <span class="fab-value" id="valSort">Сортировка</span>
-      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-    <button class="filter-action-btn" data-filter="filters" type="button">
-      <span class="fab-value" id="valFilters">Фильтры</span>
-      <span class="fab-dot" id="filterDot" hidden></span>
-      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-  </div>
+  <div class="sep"></div>
 
-  <!-- Content grid (bottom half of merged card via sibling-selector CSS) -->
-  <div class="list-page">
-    <section class="product-block" style="padding: 4px 0 16px;">
-      <div class="mini-grid-2col" id="dishGrid"></div>
-    </section>
-  </div>
+  <!-- Reels (horizontal scroll) -->
+  <section class="event-scroll-section" id="reelsSection">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Атмосфера торжества</h2>
+      <span class="event-section-sub">Рилсы</span>
+    </div>
+    <div class="scroll-x event-reels-scroll" id="eventReelsScroll"></div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- Photo gallery (horizontal scroll) -->
+  <section class="event-scroll-section" id="gallerySection">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Как это выглядит</h2>
+      <span class="event-section-sub">Фото со столов</span>
+    </div>
+    <div class="scroll-x event-gallery-scroll" id="eventGalleryScroll"></div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- Suitable dishes — curated, no filter UI -->
+  <section class="product-block event-dishes">
+    <div class="event-section-head">
+      <h2 class="event-section-title">Блюда для торжества</h2>
+      <span class="event-section-sub" id="dishCount"></span>
+    </div>
+    <div class="mini-grid-2col" id="dishGrid"></div>
+  </section>
 
 </div>
 
-<!-- Sort bottom-sheet -->
-<div class="filter-overlay" id="sortOverlay"></div>
-<aside class="filter-sheet" id="sortSheet" aria-modal="true">
-  <div class="filter-sheet-head">
-    <div class="filter-sheet-title">Сортировка</div>
-    <button class="filter-sheet-reset" id="sortReset" type="button">Сбросить</button>
+<!-- Lightbox for reel / gallery taps -->
+<div class="event-lb-overlay" id="lbOverlay"></div>
+<div class="event-lb" id="lb" role="dialog" aria-modal="true">
+  <button class="event-lb-close" id="lbClose" type="button" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <img class="event-lb-img" id="lbImg" src="" alt="">
+  <div class="event-lb-play" id="lbPlay" hidden>
+    <svg viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 22 12 6 20 6 4"/></svg>
   </div>
-  <div class="filter-sheet-list" id="sortList"></div>
-  <button class="filter-sheet-apply" id="sortApply" type="button">Показать результаты</button>
-</aside>
-
-<!-- Combined Filters bottom-sheet (Price + Vendor) -->
-<div class="filter-overlay" id="filtersOverlay"></div>
-<aside class="filter-sheet filter-sheet--blocks" id="filtersSheet" aria-modal="true">
-  <div class="fbs-head">
-    <div class="filter-sheet-title">Фильтры</div>
-    <button class="fbs-close" id="fbsClose" type="button" aria-label="Закрыть">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="fbs-body" id="fbsBody">
-    <section class="fbs-block">
-      <div class="fbs-block-title">Цена</div>
-      <div class="fbs-pills" id="fbsPrice"></div>
-    </section>
-    <section class="fbs-block">
-      <div class="fbs-block-title">Ресторан</div>
-      <div class="fbs-pills" id="fbsVendor"></div>
-    </section>
-  </div>
-  <div class="fbs-foot">
-    <button class="fbs-btn fbs-btn-reset" id="fbsReset" type="button">Сбросить</button>
-    <button class="fbs-btn fbs-btn-apply" id="fbsApply" type="button">Применить</button>
-  </div>
-</aside>
+  <div class="event-lb-caption" id="lbCaption"></div>
+</div>
 
 <nav class="bottom-nav">
   <a class="nav-item" href="index.html" data-page="index.html">
@@ -115,7 +108,7 @@
       <path class="ni" d="M20 9H17V8A4 4 0 009 8V9H6A2 2 0 004 11V21A2 2 0 006 23H20A2 2 0 0022 21V11A2 2 0 0020 9ZM11 8A2 2 0 0115 8V9H11V8ZM20 21H6V11H20V21Z"/>
       <path class="ni" d="M10 15C10 16.66 11.34 18 13 18C14.66 18 16 16.66 16 15H10Z"/>
     </svg></div>
-    <div class="cart-pill">3</div>
+    <div class="cart-pill" id="navCartPill" hidden>0</div>
     <span>Корзина</span>
   </a>
   <a class="nav-item" href="profile.html" data-page="profile.html">
@@ -139,11 +132,25 @@
 (function() {
   'use strict';
 
+  // Per-event metadata + dishes. Each entry is a small landing's worth of content.
   var EVENT_CATALOG = {
     wedding: {
       title: 'Свадьба',
+      kicker: 'Узбекское торжество',
       img: './img/ev-04.jpg',
-      desc: 'Полноценные банкетные наборы — палов, шашлык, манты, лепёшки и сладости. Рассчитано на 20–50 гостей. Бесплатная доставка и сервировка.',
+      desc: 'Туй — главное событие в жизни узбекской семьи. С раннего утра гости собираются на «нахор оши» — утренний свадебный плов из казана, который символизирует начало новой жизни. К полудню на дастархан выходят шашлык из ягнёнка, манты, самса из тандыра и горячие лепёшки. Завершают торжество восточные сладости, чак-чак и крепкий чай. Обычно собирается 30–100 гостей, и каждый должен встать из-за стола сытым.',
+      reels: [
+        { poster: './img/dish-03.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi',  caption: 'Нахор оши с 5 утра — 300 порций',     views: 4200 },
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',   caption: 'Шашлык-банкет на свадьбу',           views: 6800 },
+        { poster: './img/dish-09.jpg', avatar: './img/dish-09.jpg', vendor: 'Manti House',  caption: 'Лепим манты на 50 гостей',           views: 2900 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: '100 самс прямо из тандыра',          views: 3500 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Свадебные лепёшки и патыры',         views: 1800 }
+      ],
+      gallery: [ './img/ev-04.jpg', './img/dish-03.jpg', './img/dish-04.jpg', './img/dish-09.jpg', './img/dish-08.jpg', './img/ev-02.jpg', './img/dish-14.jpg' ],
+      bundles: [
+        { name: 'Свадебный палов-сет',  img: './img/ev-04.jpg',   desc: 'Палов, манты, лепёшки, чай — на 30 гостей', price: 1200000, vendor: 'Osh Markazi' },
+        { name: 'Шашлык-банкет',         img: './img/dish-04.jpg', desc: '50 шампуров, 5 видов мяса, гарниры',       price: 2100000, vendor: 'Khan Atlas' }
+      ],
       items: [
         { name: 'Свадебный плов',      img: './img/dish-03.jpg', price: 380000, vendor: 'Osh Markazi' },
         { name: 'Шашлык-сет 50 шамп.', img: './img/dish-04.jpg', price: 850000, vendor: 'Khan Atlas' },
@@ -155,8 +162,19 @@
     },
     beshik: {
       title: 'Бешик туй',
+      kicker: 'Праздник рождения малыша',
       img: './img/ev-05.jpg',
-      desc: 'Праздничный набор для торжества по случаю рождения малыша. Лёгкие угощения и сладости для гостей.',
+      desc: 'Бешик туй — тёплый семейный праздник в честь укладывания ребёнка в традиционную колыбель «бешик». Собираются ближайшие родственники и соседи — 10–20 человек. На стол подают палов в небольшом казане, норин, горячую самсу и свежие лепёшки. Обязательная часть — сладости: чак-чак, парварда и сладкие патыры. Это символ счастливой и сладкой жизни нового члена семьи.',
+      reels: [
+        { poster: './img/ev-05.jpg',   avatar: './img/dish-02.jpg', vendor: 'Beshqozon Plov',caption: 'Палов на 10 персон для бешик туй',  views: 1400 },
+        { poster: './img/dish-17.jpg', avatar: './img/dish-13.jpg', vendor: 'Norin House',   caption: 'Норин-семейный — нарезаем лапшу',   views: 960  },
+        { poster: './img/dish-15.jpg', avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',     caption: 'Чак-чак к колыбельному торжеству',  views: 2100 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master', caption: '20 самс из тандыра',                 views: 1200 }
+      ],
+      gallery: [ './img/ev-05.jpg', './img/dish-02.jpg', './img/dish-17.jpg', './img/dish-08.jpg', './img/dish-15.jpg', './img/dish-14.jpg' ],
+      bundles: [
+        { name: 'Семейный набор',  img: './img/ev-05.jpg',   desc: 'Палов, норин, самса, сладости — на 12 гостей', price: 320000, vendor: 'Beshqozon Plov' }
+      ],
       items: [
         { name: 'Палов на 10 персон', img: './img/dish-02.jpg', price: 180000, vendor: 'Beshqozon Plov' },
         { name: 'Норин-семейный',     img: './img/dish-17.jpg', price: 65000,  vendor: 'Norin House' },
@@ -167,8 +185,18 @@
     },
     engagement: {
       title: 'Помолвка',
+      kicker: 'Встреча двух семей',
       img: './img/ev-04.jpg',
-      desc: 'Меню для торжественной встречи семей. Изысканные блюда — палов, шашлык, фруктовые десерты.',
+      desc: 'Фотиха-туй — торжество, на котором две семьи официально объявляют о помолвке. Это камерный приём для 15–25 близких. На столе обязательно палов, шашлык из ягнёнка, разнообразные закуски, фрукты и восточные десерты. Угощение должно быть достойным — это первая большая встреча будущих сватов, и принимающая сторона старается удивить.',
+      reels: [
+        { poster: './img/dish-03.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Свадебный плов для фотихи',    views: 2200 },
+        { poster: './img/dish-12.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',  caption: 'Шашлык-сет на 15 персон',      views: 3100 },
+        { poster: './img/dish-14.jpg', avatar: './img/dish-14.jpg', vendor: 'Sweet Lab',   caption: 'Десертная тарелка для гостей', views: 1700 }
+      ],
+      gallery: [ './img/ev-04.jpg', './img/dish-03.jpg', './img/dish-12.jpg', './img/dish-14.jpg', './img/dish-15.jpg' ],
+      bundles: [
+        { name: 'Помолвочный набор', img: './img/ev-04.jpg', desc: 'Палов, шашлык, лепёшки, сладости — на 15 гостей', price: 450000, vendor: 'Osh Markazi' }
+      ],
       items: [
         { name: 'Свадебный плов',  img: './img/dish-03.jpg', price: 280000, vendor: 'Osh Markazi' },
         { name: 'Шашлык-сет',      img: './img/dish-12.jpg', price: 75000,  vendor: 'Khan Atlas' },
@@ -177,8 +205,19 @@
     },
     kuda: {
       title: 'Куда чакирик',
+      kicker: 'Сбор родственников',
       img: './img/ev-01.jpg',
-      desc: 'Встреча родственников — классический набор: плов, лепёшки, шашлык, сладости.',
+      desc: 'Куда чакирик — традиционное приглашение сватов и близких родственников. Стол скромнее свадебного, но всё важное на месте: горячий палов, шашлык из ягнёнка, лепёшки прямо из тандыра, ачичук-салат и зелёный чай в чайнике. Обычно собираются 10–15 человек ближнего круга — за разговорами засиживаются до позднего вечера.',
+      reels: [
+        { poster: './img/dish-02.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi',  caption: 'Плов из казана для гостей',  views: 1900 },
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',   caption: 'Шашлык из ягнёнка',          views: 2800 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Лепёшки Qo\'qon patir',      views: 1400 },
+        { poster: './img/dish-08.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: 'Самса прямо из печи',        views: 1100 }
+      ],
+      gallery: [ './img/ev-01.jpg', './img/dish-02.jpg', './img/dish-04.jpg', './img/ev-02.jpg', './img/dish-08.jpg' ],
+      bundles: [
+        { name: 'Семейный стол', img: './img/ev-01.jpg', desc: 'Палов, шашлык, лепёшки, чай — на 12 гостей', price: 380000, vendor: 'Osh Markazi' }
+      ],
       items: [
         { name: 'Osh Palav',         img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
         { name: 'Шашлык из ягнёнка', img: './img/dish-04.jpg', price: 42000, vendor: 'Khan Atlas' },
@@ -188,8 +227,18 @@
     },
     kavurdak: {
       title: 'Кавурдак',
+      kicker: 'Блюдо из казана',
       img: './img/ev-02.jpg',
-      desc: 'Кавурдак — традиционное блюдо из казана: жареное мясо с овощами и специями. Готовится 4 часа на углях.',
+      desc: 'Кавурдак — крестьянское блюдо из казана, которое готовят на больших семейных встречах и пастушеских праздниках. Мясо ягнёнка или говядины долго тушится с картофелем, помидорами, перцем и луком на углях из карагача — 4 часа неспешного огня. Подаётся горячим на большом лягане в центр стола: к нему лепёшки, ачичук-салат и зелёный чай. Хватает на 6–12 человек большой компании.',
+      reels: [
+        { poster: './img/dish-04.jpg', avatar: './img/dish-04.jpg', vendor: 'Khan Atlas',  caption: 'Кавурдак готовится 4 часа на углях', views: 5400 },
+        { poster: './img/dish-05.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Кавурдак с молодой картошкой',       views: 2300 },
+        { poster: './img/ev-02.jpg',   avatar: './img/dish-06.jpg', vendor: 'Rayhon Milliy',caption: 'Лепёшки к кавурдаку',              views: 800  }
+      ],
+      gallery: [ './img/ev-02.jpg', './img/dish-04.jpg', './img/dish-05.jpg', './img/dish-06.jpg', './img/dish-08.jpg' ],
+      bundles: [
+        { name: 'Кавурдак-сет на 8 персон', img: './img/dish-04.jpg', desc: 'Кавурдак, лепёшки, ачичук, чай', price: 320000, vendor: 'Khan Atlas' }
+      ],
       items: [
         { name: 'Кавурдак из ягнёнка',   img: './img/dish-04.jpg', price: 65000, vendor: 'Khan Atlas' },
         { name: 'Кавурдак с картофелем', img: './img/dish-05.jpg', price: 55000, vendor: 'Osh Markazi' }
@@ -197,8 +246,19 @@
     },
     navruz: {
       title: 'Навруз',
+      kicker: 'Праздник весны',
       img: './img/ev-03.jpg',
-      desc: 'Сезонное меню весеннего праздника — сумаляк, нишолда, проросшие зёрна, плов с сухофруктами.',
+      desc: 'Навруз — праздник весны и Нового года по солнечному календарю, отмечается 21 марта. На дастархан обязательно ставят сумаляк, нишолду и проросшую пшеницу — символы плодородия и достатка. Главное горячее блюдо — сладкий палов с сухофруктами и чесноком, к нему — самса с зеленью, патыры и восточные сладости. На махаллинский Навруз приходят 10–30 соседей и друзей.',
+      reels: [
+        { poster: './img/dish-11.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Сладкий палов с сухофруктами',   views: 3300 },
+        { poster: './img/ev-03.jpg',   avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',   caption: 'Сумаляк — варим всю ночь',       views: 4100 },
+        { poster: './img/dish-15.jpg', avatar: './img/dish-15.jpg', vendor: 'Sweet Lab',   caption: 'Чак-чак к весеннему столу',      views: 1900 },
+        { poster: './img/dish-14.jpg', avatar: './img/dish-14.jpg', vendor: 'Sweet Lab',   caption: 'Сладкая патыр для Навруза',      views: 1200 }
+      ],
+      gallery: [ './img/ev-03.jpg', './img/dish-11.jpg', './img/dish-15.jpg', './img/dish-14.jpg', './img/ev-02.jpg' ],
+      bundles: [
+        { name: 'Сумаляк-сет', img: './img/ev-03.jpg', desc: 'Сумаляк, плов с сухофруктами, патыр, чак-чак', price: 280000, vendor: 'Osh Markazi' }
+      ],
       items: [
         { name: 'Сладкий палов', img: './img/dish-11.jpg', price: 27000, vendor: 'Osh Markazi' },
         { name: 'Чак-чак',       img: './img/dish-15.jpg', price: 18000, vendor: 'Sweet Lab' },
@@ -207,8 +267,18 @@
     },
     iftar: {
       title: 'Ифтар',
+      kicker: 'Разговение в Рамадан',
       img: './img/ev-02.jpg',
-      desc: 'Готовые наборы для разговения в Рамадан. Доставка точно к закату. Финики, бульон, плов, сладости.',
+      desc: 'Ифтар — вечернее разговение в священный месяц Рамадан. Начинают традиционно: финик и глоток воды, затем горячий бульон-шурпа. Основное — плов или норин с тандыр-нон, а в завершение обязательно сладкое: щербет, чак-чак, восточные сухофрукты. Готовые наборы привозим точно к закату, чтобы стол был накрыт к азану. Обычно собираются 4–10 близких людей.',
+      reels: [
+        { poster: './img/dish-02.jpg', avatar: './img/dish-02.jpg', vendor: 'Osh Markazi', caption: 'Плов к ифтару — точно к закату', views: 2700 },
+        { poster: './img/dish-12.jpg', avatar: './img/dish-13.jpg', vendor: 'Norin House', caption: 'Mayda norin для разговения',     views: 1500 },
+        { poster: './img/dish-06.jpg', avatar: './img/dish-08.jpg', vendor: 'Tandur Master',caption: 'Тандыр-нон — горячий из печи',  views: 1100 }
+      ],
+      gallery: [ './img/ev-02.jpg', './img/dish-02.jpg', './img/dish-12.jpg', './img/dish-06.jpg', './img/dish-15.jpg' ],
+      bundles: [
+        { name: 'Семейный ифтар', img: './img/ev-02.jpg', desc: 'Финики, бульон, плов, лепёшки, чай — на 6 гостей', price: 220000, vendor: 'Osh Markazi' }
+      ],
       items: [
         { name: 'Osh Palav',  img: './img/dish-02.jpg', price: 28000, vendor: 'Osh Markazi' },
         { name: 'Mayda norin', img: './img/dish-12.jpg', price: 28000, vendor: 'Norin House' },
@@ -224,295 +294,165 @@
   document.title = ev.title + ' — Togora';
   document.getElementById('eventImg').src = ev.img;
   document.getElementById('eventTitle').textContent = ev.title;
-  document.getElementById('eventDesc').textContent = ev.desc;
-
-  // ---- Filter options ----
-  var SORT_OPTS = [
-    { id: 'default',    label: 'По умолчанию' },
-    { id: 'price-asc',  label: 'Сначала дешевле' },
-    { id: 'price-desc', label: 'Сначала дороже' },
-    { id: 'name-asc',   label: 'По названию А→Я' }
-  ];
-  var PRICE_OPTS = [
-    { id: 'all',     label: 'Все цены' },
-    { id: 'low',     label: 'До 30 000 сум', max: 30000 },
-    { id: 'mid',     label: '30 000 – 100 000 сум', min: 30000, max: 100000 },
-    { id: 'high',    label: '100 000 – 300 000 сум', min: 100000, max: 300000 },
-    { id: 'premium', label: 'Свыше 300 000 сум', min: 300000 }
-  ];
-  function vendorList() {
-    return Array.from(new Set(ev.items.map(function(i) { return i.vendor; }))).sort();
-  }
-
-  // ---- State (persisted per event type) ----
-  var STORAGE_KEY = 'tg-event-filters-' + type;
-  var state = { sort: 'default', price: 'all', vendor: 'all' };
-  try {
-    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-    if (saved && typeof saved === 'object') {
-      if (saved.sort)   state.sort   = saved.sort;
-      if (saved.price)  state.price  = saved.price;
-      if (saved.vendor) state.vendor = saved.vendor;
+  document.getElementById('eventKicker').textContent = ev.kicker || 'Национальное торжество';
+  var $desc = document.getElementById('eventDesc');
+  var $descToggle = document.getElementById('eventDescToggle');
+  $desc.textContent = ev.desc;
+  // Show the toggle only when the description is long enough that clamping kicks in
+  requestAnimationFrame(function(){
+    // If the element is actually being clipped, scrollHeight > clientHeight.
+    if ($desc.scrollHeight > $desc.clientHeight + 1) {
+      $descToggle.hidden = false;
     }
-  } catch (e) {}
-  function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-  }
+  });
+  $descToggle.addEventListener('click', function(){
+    var nowCollapsed = $desc.classList.toggle('collapsed');
+    $descToggle.textContent = nowCollapsed ? 'Читать полностью' : 'Свернуть';
+  });
 
-  // ---- DOM refs ----
-  var actions      = document.getElementById('filterActions');
-  var grid         = document.getElementById('dishGrid');
-  var valSort      = document.getElementById('valSort');
-  var valFilters   = document.getElementById('valFilters');
-  var filterDot    = document.getElementById('filterDot');
-
-  var sortOverlay  = document.getElementById('sortOverlay');
-  var sortSheet    = document.getElementById('sortSheet');
-  var sortList     = document.getElementById('sortList');
-  var sortApplyBtn = document.getElementById('sortApply');
-  var sortResetBtn = document.getElementById('sortReset');
-
-  var fOverlay = document.getElementById('filtersOverlay');
-  var fSheet   = document.getElementById('filtersSheet');
-  var fPrice   = document.getElementById('fbsPrice');
-  var fVendor  = document.getElementById('fbsVendor');
-  var fApply   = document.getElementById('fbsApply');
-  var fReset   = document.getElementById('fbsReset');
-  var fClose   = document.getElementById('fbsClose');
-
-  function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
   function esc(s) { return (window.TG && TG.escHTML) ? TG.escHTML(s) : String(s||''); }
   function escAttr(s) { return esc(s).replace(/"/g,'&quot;'); }
-
-  function applyFilters() {
-    var arr = ev.items.slice();
-    if (state.vendor !== 'all') arr = arr.filter(function(d) { return d.vendor === state.vendor; });
-    if (state.price !== 'all') {
-      var opt = PRICE_OPTS.find(function(o) { return o.id === state.price; });
-      if (opt) {
-        if (opt.min != null) arr = arr.filter(function(d) { return d.price >= opt.min; });
-        if (opt.max != null) arr = arr.filter(function(d) { return d.price <= opt.max; });
-      }
-    }
-    if (state.sort === 'price-asc')  arr.sort(function(a,b) { return a.price - b.price; });
-    if (state.sort === 'price-desc') arr.sort(function(a,b) { return b.price - a.price; });
-    if (state.sort === 'name-asc')   arr.sort(function(a,b) { return a.name.localeCompare(b.name, 'ru'); });
-    return arr;
+  function fmt(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' ') + ' сум'; }
+  function pluralDish(n){
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return n + ' блюдо';
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return n + ' блюда';
+    return n + ' блюд';
   }
 
-  function chipLabels() {
-    var s = SORT_OPTS.find(function(o){return o.id===state.sort;});
-    valSort.textContent = state.sort === 'default' ? 'Сортировка' : (s ? s.label : 'Сортировка');
-    actions.querySelector('[data-filter="sort"]').classList.toggle('active', state.sort !== 'default');
-    var count = (state.price !== 'all' ? 1 : 0) + (state.vendor !== 'all' ? 1 : 0);
-    var any = count > 0;
-    valFilters.textContent = any ? ('Фильтры · ' + count) : 'Фильтры';
-    filterDot.hidden = !any;
-    actions.querySelector('[data-filter="filters"]').classList.toggle('active', any);
+  // ---- Reels (horizontal scroll) ----
+  var $reelsScroll = document.getElementById('eventReelsScroll');
+  var $reelsSection = document.getElementById('reelsSection');
+  function formatViews(n) {
+    if (n >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return String(n);
   }
-
-  function render() {
-    var list = applyFilters();
-    chipLabels();
-    if (!list.length) {
-      grid.innerHTML = '<div style="grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--color-muted)">Под выбранные фильтры ничего не нашлось</div>';
-      return;
-    }
-    grid.innerHTML = list.map(function(d) {
-      return '<div class="mini-card" data-name="' + escAttr(d.name) +
-             '" data-img="' + escAttr(d.img) + '">' +
-        '<div class="mini-img">' +
-          '<img src="' + d.img + '" alt="">' +
-          '<div class="mini-img-overlay"></div>' +
-          '<button class="add-btn-float" type="button" data-name="' + escAttr(d.name) + '" aria-label="Добавить">' +
-            '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-          '</button>' +
-        '</div>' +
-        '<div class="mini-body">' +
-          '<div class="mini-price">' + fmt(d.price) + '</div>' +
-          '<div class="mini-name">' + esc(d.name) + '</div>' +
-          '<div class="mini-vendor">' + esc(d.vendor) + '</div>' +
-        '</div>' +
-      '</div>';
+  if (ev.reels && ev.reels.length) {
+    $reelsScroll.innerHTML = ev.reels.map(function(r, i) {
+      return '<div class="reel-card" data-i="' + i + '">'
+        +   '<img class="reel-poster" src="' + escAttr(r.poster) + '" alt="' + escAttr(r.vendor) + '">'
+        +   '<div class="reel-grad"></div>'
+        +   '<div class="reel-avatar"><img src="' + escAttr(r.avatar || r.poster) + '" alt=""></div>'
+        +   '<div class="reel-views">'
+        +     '<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3" fill="#000"/></svg>'
+        +     formatViews(r.views || 0)
+        +   '</div>'
+        +   '<div class="reel-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>'
+        +   '<div class="reel-info">'
+        +     '<div class="reel-name">' + esc(r.vendor) + '</div>'
+        +     '<div class="reel-cap">' + esc(r.caption.length > 32 ? r.caption.slice(0,30) + '…' : r.caption) + '</div>'
+        +   '</div>'
+        + '</div>';
     }).join('');
+    $reelsScroll.addEventListener('click', function(e){
+      var card = e.target.closest('.reel-card');
+      if (!card) return;
+      var r = ev.reels[parseInt(card.dataset.i, 10)];
+      if (r) openLightbox(r.poster, r.vendor + ' · ' + r.caption, true);
+    });
+  } else {
+    $reelsSection.style.display = 'none';
   }
 
-  // ==================== SORT sheet ====================
-  function openSort() {
-    sortList.innerHTML = SORT_OPTS.map(function(o) {
-      var sel = o.id === state.sort ? ' selected' : '';
-      return '<div class="filter-option' + sel + '" data-id="' + escAttr(o.id) + '">' +
-        '<div class="filter-option-label">' + esc(o.label) + '</div>' +
-        '<div class="filter-option-radio"></div>' +
-      '</div>';
+  // ---- Photo gallery (horizontal scroll) ----
+  var $galleryScroll = document.getElementById('eventGalleryScroll');
+  var $gallerySection = document.getElementById('gallerySection');
+  if (ev.gallery && ev.gallery.length) {
+    $galleryScroll.innerHTML = ev.gallery.map(function(src, i) {
+      return '<div class="event-gallery-card" data-i="' + i + '" style="background-image:url(\'' + escAttr(src) + '\')"></div>';
     }).join('');
-    sortOverlay.classList.add('show');
-    sortSheet.classList.add('show');
+    $galleryScroll.addEventListener('click', function(e){
+      var card = e.target.closest('.event-gallery-card');
+      if (!card) return;
+      var src = ev.gallery[parseInt(card.dataset.i, 10)];
+      if (src) openLightbox(src, '', false);
+    });
+  } else {
+    $gallerySection.style.display = 'none';
+  }
+
+  // ---- Lightbox ----
+  var $lb        = document.getElementById('lb');
+  var $lbOverlay = document.getElementById('lbOverlay');
+  var $lbImg     = document.getElementById('lbImg');
+  var $lbCaption = document.getElementById('lbCaption');
+  var $lbClose   = document.getElementById('lbClose');
+  var $lbPlay    = document.getElementById('lbPlay');
+  function openLightbox(src, caption, isVideo){
+    $lbImg.src = src;
+    $lbCaption.textContent = caption || '';
+    $lbCaption.style.display = caption ? '' : 'none';
+    $lbPlay.hidden = !isVideo;
+    $lb.classList.add('open');
+    $lbOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-  function closeSort() {
-    sortOverlay.classList.remove('show');
-    sortSheet.classList.remove('show');
+  function closeLightbox(){
+    $lb.classList.remove('open');
+    $lbOverlay.classList.remove('open');
     document.body.style.overflow = '';
+    $lbImg.src = '';
   }
-  sortList.addEventListener('click', function(e) {
-    var opt = e.target.closest('.filter-option');
-    if (!opt) return;
-    sortList.querySelectorAll('.filter-option').forEach(function(o) { o.classList.toggle('selected', o === opt); });
-  });
-  sortApplyBtn.addEventListener('click', function() {
-    var sel = sortList.querySelector('.filter-option.selected');
-    if (sel) state.sort = sel.dataset.id;
-    saveState();
-    closeSort();
-    render();
-  });
-  sortResetBtn.addEventListener('click', function() {
-    state.sort = 'default';
-    saveState();
-    closeSort();
-    render();
-  });
-  sortOverlay.addEventListener('click', closeSort);
-
-  // ==================== FILTERS sheet ====================
-  var tent = { price: 'all', vendor: 'all' };
-  function renderFiltersSheet() {
-    fPrice.innerHTML = PRICE_OPTS.map(function(o) {
-      var sel = o.id === tent.price ? ' selected' : '';
-      return '<button class="fbs-pill' + sel + '" type="button" data-price="' + escAttr(o.id) + '">' + esc(o.label) + '</button>';
-    }).join('');
-    var vendors = vendorList();
-    var html = '<button class="fbs-pill' + (tent.vendor === 'all' ? ' selected' : '') + '" type="button" data-vendor="all">Все рестораны</button>';
-    html += vendors.map(function(v) {
-      var sel = v === tent.vendor ? ' selected' : '';
-      return '<button class="fbs-pill' + sel + '" type="button" data-vendor="' + escAttr(v) + '">' + esc(v) + '</button>';
-    }).join('');
-    fVendor.innerHTML = html;
-  }
-  function openFilters() {
-    tent = { price: state.price, vendor: state.vendor };
-    renderFiltersSheet();
-    fOverlay.classList.add('show');
-    fSheet.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeFilters() {
-    fOverlay.classList.remove('show');
-    fSheet.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-  fPrice.addEventListener('click', function(e) {
-    var pill = e.target.closest('.fbs-pill'); if (!pill) return;
-    tent.price = pill.dataset.price;
-    fPrice.querySelectorAll('.fbs-pill').forEach(function(p) { p.classList.toggle('selected', p === pill); });
-  });
-  fVendor.addEventListener('click', function(e) {
-    var pill = e.target.closest('.fbs-pill'); if (!pill) return;
-    tent.vendor = pill.dataset.vendor;
-    fVendor.querySelectorAll('.fbs-pill').forEach(function(p) { p.classList.toggle('selected', p === pill); });
-  });
-  fApply.addEventListener('click', function() {
-    state.price = tent.price; state.vendor = tent.vendor;
-    saveState(); closeFilters(); render();
-  });
-  fReset.addEventListener('click', function() {
-    tent = { price: 'all', vendor: 'all' };
-    renderFiltersSheet();
-  });
-  fClose.addEventListener('click', closeFilters);
-  fOverlay.addEventListener('click', closeFilters);
-
-  // ==================== Chip dispatcher ====================
-  actions.addEventListener('click', function(e) {
-    var btn = e.target.closest('.filter-action-btn'); if (!btn) return;
-    var kind = btn.dataset.filter;
-    if (kind === 'sort')    openSort();
-    if (kind === 'filters') openFilters();
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Escape') return;
-    if (sortSheet.classList.contains('show')) closeSort();
-    if (fSheet.classList.contains('show')) closeFilters();
+  $lbClose.addEventListener('click', closeLightbox);
+  $lbOverlay.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && $lb.classList.contains('open')) closeLightbox();
   });
 
-  // ==================== Cart add / stepper ====================
-  var navCartPill = document.querySelector('nav .cart-pill');
-  function bumpPill(delta) {
-    if (!navCartPill) return;
-    var n = parseInt(navCartPill.textContent || '0', 10);
-    if (isNaN(n)) n = 0;
-    n = Math.max(0, n + delta);
-    navCartPill.textContent = String(n);
-    navCartPill.hidden = n === 0;
-  }
-  function showToast(name) {
-    if (window.TG && TG.showToast) { TG.showToast(name + ' — добавлено'); return; }
-    var t = document.getElementById('cart-toast');
-    if (!t) return;
-    var txt = t.querySelector('.toast-text');
-    if (txt) txt.textContent = name + ' — добавлено';
-    t.classList.add('show');
-    clearTimeout(showToast._t);
-    showToast._t = setTimeout(function(){ t.classList.remove('show'); }, 1800);
-  }
+  // ---- Dishes grid ----
+  var grid = document.getElementById('dishGrid');
+  document.getElementById('dishCount').textContent = pluralDish((ev.items || []).length);
 
+  grid.innerHTML = (ev.items || []).map(function(d) {
+    return '<div class="mini-card" data-name="' + escAttr(d.name) +
+           '" data-img="' + escAttr(d.img) + '">' +
+      '<div class="mini-img">' +
+        '<img src="' + d.img + '" alt="">' +
+        '<div class="mini-img-overlay"></div>' +
+        '<button class="add-btn-float" type="button" data-name="' + escAttr(d.name) + '" aria-label="Добавить">' +
+          '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+        '</button>' +
+      '</div>' +
+      '<div class="mini-body">' +
+        '<div class="mini-price">' + fmt(d.price) + '</div>' +
+        '<div class="mini-name">' + esc(d.name) + '</div>' +
+        '<div class="mini-vendor">' + esc(d.vendor) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Card body → product page (skip when tapping +/− or stepper)
   grid.addEventListener('click', function(e) {
-    var add = e.target.closest('.add-btn-float');
-    if (add) {
-      e.stopPropagation();
-      var name = add.dataset.name || 'Блюдо';
-      var stepper = document.createElement('div');
-      stepper.className = 'qty-stepper';
-      stepper.dataset.name = name;
-      stepper.innerHTML =
-        '<button class="qs-btn qs-minus" type="button" aria-label="Меньше">−</button>' +
-        '<span class="qs-count">1</span>' +
-        '<button class="qs-btn qs-plus" type="button" aria-label="Больше">+</button>';
-      add.replaceWith(stepper);
-      bumpPill(1);
-      showToast(name);
-      return;
-    }
-    var qsBtn = e.target.closest('.qs-btn');
-    if (qsBtn) {
-      e.stopPropagation();
-      var stepper2 = qsBtn.closest('.qty-stepper');
-      var countEl = stepper2.querySelector('.qs-count');
-      var n = parseInt(countEl.textContent, 10) || 0;
-      if (qsBtn.classList.contains('qs-plus'))  { n += 1; bumpPill(1); }
-      if (qsBtn.classList.contains('qs-minus')) {
-        n -= 1; bumpPill(-1);
-        if (n <= 0) {
-          var add2 = document.createElement('button');
-          add2.className = 'add-btn-float';
-          add2.type = 'button';
-          add2.dataset.name = stepper2.dataset.name;
-          add2.setAttribute('aria-label','Добавить');
-          add2.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-          stepper2.replaceWith(add2);
-          return;
-        }
-      }
-      countEl.textContent = String(n);
-      return;
-    }
+    if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
     var card = e.target.closest('.mini-card');
     if (!card) return;
     var qs = 'name=' + encodeURIComponent(card.dataset.name) + '&img=' + encodeURIComponent(card.dataset.img);
     location.href = 'product.html?' + qs;
   });
 
-  // Back + share
+  // Shared cart wiring for the mini-card "+ / qty stepper"
+  if (TG.wireMiniCardCart) TG.wireMiniCardCart(grid);
+
+  // ---- Nav cart pill ----
+  function updateCartPill(){
+    var pill = document.getElementById('navCartPill');
+    if (!pill) return;
+    var n = (TG && TG.cartCount) ? TG.cartCount() : 0;
+    if (n > 0) { pill.hidden = false; pill.textContent = n; }
+    else       { pill.hidden = true; }
+  }
+  updateCartPill();
+  window.addEventListener('tg:cart-changed', updateCartPill);
+
+  // ---- Top buttons ----
   document.getElementById('ph-back').addEventListener('click', function() {
-    if (history.length > 1) history.back(); else location.href = 'events.html';
+    if (history.length > 1) history.back();
+    else location.href = 'events.html';
   });
   document.getElementById('ph-share').addEventListener('click', function() {
     if (navigator.share) navigator.share({ title: ev.title, url: location.href }).catch(function() {});
     else if (window.TG && TG.showToast) TG.showToast('Ссылка скопирована');
   });
-
-  render();
 })();
 </script>
 

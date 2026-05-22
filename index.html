@@ -379,7 +379,7 @@
       <div class="hist-body">
         <div class="hist-name">Qo'qon patir</div>
         <div class="hist-vendor">Rayhon Milliy</div>
-        <button class="repeat-btn">Повторить</button>
+        <button class="repeat-btn" data-name="Qo'qon patir" data-vendor="Rayhon Milliy" data-img="./img/ev-02.jpg" data-price="15000">Повторить</button>
       </div>
     </div>
 
@@ -390,7 +390,7 @@
       <div class="hist-body">
         <div class="hist-name">Qazili norin</div>
         <div class="hist-vendor">Norin House</div>
-        <button class="repeat-btn">Повторить</button>
+        <button class="repeat-btn" data-name="Qazili norin" data-vendor="Norin House" data-img="./img/dish-13.jpg" data-price="115000">Повторить</button>
       </div>
     </div>
 
@@ -401,7 +401,7 @@
       <div class="hist-body">
         <div class="hist-name">Osh Palav</div>
         <div class="hist-vendor">Osh Markazi</div>
-        <button class="repeat-btn">Повторить</button>
+        <button class="repeat-btn" data-name="Osh Palav" data-vendor="Osh Markazi" data-img="./img/dish-02.jpg" data-price="28000">Повторить</button>
       </div>
     </div>
 
@@ -1020,6 +1020,24 @@
   // Cart wiring — uses shared TG.cartAdd (writes to localStorage 'tg-cart'
   // with vendor info so cart.html groups items by vendor correctly).
   TG.wireMiniCardCart(document);
+
+  // "Повторить" — adds the item to cart and jumps straight to checkout.
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.repeat-btn');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.TG && TG.cartAdd) {
+      TG.cartAdd({
+        name:       btn.dataset.name  || 'Блюдо',
+        img:        btn.dataset.img   || '',
+        price:      parseInt(btn.dataset.price || '0', 10),
+        vendorName: btn.dataset.vendor || 'Togora',
+        qty:        1
+      });
+    }
+    location.href = 'checkout.html';
+  });
 
   // Tap on mini-card body → open product page
   document.addEventListener('click', function(e) {

@@ -763,14 +763,19 @@ body:has(.product-page) {
   position: fixed; bottom: 82px; left: 50%;
   transform: translateX(-50%) translateY(12px);
   background: #21201F; color: #fff;
-  padding: 13px 20px; border-radius: 50px;
+  padding: 13px 20px; border-radius: 22px;
   font-size: 14px; font-weight: 600;
   display: flex; align-items: center; gap: 9px;
   opacity: 0; transition: opacity .2s ease, transform .2s ease;
   z-index: 600; pointer-events: none;
-  white-space: nowrap;
+  max-width: calc(100vw - 32px);
+  width: max-content;
+  line-height: 1.35;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   box-shadow: 0 6px 24px rgba(0,0,0,0.22);
 }
+.toast-text { min-width: 0; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast-check {
   width: 20px; height: 20px; background: var(--color-plus);

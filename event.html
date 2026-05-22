@@ -2,7 +2,7 @@
 <html lang="ru" dir="ltr" data-theme-name="bng" data-palette-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Мероприятие — Togora</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#FC3F1D">
@@ -536,35 +536,4 @@
     if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
     var card = e.target.closest('.mini-card');
     if (!card) return;
-    var qs = 'name=' + encodeURIComponent(card.dataset.name) + '&img=' + encodeURIComponent(card.dataset.img);
-    location.href = 'product.html?' + qs;
-  });
-
-  // Shared cart wiring for the mini-card "+ / qty stepper"
-  if (TG.wireMiniCardCart) TG.wireMiniCardCart(grid);
-
-  // ---- Nav cart pill ----
-  function updateCartPill(){
-    var pill = document.getElementById('navCartPill');
-    if (!pill) return;
-    var n = (TG && TG.cartCount) ? TG.cartCount() : 0;
-    if (n > 0) { pill.hidden = false; pill.textContent = n; }
-    else       { pill.hidden = true; }
-  }
-  updateCartPill();
-  window.addEventListener('tg:cart-changed', updateCartPill);
-
-  // ---- Top buttons ----
-  document.getElementById('ph-back').addEventListener('click', function() {
-    if (history.length > 1) history.back();
-    else location.href = 'events.html';
-  });
-  document.getElementById('ph-share').addEventListener('click', function() {
-    if (navigator.share) navigator.share({ title: ev.title, url: location.href }).catch(function() {});
-    else if (window.TG && TG.showToast) TG.showToast('Ссылка скопирована');
-  });
-})();
-</script>
-
-</body>
-</html>
+    var qs = 'name=' + encodeURIComponent(card.dataset.name)

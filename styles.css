@@ -3618,6 +3618,15 @@ body:has(.profile-page) {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
 }
 
+/* Drop all card-shadows on profile so the bottom-nav doesn't appear to inherit
+   a soft glow from the last card just above it. */
+body:has(.profile-page) .profile-card,
+body:has(.profile-page) .profile-stats,
+body:has(.profile-page) .checkout-block,
+body:has(.profile-page) .profile-social {
+  box-shadow: none;
+}
+
 /* ===== Orders page ===== */
 .orders-page { padding: 0 0 8px; }
 .orders-list {

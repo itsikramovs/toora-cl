@@ -2,7 +2,7 @@
 <html lang="uz" dir="ltr" data-theme-name="bng" data-palette-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Togora — Toshkent</title>
 
 <!-- PWA -->
@@ -13,8 +13,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Togora">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-startup-image" href="./splash-ios.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 
@@ -24,6 +22,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 
 <!-- ═══ HEADER ═══ -->
 <header class="header">
@@ -278,7 +277,7 @@
       <div class="hist-body">
         <div class="hist-name">Qo'qon patir</div>
         <div class="hist-vendor">Rayhon Milliy</div>
-        <button class="repeat-btn" data-name="Qo'qon patir" data-vendor="Rayhon Milliy" data-img="./img/ev-02.jpg" data-price="15000">Повторить</button>
+        <button class="repeat-btn">Повторить</button>
       </div>
     </div>
 
@@ -289,7 +288,7 @@
       <div class="hist-body">
         <div class="hist-name">Qazili norin</div>
         <div class="hist-vendor">Norin House</div>
-        <button class="repeat-btn" data-name="Qazili norin" data-vendor="Norin House" data-img="./img/dish-13.jpg" data-price="115000">Повторить</button>
+        <button class="repeat-btn">Повторить</button>
       </div>
     </div>
 
@@ -300,7 +299,7 @@
       <div class="hist-body">
         <div class="hist-name">Osh Palav</div>
         <div class="hist-vendor">Osh Markazi</div>
-        <button class="repeat-btn" data-name="Osh Palav" data-vendor="Osh Markazi" data-img="./img/dish-02.jpg" data-price="28000">Повторить</button>
+        <button class="repeat-btn">Повторить</button>
       </div>
     </div>
 
@@ -920,24 +919,6 @@
   // with vendor info so cart.html groups items by vendor correctly).
   TG.wireMiniCardCart(document);
 
-  // "Повторить" — adds the item to cart and jumps straight to checkout.
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('.repeat-btn');
-    if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (window.TG && TG.cartAdd) {
-      TG.cartAdd({
-        name:       btn.dataset.name  || 'Блюдо',
-        img:        btn.dataset.img   || '',
-        price:      parseInt(btn.dataset.price || '0', 10),
-        vendorName: btn.dataset.vendor || 'Togora',
-        qty:        1
-      });
-    }
-    location.href = 'checkout.html';
-  });
-
   // Tap on mini-card body → open product page
   document.addEventListener('click', function(e) {
     if (e.target.closest('.add-btn-float, .qty-stepper, .qs-btn, button')) return;
@@ -1436,8 +1417,112 @@
     renderReelsCards();
   }
 
+  // Bind reel card clicks
   if (reelsScroll) {
     reelsScroll.addEventListener('click', function(e) {
       var card = e.target.closest('.reel-card');
       if (!card) return;
-      openReels(parseInt(card.dat
+      openReels(parseInt(card.dataset.id));
+    });
+  }
+
+  // Player buttons
+  if (rpClose) rpClose.addEventListener('click', closeReels);
+  if (rpMute)  rpMute.addEventListener('click', function() {
+    rpMuted = !rpMuted;
+    rpMute.classList.toggle('muted', rpMuted);
+  });
+  if (rpPrevBtn) rpPrevBtn.addEventListener('click', function() { loadReel(rpIndex - 1); });
+  if (rpNextBtn) rpNextBtn.addEventListener('click', function() { loadReel(rpIndex + 1); });
+
+  // Center area pause/play on tap
+  if (rpStage) {
+    var pressTimer = null, pressed = false;
+    rpStage.addEventListener('pointerdown', function(e) {
+      // Skip if target is on a button/zone
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      pressed = true;
+      pressTimer = setTimeout(function() {
+        if (pressed) pauseReel();
+      }, 200);
+    });
+    rpStage.addEventListener('pointerup', function(e) {
+      if (e.target.closest('button') || e.target.closest('.rp-side') || e.target.closest('.rp-bottom') || e.target.closest('.rp-top') || e.target.closest('.rp-zone')) return;
+      clearTimeout(pressTimer);
+      if (rpPaused) { resumeReel(); pressed = false; return; }
+      pressed = false;
+    });
+    rpStage.addEventListener('pointercancel', function() {
+      clearTimeout(pressTimer);
+      pressed = false;
+      if (rpPaused) resumeReel();
+    });
+  }
+
+  // Like
+  if (rpLike) rpLike.addEventListener('click', function() {
+    var r = reels[rpIndex];
+    if (!r) return;
+    likedSet[r.id] = !likedSet[r.id];
+    rpLike.classList.toggle('liked', !!likedSet[r.id]);
+    rpLikeNum.textContent = r.likes + (likedSet[r.id] ? 1 : 0);
+  });
+  if (rpShare) rpShare.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Ссылка скопирована');
+  });
+  if (rpSave) rpSave.addEventListener('click', function() {
+    if (typeof showToast === 'function') showToast('Сохранено');
+  });
+  if (rpCta) rpCta.addEventListener('click', closeReels);
+  if (rpRestBlock) rpRestBlock.addEventListener('click', closeReels);
+
+  // Swipe up/down for next/prev
+  if (rpStage) {
+    var swipeStartY = null;
+    rpStage.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+    rpStage.addEventListener('touchend', function(e) {
+      if (swipeStartY == null) return;
+      var endY = (e.changedTouches[0] || {}).clientY || swipeStartY;
+      var dy = endY - swipeStartY;
+      swipeStartY = null;
+      if (Math.abs(dy) < 50) return;
+      if (dy < 0) loadReel(rpIndex + 1);
+      else        loadReel(rpIndex - 1);
+    }, { passive: true });
+  }
+
+  // Esc closes reels
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && reelsPlayer.classList.contains('show')) closeReels();
+    if (!reelsPlayer.classList.contains('show')) return;
+    if (e.key === 'ArrowLeft')  loadReel(rpIndex - 1);
+    if (e.key === 'ArrowRight') loadReel(rpIndex + 1);
+    if (e.key === ' ') { e.preventDefault(); togglePause(); }
+  });
+
+  // initial render
+  renderReelsCards();
+
+  // ════════════════════════════════════════════════
+  //  TABBED SECTIONS — switch panes inside .tabbed-section
+  // ════════════════════════════════════════
+  document.querySelectorAll('.tabbed-section').forEach(function(section) {
+    var tabs  = section.querySelectorAll('.ts-tab');
+    var panes = section.querySelectorAll('.ts-pane');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.pane;
+        tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+        panes.forEach(function(p) { p.classList.toggle('active', p.dataset.pane === target); });
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
